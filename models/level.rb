@@ -127,7 +127,7 @@ class Level
       end
 
       # Test on cell (m_2,n_2)
-      if read_pos(m_1, n_1) == '$' || read_pos(m_1, n_1) == '*'
+      if ['$', '*'].include? read_pos(m_1, n_1)
         if read_pos(m_2, n_2) == '.'
           write_pos(m_2, n_2, '*')
         else
@@ -138,7 +138,7 @@ class Level
       end
 
       # Test on cell (m_1, n_1)
-      if read_pos(m_1, n_1) == '.' || read_pos(m_1, n_1)== '*'
+      if ['.', '*'].include? read_pos(m_1, n_1)
         write_pos(m_1, n_1, '+')
       else
         write_pos(m_1, n_1, '@')
@@ -195,7 +195,7 @@ class Level
     end
 
     # If non-visited cell, test neighbours cells
-    if cell != '#' && cell != 's' && cell != 'p' && cell != 'd' && cell != 'a'
+    if !['#', 's', 'p', 'd', 'a'].include? cell
       initialize_floor_rec(m+1, n)
       initialize_floor_rec(m-1, n)
       initialize_floor_rec(m, n+1)
@@ -204,8 +204,7 @@ class Level
   end
 
   def initialize_boxes_and_goals
-    @boxes = @grid.count { |cell| cell == '*' || cell == '$' }
-    @goals = @grid.count { |cell| cell == '+' || cell == '*' || cell == '.' }
+    @boxes = @grid.count { |cell| ['*', '$'].include? cell }
+    @goals = @grid.count { |cell| ['+', '*', '.'].include? cell }
   end
 end
-
