@@ -1,4 +1,4 @@
-class CornerDeadlock < AbstractDeadlock
+class CornerDeadlock < Deadlock
 
   attr_reader :deadlock_positions
 
@@ -18,8 +18,8 @@ class CornerDeadlock < AbstractDeadlock
   def corner_deadlock_positions(level)
     positions = []
 
-    for m in (0..level.rows-1)
-      for n in (0..level.cols-1)
+    (0..level.rows-1).each do |m|
+      (0..level.cols-1).each do |n|
         cell = level.read_pos(m, n)
 
         # If not outside, not wall, not goal and in a corner

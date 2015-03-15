@@ -1,4 +1,4 @@
-class AbstractDeadlock
+class Deadlock
 
   attr_reader :level
 

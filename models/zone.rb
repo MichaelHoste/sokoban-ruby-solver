@@ -1,21 +1,21 @@
 class Zone
 
-  BOXES_ZONE    = 0
-  PUSHER_ZONE   = 1
-  GOAL_ZONE     = 2
-  DEADLOCK_ZONE = 3
+  BOXES_ZONE  = 0
+  PUSHER_ZONE = 1
+  GOALS_ZONE  = 2
+  CUSTOM_ZONE = 3
 
-  attr_reader :level, :type, :zone, :length
+  attr_reader :level, :type, :zone
 
-  def initialize(level, type = BOXES_ZONE)
+  def initialize(level, type = BOXES_ZONE, options = {})
     @level  = level
     @type   = type
-    @length = initialize_length
+    @zone   = 0
 
-    initialize_boxes_zone    if @type == BOXES_ZONE
-    initialize_pusher_zone   if @type == PUSHER_ZONE
-    initialize_goal_zone     if @type == GOAL_ZONE
-    initialize_deadlock_zone if @type == DEADLOCK_ZONE
+    initialize_boxes_zone                       if @type == BOXES_ZONE
+    initialize_pusher_zone                      if @type == PUSHER_ZONE
+    initialize_goal_zone                        if @type == GOALS_ZONE
+    initialize_custom_zone(options[:positions]) if @type == CUSTOM_ZONE
   end
 
   def print
@@ -23,7 +23,7 @@ class Zone
   end
 
   def print_binary
-    puts "%0#{@length}b" % @zone
+    puts "%0#{@zone.bit_length}b" % @zone
   end
 
   def print_integer
@@ -50,17 +50,8 @@ class Zone
 
   private
 
-  # length of zone (number of inside positions)
-  def initialize_length
-    @level.grid.count do |char|
-      ['$', '.', '*', '@', '+', 's'].include? char
-    end
-  end
-
   def initialize_boxes_zone
-    @zone = 0
-    bit  = 1
-
+    bit = 1
     @level.grid.collect do |char|
       if ['$', '.', '*', '@', '+', 's'].include? char
         if ['$', '*'].include? char
@@ -76,11 +67,32 @@ class Zone
   end
 
   def initialize_goal_zone
-
+    bit = 1
+    @level.grid.collect do |char|
+      if ['$', '.', '*', '@', '+', 's'].include? char
+        if ['.', '*', '+'].include? char
+          @zone += bit
+        end
+        bit *= 2
+      end
+    end
   end
 
-  def initialize_deadlock_zone
-
+  def initialize_custom_zone(positions)
+    bit = 1
+    (0..@level.rows-1).each do |m|
+      (0..@level.cols-1).each do |n|
+        pos = @level.read_pos(m, n)
+        if ['$', '.', '*', '@', '+', 's'].include? pos
+          positions.each do |position|
+            if position[:m] == m && position[:n] == n
+              @zone += bit
+              break
+            end
+          end
+          bit *= 2
+        end
+      end
+    end
   end
-
 end
