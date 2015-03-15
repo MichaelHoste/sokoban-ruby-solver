@@ -3,7 +3,6 @@ class Pack
   attr_reader :file_name, :name, :description, :email, :url, :copyright,
               :max_cols, :max_rows, :levels
 
-
   def initialize(file_path)
     File.open(file_path) do |file|
       xml_pack_node = Nokogiri::XML(file)

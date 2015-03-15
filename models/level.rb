@@ -153,7 +153,11 @@ class Level
   end
 
   def print
-    puts @grid.join.scan(/.{#{@cols}}/)
+    puts to_s
+  end
+
+  def to_s
+    @grid.join.gsub('s', ' ').scan(/.{#{@cols}}/)
   end
 
   private
