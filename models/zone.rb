@@ -8,9 +8,9 @@ class Zone
   attr_reader :level, :type, :zone
 
   def initialize(level, type = BOXES_ZONE, options = {})
-    @level  = level
-    @type   = type
-    @zone   = 0
+    @level = level
+    @type  = type
+    @zone  = 0
 
     initialize_boxes_zone                       if @type == BOXES_ZONE
     initialize_pusher_zone                      if @type == PUSHER_ZONE
@@ -37,7 +37,7 @@ class Zone
     @level.grid.each do |char|
       spotted = false
 
-      if ['$', '.', '*', '@', '+', 's'].include? char
+      if inside_cells.include? char
         string += (@zone[pos] == 1 ? 'x' : ' ')
         pos += 1
       else
@@ -53,7 +53,7 @@ class Zone
   def initialize_boxes_zone
     bit = 1
     @level.grid.collect do |char|
-      if ['$', '.', '*', '@', '+', 's'].include? char
+      if inside_cells.include? char
         if ['$', '*'].include? char
           @zone += bit
         end
@@ -63,13 +63,34 @@ class Zone
   end
 
   def initialize_pusher_zone
+    positions = []
 
+    pusher_positions_rec(@level.pusher[:pos_m],
+                         @level.pusher[:pos_n],
+                         positions)
+
+    initialize_custom_zone(positions)
+  end
+
+  def pusher_positions_rec(m, n, positions)
+    if !positions.include?({ :m => m, :n => n })
+      positions << { :m => m, :n => n }
+
+      cell = @level.read_pos(m, n)
+
+      if ['.', '@', '+', 's'].include?(cell)
+        pusher_positions_rec(m+1, n,   positions)
+        pusher_positions_rec(m-1, n,   positions)
+        pusher_positions_rec(m,   n+1, positions)
+        pusher_positions_rec(m,   n-1, positions)
+      end
+    end
   end
 
   def initialize_goal_zone
     bit = 1
     @level.grid.collect do |char|
-      if ['$', '.', '*', '@', '+', 's'].include? char
+      if inside_cells.include? char
         if ['.', '*', '+'].include? char
           @zone += bit
         end
@@ -82,8 +103,8 @@ class Zone
     bit = 1
     (0..@level.rows-1).each do |m|
       (0..@level.cols-1).each do |n|
-        pos = @level.read_pos(m, n)
-        if ['$', '.', '*', '@', '+', 's'].include? pos
+        cell = @level.read_pos(m, n)
+        if inside_cells.include? cell
           positions.each do |position|
             if position[:m] == m && position[:n] == n
               @zone += bit
@@ -94,5 +115,9 @@ class Zone
         end
       end
     end
+  end
+
+  def inside_cells
+    ['$', '.', '*', '@', '+', 's']
   end
 end

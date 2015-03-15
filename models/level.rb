@@ -22,7 +22,7 @@
 class Level
 
   attr_reader :name, :copyright, :rows, :cols, :grid, :boxes,
-              :goals, :pusher_pos_m, :pusher_pos_n
+              :goals, :pusher
 
   def initialize(xml_level)
     xml_level_node = Nokogiri::XML(xml_level)

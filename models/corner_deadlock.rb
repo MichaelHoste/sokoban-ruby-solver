@@ -21,8 +21,6 @@ class CornerDeadlock < Deadlock
     (0..level.rows-1).each do |m|
       (0..level.cols-1).each do |n|
         cell = level.read_pos(m, n)
-
-        # If not outside, not wall, not goal and in a corner
         if ![' ', '#', '.', '*', '+'].include? cell
           if in_corner?(level, m, n)
             positions << { :m => m, :n => n }

@@ -12,5 +12,5 @@ positions = CornerDeadlock.new(level).deadlock_positions
 
 Zone.new(level, Zone::BOXES_ZONE).print
 Zone.new(level, Zone::GOALS_ZONE).print
-#Zone.new(level, Zone::PUSHER_ZONE).print
+Zone.new(level, Zone::PUSHER_ZONE).print
 Zone.new(level, Zone::CUSTOM_ZONE, { :positions => positions }).print
