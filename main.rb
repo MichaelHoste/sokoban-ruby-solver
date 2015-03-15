@@ -1,7 +1,4 @@
-require 'nokogiri'
-
-require './models/deadlock'
-Dir.glob("./models/*.rb").each { |f| require f }
+require './lib/boot'
 
 pack  = Pack.new('data/Original.slc')
 level = pack.levels[1]
