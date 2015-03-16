@@ -45,7 +45,7 @@ class Zone
       end
     end
 
-    string.scan(/.{#{@level.cols}}/)
+    string.scan(/.{#{@level.cols}}/).join("\n")
   end
 
   private

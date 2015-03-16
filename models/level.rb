@@ -157,7 +157,7 @@ class Level
   end
 
   def to_s
-    @grid.join.gsub('s', ' ').scan(/.{#{@cols}}/)
+    @grid.join.gsub('s', ' ').scan(/.{#{@cols}}/).join("\n")
   end
 
   private
