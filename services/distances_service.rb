@@ -4,7 +4,7 @@
 class DistancesService
 
   def initialize(level)
-    @level = level
+    @level = level.clone
 
     if !valid?
       raise 'Error: Assume the level contains only one box and no goals'
@@ -39,7 +39,7 @@ class DistancesService
       next_item = heap.min_by { |pos| pos[:weight] }
       heap.delete(next_item)
 
-      dijkstra_rec(heap, distances, next_item)
+      dijkstra(heap, distances, next_item)
     end
 
     format_distances(distances)
@@ -47,7 +47,7 @@ class DistancesService
 
   private
 
-  def dijkstra_rec(heap, distances, item)
+  def dijkstra(heap, distances, item)
     pos       = item[:m]*@level.cols + item[:n]
     cell      = @level.read_pos(item[:m], item[:n])
     direction = item[:direction]
@@ -56,6 +56,10 @@ class DistancesService
     if ['@', '$', 's'].include?(cell) && distances[pos][direction] > weight
       distances[pos][direction] = weight
 
+      # place box at pos
+      # place pusher based on direction variable (if from_left, start right)
+
+      # For each, execute only if position is on pusherzone
       heap << { :m => item[:m] - 1, :n => item[:n],     :direction => :from_bottom, :weight => weight + 1 }
       heap << { :m => item[:m] + 1, :n => item[:n],     :direction => :from_top,    :weight => weight + 1 }
       heap << { :m => item[:m]    , :n => item[:n] + 1, :direction => :from_left,   :weight => weight + 1 }
