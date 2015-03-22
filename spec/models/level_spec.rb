@@ -13,16 +13,16 @@ describe Level do
     level.pusher.should    == { :pos_m => 8, :pos_n => 11 }
 
     level.to_s.should == "    #####          \n"\
-                          "    #   #          \n"\
-                          "    #$  #          \n"\
-                          "  ###  $##         \n"\
-                          "  #  $ $ #         \n"\
-                          "### # ## #   ######\n"\
-                          "#   # ## #####  ..#\n"\
-                          "# $  $          ..#\n"\
-                          "##### ### #@##  ..#\n"\
-                          "    #     #########\n"\
-                          "    #######        "\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #  $ $ #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $          ..#\n"\
+                         "##### ### #@##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        "\
   end
 
   it 'raise error when loading' do
@@ -49,16 +49,16 @@ describe Level do
     level.write_pos(7, 11, '@')
 
     level.to_s.should == "    #####          \n"\
-                          "    #   #          \n"\
-                          "    #$  #          \n"\
-                          "  ###  $##         \n"\
-                          "  #  $ $ #         \n"\
-                          "### # ## #   ######\n"\
-                          "#   # ## #####  ..#\n"\
-                          "# $  $     @    ..#\n"\
-                          "##### ### # ##  ..#\n"\
-                          "    #     #########\n"\
-                          "    #######        "\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #  $ $ #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $     @    ..#\n"\
+                         "##### ### # ##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        "\
 
     expect { level.write_pos(0, 19, '$') }.to raise_error "Try to write value out of level's grid"
     expect { level.write_pos(11, 0, '$') }.to raise_error "Try to write value out of level's grid"
@@ -82,8 +82,49 @@ describe Level do
   end
 
   it '#move' do
+    original_level = Pack.new('spec/support/files/level.slc').levels[0]
+    level_1        = Pack.new('spec/support/files/level.slc').levels[0]
+    level_2        = Pack.new('spec/support/files/level_move_up.slc').levels[0]
+
+    level_1.move('D').should == Level::NO_MOVE
+    level_1.move('d').should == Level::NO_MOVE
+    level_1.should           == original_level
+
+    level_1.move('L').should == Level::NO_MOVE
+    level_1.move('l').should == Level::NO_MOVE
+    level_1.should           == original_level
+
+    level_1.move('R').should == Level::NO_MOVE
+    level_1.move('r').should == Level::NO_MOVE
+    level_1.should           == original_level
+
+    level_1.move('U').should == Level::NORMAL_MOVE
+    level_1.move('u').should == Level::NO_MOVE
+    level_1.should           == level_2
+  end
+
+  it '#move (2)' do
     level = Pack.new('spec/support/files/level.slc').levels[0]
 
+    level.move('u').should == Level::NORMAL_MOVE
+
+    5.times do
+      level.move('l').should == Level::NORMAL_MOVE
+    end
+
+    level.move('l').should == Level::BOX_MOVE
+
+    level.to_s.should == "    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #  $ $ #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $ $@          ..#\n"\
+                         "##### ### # ##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        "\
   end
 
   it '#won?' do
@@ -92,6 +133,13 @@ describe Level do
   end
 
   it '#==' do
+    level_1 = Pack.new('spec/support/files/level.slc').levels[0]
+    level_2 = Pack.new('spec/support/files/level_move_up.slc').levels[0]
+
+    level_1.should_not == level_2
+
+    level_1.move('u')
+    level_1.should == level_2
   end
 
   it 'Check that solution string goes to solution level' do

@@ -21,6 +21,10 @@
 
 class Level
 
+  NO_MOVE     = 0
+  NORMAL_MOVE = 1
+  BOX_MOVE    = 2
+
   attr_reader :name, :copyright, :rows, :cols, :grid, :boxes,
               :goals, :pusher
 
@@ -83,7 +87,7 @@ class Level
   end
 
   # Direction should be 'u', 'd', 'l', 'r' in lowercase or uppercase
-  # Return 0 if no move, 1 if normal move, 2 if box push.
+  # Return NO_MOVE, NORMAL_MOVE or BOX_MOVE
   def move(direction)
     action = true
     m      = @pusher[:pos_m]
@@ -114,12 +118,12 @@ class Level
       @pusher[:pos_n] += 1
     else
       action = false
-      state = 0
+      state = NO_MOVE
     end
 
     # Move accepted
     if action
-      state = 1
+      state = NORMAL_MOVE
 
       # Test on cell (m,n)
       if read_pos(m, n) == '+'
@@ -136,7 +140,7 @@ class Level
           write_pos(m_2, n_2, '$')
         end
 
-        state = 2
+        state = BOX_MOVE
       end
 
       # Test on cell (m_1, n_1)
