@@ -4,9 +4,10 @@ class CornerDeadlock < Deadlock
 
   def initialize(level)
     super
+
     @deadlock_positions = []
-    @deadlock_positions += corner_deadlock_positions(level)
-    @deadlock_positions += line_deadlock_positions(level)
+    @deadlock_positions += corner_deadlock_positions
+    @deadlock_positions += line_deadlock_positions
   end
 
   def deadlocked?(node)
@@ -15,14 +16,14 @@ class CornerDeadlock < Deadlock
   private
 
   # When a box is in a corner and no way to remove it
-  def corner_deadlock_positions(level)
+  def corner_deadlock_positions
     positions = []
 
     (0..level.rows-1).each do |m|
       (0..level.cols-1).each do |n|
         cell = level.read_pos(m, n)
         if ![' ', '#', '.', '*', '+'].include? cell
-          if in_corner?(level, m, n)
+          if in_corner?(m, n)
             positions << { :m => m, :n => n }
           end
         end
@@ -33,8 +34,8 @@ class CornerDeadlock < Deadlock
   end
 
   # When there is a box against a wall and no way to remove it
-  def line_deadlock_positions(level)
-    corner_deadlock_positions = corner_deadlock_positions(level)
+  def line_deadlock_positions
+    corner_deadlock_positions = corner_deadlock_positions()
     line_deadlock_positions   = []
 
     corner_deadlock_positions.each do |corner_pos|
@@ -128,7 +129,7 @@ class CornerDeadlock < Deadlock
     return line_deadlock_positions
   end
 
-  def in_corner?(level, m, n)
+  def in_corner?(m, n)
     l = level.read_pos(m, n-1)
     r = level.read_pos(m, n+1)
     u = level.read_pos(m-1, n)
