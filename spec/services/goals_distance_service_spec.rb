@@ -28,7 +28,7 @@ describe GoalsDistanceService do
     end
   end
 
-  it '#run (1)' do
+  it '#run (1)', :focus => true do
     text = "  #####\n"\
            "  #   #\n"\
            "###   #\n"\
@@ -40,11 +40,17 @@ describe GoalsDistanceService do
     level = Level.new(text)
     i     = Float::INFINITY
 
-    GoalsDistanceService.new(level).run.should == [       2, i, i,
-                                                          1, i, i,
-                                                    4, 3, 0, 1, 2,
-                                                    i, i, 3,
-                                                    i, i, 4        ]
+    GoalsDistanceService.new(level).run.should == [       2, 3, 4,
+                                                          1, 2, 3,
+                                                    2, 1, 0, 1, 2,
+                                                    3, 2, 1,
+                                                    4, 3, 2       ]
+
+    #GoalsDistanceService.new(level).run.should == [       2, i, i,
+    #                                                      1, i, i,
+    #                                                4, 3, 0, 1, 2,
+    #                                                i, i, 3,
+    #                                                i, i, 4        ]
   end
 
   it '#run (2)' do
