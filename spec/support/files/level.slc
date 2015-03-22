@@ -2,10 +2,12 @@
 <!DOCTYPE SokobanLevels SYSTEM "SokobanLev.dtd">
 <SokobanLevels>
   <Title>Original &#x26; Extra</Title>
+  <Email>test@gmail.com</Email>
+  <Url>http://test.com</Url>
   <Description>
 The 50 original levels from Sokoban plus the 40 from Extra.
   </Description>
-  <LevelCollection Copyright="Thinking Rabbit" MaxWidth="20" MaxHeight="17">
+  <LevelCollection Copyright="Thinking Rabbit" MaxWidth="19" MaxHeight="11">
     <Level Id="1" Width="19" Height="11">
       <L>    #####</L>
       <L>    #   #</L>
