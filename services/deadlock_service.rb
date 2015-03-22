@@ -1,16 +1,11 @@
 class DeadlockService
 
-  attr_reader :level, :deadlock_positions
-
   def initialize(level)
-    @level              = level
-    @deadlock_positions = []
+    @level = level
   end
 
   def run
-    @deadlock_positions += corner_deadlock_positions
-    @deadlock_positions += line_deadlock_positions
-    @deadlock_positions
+    corner_deadlock_positions + line_deadlock_positions
   end
 
   private

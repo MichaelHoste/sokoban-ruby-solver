@@ -22,7 +22,7 @@ describe Level do
                          "# $  $          ..#\n"\
                          "##### ### #@##  ..#\n"\
                          "    #     #########\n"\
-                         "    #######        "\
+                         "    #######        "
   end
 
   it '.initialize (text)' do
@@ -36,7 +36,7 @@ describe Level do
             "# $  $          ..#\n"\
             "##### ### #@##  ..#\n"\
             "    #     #########\n"\
-            "    #######        "\
+            "    #######        "
 
     level = Level.new(text)
 
@@ -58,7 +58,7 @@ describe Level do
                          "# $  $          ..#\n"\
                          "##### ### #@##  ..#\n"\
                          "    #     #########\n"\
-                         "    #######        "\
+                         "    #######        "
   end
 
   it 'initialize (node)' do
@@ -77,13 +77,7 @@ describe Level do
                                    "# $  $          ..#\n"\
                                    "##### ### # ##  ..#\n"\
                                    "    #     #########\n"\
-                                   "    #######        "\
-  end
-
-  it 'raise error when loading' do
-    message = "Level error: there must be the same number of boxes and goals"
-
-    expect { Pack.new('spec/support/files/wrong_level.slc') }.to raise_error message
+                                   "    #######        "
   end
 
   it '#read_pos' do
@@ -113,7 +107,7 @@ describe Level do
                          "# $  $     @    ..#\n"\
                          "##### ### # ##  ..#\n"\
                          "    #     #########\n"\
-                         "    #######        "\
+                         "    #######        "
 
     expect { level.write_pos(0, 19, '$') }.to raise_error "Try to write value out of level's grid"
     expect { level.write_pos(11, 0, '$') }.to raise_error "Try to write value out of level's grid"
@@ -179,7 +173,12 @@ describe Level do
                          "# $ $@          ..#\n"\
                          "##### ### # ##  ..#\n"\
                          "    #     #########\n"\
-                         "    #######        "\
+                         "    #######        "
+  end
+
+  it '#valid?' do
+    Pack.new('spec/support/files/level.slc').levels[0].valid?.should       == true
+    Pack.new('spec/support/files/wrong_level.slc').levels[0].valid?.should == false
   end
 
   it '#won?' do

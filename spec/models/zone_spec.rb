@@ -19,7 +19,7 @@ describe Zone do
                           "# x  x            #\n"\
                           "##### ### # ##    #\n"\
                           "    #     #########\n"\
-                          "    #######        "\
+                          "    #######        "
     end
 
     it "creates goals zone" do
@@ -35,7 +35,7 @@ describe Zone do
                           "#               xx#\n"\
                           "##### ### # ##  xx#\n"\
                           "    #     #########\n"\
-                          "    #######        "\
+                          "    #######        "
     end
 
     it "creates pusher zone" do
@@ -51,7 +51,7 @@ describe Zone do
                           "#    xxxxxxxxxxxxx#\n"\
                           "#####x###x#x##xxxx#\n"\
                           "    #xxxxx#########\n"\
-                          "    #######        "\
+                          "    #######        "
     end
 
     it "creates custom zone with positions" do
@@ -69,7 +69,7 @@ describe Zone do
                           "#                 #\n"\
                           "##### ### # ##    #\n"\
                           "    #     #########\n"\
-                          "    #######        "\
+                          "    #######        "
     end
 
     it "creates custom zone with numbers" do
@@ -86,7 +86,7 @@ describe Zone do
                           "# x  x            #\n"\
                           "##### ### # ##    #\n"\
                           "    #     #########\n"\
-                          "    #######        "\
+                          "    #######        "
     end
   end
 
@@ -113,7 +113,7 @@ describe Zone do
                         "#    x            #\n"\
                         "##### ### # ##    #\n"\
                         "    #     #########\n"\
-                        "    #######        "\
+                        "    #######        "
   end
 
   it '#|' do
@@ -132,7 +132,7 @@ describe Zone do
                         "# x  x          xx#\n"\
                         "##### ### # ##  xx#\n"\
                         "    #     #########\n"\
-                        "    #######        "\
+                        "    #######        "
   end
 
   it '#| (2)' do

@@ -24,7 +24,7 @@ describe DeadlockService do
                                  "#x                #\n"\
                                  "##### ### #x##x   #\n"\
                                  "    #x   x#########\n"\
-                                 "    #######        "\
+                                 "    #######        "
   end
 
   it "should detect line deadlocks" do
@@ -46,7 +46,7 @@ describe DeadlockService do
                                  "#                 #\n"\
                                  "##### ### # ##    #\n"\
                                  "    # xxx #########\n"\
-                                 "    #######        "\
+                                 "    #######        "
   end
 
   it "should detect deadlock positions of a level" do
@@ -68,6 +68,6 @@ describe DeadlockService do
                                  "#x                #\n"\
                                  "##### ### #x##x   #\n"\
                                  "    #xxxxx#########\n"\
-                                 "    #######        "\
+                                 "    #######        "
   end
 end

@@ -153,6 +153,13 @@ class Level
     state
   end
 
+  def valid?
+    criteria_1 = @boxes == @goals
+    criteria_2 = @grid.count { |cell| ['@', '+'].include? cell } == 1
+
+    criteria_1 && criteria_2
+  end
+
   def won?
     !(@grid.any? { |cell| cell == '$' })
   end
@@ -290,9 +297,5 @@ class Level
   def initialize_boxes_and_goals
     @boxes = @grid.count { |cell| ['*', '$'].include? cell }
     @goals = @grid.count { |cell| ['+', '*', '.'].include? cell }
-
-    if @boxes != @goals
-      raise 'Level error: there must be the same number of boxes and goals'
-    end
   end
 end
