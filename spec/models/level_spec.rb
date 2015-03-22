@@ -206,6 +206,17 @@ describe Level do
     level_1.should == level_2
   end
 
+  it '#clone' do
+    level     = Pack.new('spec/support/files/level.slc').levels[0]
+    new_level = level.clone
+
+    level.should == new_level
+
+    level.write_pos(1, 5, '$')
+
+    level.should_not == new_level
+  end
+
   it 'Check that solution string goes to solution level' do
     level = Pack.new('spec/support/files/level.slc').levels[0]
 

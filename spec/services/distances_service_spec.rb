@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GoalsDistanceService do
+describe DistancesService do
 
   context "#valid?" do
     it "positive" do
@@ -17,14 +17,14 @@ describe GoalsDistanceService do
               "    #######        "
 
       level = Level.new(text)
-      expect { GoalsDistanceService.new(level).should }.to_not raise_error
+      expect { DistancesService.new(level).should }.to_not raise_error
     end
 
     it "negative" do
       level = Pack.new('spec/support/files/level.slc').levels[0]
 
       message = 'Error: Assume the level contains only one box and no goals'
-      expect { GoalsDistanceService.new(level).should }.to raise_error message
+      expect { DistancesService.new(level).should }.to raise_error message
     end
   end
 
@@ -40,13 +40,13 @@ describe GoalsDistanceService do
     level = Level.new(text)
     i     = Float::INFINITY
 
-    GoalsDistanceService.new(level).run.should == [       2, 3, 4,
+    DistancesService.new(level).run.should == [       2, 3, 4,
                                                           1, 2, 3,
                                                     2, 1, 0, 1, 2,
                                                     3, 2, 1,
                                                     4, 3, 2       ]
 
-    #GoalsDistanceService.new(level).run.should == [       2, i, i,
+    #DistancesService.new(level).run.should == [       2, i, i,
     #                                                      1, i, i,
     #                                                4, 3, 0, 1, 2,
     #                                                i, i, 3,
@@ -65,7 +65,7 @@ describe GoalsDistanceService do
     level = Level.new(text)
     i     = Float::INFINITY
 
-    GoalsDistanceService.new(level).run.should == [       2, i, i,
+    DistancesService.new(level).run.should == [       2, i, i,
                                                           1, i, i,
                                                     4, 3, 0, 1, 2,
                                                     i, i, 3,
@@ -84,7 +84,7 @@ describe GoalsDistanceService do
     level = Level.new(text)
     i     = Float::INFINITY
 
-    GoalsDistanceService.new(level).run.should == [       4, i, i,
+    DistancesService.new(level).run.should == [       4, i, i,
                                                           3, i, i,
                                                     2, 1, 0, 3, 4,
                                                     i, i, 1,

@@ -35,6 +35,8 @@ class Level
       initialize_grid_from_text(level)
     elsif level.is_a? Node
       initialize_grid_from_node(level)
+    elsif level.is_a? Level
+      initialize_grid_from_level(level)
     end
 
     initialize_pusher_position
@@ -175,6 +177,10 @@ class Level
   # compare on the grid only!
   def ==(other_level)
     @grid == other_level.grid
+  end
+
+  def clone
+    Level.new(to_s)
   end
 
   def self.inside_cells
