@@ -53,7 +53,7 @@ describe GoalsDistanceService do
     #                                                i, i, 4        ]
   end
 
-  it '#run (2)' do
+  it '#run (2)', :pending => true do
     text = "  #####\n"\
            "  #   #\n"\
            "###   #\n"\
@@ -72,7 +72,7 @@ describe GoalsDistanceService do
                                                     i, i, 4        ]
   end
 
-  it '#run (3)' do
+  it '#run (3)', :pending => true do
     text = "  #####\n"\
            "  #   #\n"\
            "###  @#\n"\
