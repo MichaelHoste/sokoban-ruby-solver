@@ -1,10 +1,10 @@
 class Node
 
-  attr_reader :pusher_zone, :boxes_zone
+  attr_reader :boxes_zone, :pusher_zone
 
-  def initialize(pusher_zone, boxes_zone)
-    @pusher_zone = pusher_zone
+  def initialize(boxes_zone, pusher_zone)
     @boxes_zone  = boxes_zone
+    @pusher_zone = pusher_zone
   end
 
   # def solution?

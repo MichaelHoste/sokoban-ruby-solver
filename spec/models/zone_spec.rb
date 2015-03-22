@@ -72,7 +72,7 @@ describe Zone do
                           "    #######        "\
     end
 
-    it "creates custom zone with numbes" do
+    it "creates custom zone with numbers" do
       zone = Zone.new(@level, Zone::CUSTOM_ZONE, :number => 4666327499276288)
 
 

@@ -61,7 +61,23 @@ describe Level do
                          "    #######        "\
   end
 
-  it 'initialize (node)', :pending => true do
+  it 'initialize (node)' do
+    level       = Pack.new('spec/support/files/level.slc').levels[0]
+    boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
+    pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
+    node        = Node.new(boxes_zone, pusher_zone)
+
+    Level.new(node).to_s.should == "    #####          \n"\
+                                   "    #   #          \n"\
+                                   "    #$  #          \n"\
+                                   "  ###  $##         \n"\
+                                   "  #  $ $@#         \n"\
+                                   "### # ## #   ######\n"\
+                                   "#   # ## #####  ..#\n"\
+                                   "# $  $          ..#\n"\
+                                   "##### ### # ##  ..#\n"\
+                                   "    #     #########\n"\
+                                   "    #######        "\
   end
 
   it 'raise error when loading' do
