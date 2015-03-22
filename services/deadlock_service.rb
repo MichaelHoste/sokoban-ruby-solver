@@ -1,16 +1,16 @@
-class CornerDeadlock < Deadlock
+class DeadlockService
 
-  attr_reader :deadlock_positions
+  attr_reader :level, :deadlock_positions
 
   def initialize(level)
-    super
-
+    @level              = level
     @deadlock_positions = []
-    @deadlock_positions += corner_deadlock_positions
-    @deadlock_positions += line_deadlock_positions
   end
 
-  def deadlocked?(node)
+  def run
+    @deadlock_positions += corner_deadlock_positions
+    @deadlock_positions += line_deadlock_positions
+    @deadlock_positions
   end
 
   private
@@ -19,9 +19,9 @@ class CornerDeadlock < Deadlock
   def corner_deadlock_positions
     positions = []
 
-    (0..level.rows-1).each do |m|
-      (0..level.cols-1).each do |n|
-        cell = level.read_pos(m, n)
+    (0..@level.rows-1).each do |m|
+      (0..@level.cols-1).each do |n|
+        cell = @level.read_pos(m, n)
         if ![' ', '#', '.', '*', '+'].include? cell
           if in_corner?(m, n)
             positions << { :m => m, :n => n }
@@ -56,15 +56,15 @@ class CornerDeadlock < Deadlock
         :n => corner_pos[:n]
       }
 
-      cell = level.read_pos(cell_pos[:m], cell_pos[:n])
+      cell = @level.read_pos(cell_pos[:m], cell_pos[:n])
 
       while cell != '#'
-        escape[:up]   = true if level.read_pos(cell_pos[:m] - 1, cell_pos[:n]) != '#'
-        escape[:down] = true if level.read_pos(cell_pos[:m] + 1, cell_pos[:n]) != '#'
+        escape[:up]   = true if @level.read_pos(cell_pos[:m] - 1, cell_pos[:n]) != '#'
+        escape[:down] = true if @level.read_pos(cell_pos[:m] + 1, cell_pos[:n]) != '#'
         escape[:goal] = true if ['.', '*', '+'].include? cell
 
         cell_pos[:n] += 1
-        cell         = level.read_pos(cell_pos[:m], cell_pos[:n])
+        cell         = @level.read_pos(cell_pos[:m], cell_pos[:n])
       end
 
       # Mark horizontal line if up or down is full of walls and has no goal
@@ -74,7 +74,7 @@ class CornerDeadlock < Deadlock
           :n => corner_pos[:n]
         }
 
-        while level.read_pos(cell_pos[:m], cell_pos[:n]) != '#'
+        while @level.read_pos(cell_pos[:m], cell_pos[:n]) != '#'
           if !corner_deadlock_positions.include?(cell_pos) && !line_deadlock_positions.include?(cell_pos)
             line_deadlock_positions << {
               :m => cell_pos[:m],
@@ -96,15 +96,15 @@ class CornerDeadlock < Deadlock
         :n => corner_pos[:n]
       }
 
-      cell = level.read_pos(cell_pos[:m], cell_pos[:n])
+      cell = @level.read_pos(cell_pos[:m], cell_pos[:n])
 
       while cell != '#'
-        escape[:left]  = true if level.read_pos(cell_pos[:m], cell_pos[:n] - 1) != '#'
-        escape[:right] = true if level.read_pos(cell_pos[:m], cell_pos[:n] + 1) != '#'
+        escape[:left]  = true if @level.read_pos(cell_pos[:m], cell_pos[:n] - 1) != '#'
+        escape[:right] = true if @level.read_pos(cell_pos[:m], cell_pos[:n] + 1) != '#'
         escape[:goal]  = true if ['.', '*', '+'].include? cell
 
         cell_pos[:m] += 1
-        cell         = level.read_pos(cell_pos[:m], cell_pos[:n])
+        cell         = @level.read_pos(cell_pos[:m], cell_pos[:n])
       end
 
       # Mark vertical line if left or right is full of walls and has no goal
@@ -114,7 +114,7 @@ class CornerDeadlock < Deadlock
           :n => corner_pos[:n]
         }
 
-        while level.read_pos(cell_pos[:m], cell_pos[:n]) != '#'
+        while @level.read_pos(cell_pos[:m], cell_pos[:n]) != '#'
           if !corner_deadlock_positions.include?(cell_pos) && !line_deadlock_positions.include?(cell_pos)
             line_deadlock_positions << {
               :m => cell_pos[:m],
@@ -130,10 +130,10 @@ class CornerDeadlock < Deadlock
   end
 
   def in_corner?(m, n)
-    l = level.read_pos(m, n-1)
-    r = level.read_pos(m, n+1)
-    u = level.read_pos(m-1, n)
-    d = level.read_pos(m+1, n)
+    l = @level.read_pos(m, n-1)
+    r = @level.read_pos(m, n+1)
+    u = @level.read_pos(m-1, n)
+    d = @level.read_pos(m+1, n)
 
     (u == '#' && l == '#') || (u == '#' && r == '#')  || (d == '#' && l == '#') || (d == '#' && r == '#')
   end

@@ -12,10 +12,10 @@ class Zone
     @type  = type
     @zone  = 0
 
-    initialize_boxes_zone                       if @type == BOXES_ZONE
-    initialize_pusher_zone                      if @type == PUSHER_ZONE
-    initialize_goal_zone                        if @type == GOALS_ZONE
-    initialize_custom_zone(options[:positions]) if @type == CUSTOM_ZONE
+    initialize_boxes_zone           if @type == BOXES_ZONE
+    initialize_pusher_zone          if @type == PUSHER_ZONE
+    initialize_goal_zone            if @type == GOALS_ZONE
+    initialize_custom_zone(options) if @type == CUSTOM_ZONE
   end
 
   def print
@@ -48,6 +48,21 @@ class Zone
     string.scan(/.{#{@level.cols}}/).join("\n")
   end
 
+  # Assume same level for speed
+  def ==(other_zone)
+    @zone = other_zone.zone
+  end
+
+  # zone intersection
+  def &(other_zone)
+    Zone.new(@level, CUSTOM_ZONE, { :number =>  @zone & other_zone.zone })
+  end
+
+  # zone union
+  def |(other_zone)
+    Zone.new(@level, CUSTOM_ZONE, { :number =>  @zone | other_zone.zone })
+  end
+
   private
 
   def initialize_boxes_zone
@@ -69,7 +84,7 @@ class Zone
                          @level.pusher[:pos_n],
                          positions)
 
-    initialize_custom_zone(positions)
+    initialize_custom_zone(:positions => positions)
   end
 
   def pusher_positions_rec(m, n, positions)
@@ -99,19 +114,25 @@ class Zone
     end
   end
 
-  def initialize_custom_zone(positions)
-    bit = 1
-    (0..@level.rows-1).each do |m|
-      (0..@level.cols-1).each do |n|
-        cell = @level.read_pos(m, n)
-        if inside_cells.include? cell
-          positions.each do |position|
-            if position[:m] == m && position[:n] == n
-              @zone += bit
-              break
+  def initialize_custom_zone(options)
+    if options[:number]
+      @zone = options[:number]
+    elsif options[:positions]
+      positions = options[:positions]
+
+      bit = 1
+      (0..@level.rows-1).each do |m|
+        (0..@level.cols-1).each do |n|
+          cell = @level.read_pos(m, n)
+          if inside_cells.include? cell
+            positions.each do |position|
+              if position[:m] == m && position[:n] == n
+                @zone += bit
+                break
+              end
             end
+            bit *= 2
           end
-          bit *= 2
         end
       end
     end

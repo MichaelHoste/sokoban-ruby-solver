@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe CornerDeadlock do
+describe DeadlockService do
   before :each do
     @level = Pack.new('data/Original.slc').levels[0]
   end
 
   it "should detect corner deadlocks" do
-    deadlock_positions = CornerDeadlock.new(@level).send(:corner_deadlock_positions)
+    deadlock_positions = DeadlockService.new(@level).send(:corner_deadlock_positions)
 
     deadlock_zone = Zone.new(@level, Zone::CUSTOM_ZONE, {
       :positions => deadlock_positions
@@ -28,7 +28,7 @@ describe CornerDeadlock do
   end
 
   it "should detect line deadlocks" do
-    deadlock_positions = CornerDeadlock.new(@level).send(:line_deadlock_positions)
+    deadlock_positions = DeadlockService.new(@level).send(:line_deadlock_positions)
 
     deadlock_zone = Zone.new(@level, Zone::CUSTOM_ZONE, {
       :positions => deadlock_positions
@@ -50,7 +50,7 @@ describe CornerDeadlock do
   end
 
   it "should detect deadlock positions of a level" do
-    deadlock_positions = CornerDeadlock.new(@level).deadlock_positions
+    deadlock_positions = DeadlockService.new(@level).run
 
     deadlock_zone = Zone.new(@level, Zone::CUSTOM_ZONE, {
       :positions => deadlock_positions

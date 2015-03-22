@@ -1,4 +1,4 @@
 require 'nokogiri'
 
-require './models/deadlock/deadlock'
-Dir.glob("./models/**/*.rb").each { |f| require f }
+Dir.glob("./services/**/*.rb").each { |f| require f }
+Dir.glob("./models/**/*.rb").each   { |f| require f }
