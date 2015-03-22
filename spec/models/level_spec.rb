@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Level do
-  it '.initialize' do
+  it '.initialize (xml_node)' do
     level = Pack.new('spec/support/files/level.slc').levels[0]
 
     level.name.should      == '1'
@@ -23,6 +23,45 @@ describe Level do
                          "##### ### #@##  ..#\n"\
                          "    #     #########\n"\
                          "    #######        "\
+  end
+
+  it '.initialize (text)' do
+    text =  "    #####          \n"\
+            "    #   #          \n"\
+            "    #$  #          \n"\
+            "  ###  $##         \n"\
+            "  #  $ $ #         \n"\
+            "### # ## #   ######\n"\
+            "#   # ## #####  ..#\n"\
+            "# $  $          ..#\n"\
+            "##### ### #@##  ..#\n"\
+            "    #     #########\n"\
+            "    #######        "\
+
+    level = Level.new(text)
+
+    level.name.should      == ''
+    level.copyright.should == ''
+    level.rows.should      == 11
+    level.cols.should      == 19
+    level.boxes.should     == 6
+    level.goals.should     == 6
+    level.pusher.should    == { :pos_m => 8, :pos_n => 11 }
+
+    level.to_s.should == "    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #  $ $ #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $          ..#\n"\
+                         "##### ### #@##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        "\
+  end
+
+  it 'initialize (node)', :pending => true do
   end
 
   it 'raise error when loading' do
@@ -130,6 +169,16 @@ describe Level do
   it '#won?' do
     level = Pack.new('spec/support/files/won_level.slc').levels[0]
     level.won?.should == true
+  end
+
+  it '#size' do
+    level = Pack.new('spec/support/files/level.slc').levels[0]
+    level.size.should == 209
+  end
+
+  it '#inside_size' do
+    level = Pack.new('spec/support/files/level.slc').levels[0]
+    level.inside_size.should == 56
   end
 
   it '#==' do

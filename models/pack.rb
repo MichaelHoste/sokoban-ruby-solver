@@ -21,7 +21,7 @@ class Pack
       @levels = []
 
       xml_pack_node.css('LevelCollection Level').each do |xml_level_node|
-        @levels << Level.new(xml_level_node.to_s)
+        @levels << Level.new(xml_level_node)
       end
     end
   end

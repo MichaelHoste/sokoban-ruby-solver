@@ -26,21 +26,20 @@ class Level
   BOX_MOVE    = 2
 
   attr_reader :name, :copyright, :rows, :cols, :grid, :boxes,
-              :goals, :pusher
+              :goals, :pusher, :size, :inside_size
 
-  def initialize(xml_level)
-    xml_level_node = Nokogiri::XML(xml_level)
-    copyright_node = xml_level_node.css('Level').attr('Copyright')
+  def initialize(level)
+    if level.is_a? Nokogiri::XML::Element
+      initialize_grid_from_xml(level)
+    elsif level.is_a? String
+      initialize_grid_from_text(level)
+    elsif level.is_a? Node
+      initialize_grid_from_node(level)
+    end
 
-    @name      = xml_level_node.css('Level').attr('Id').text.strip
-    @copyright = copyright_node ? copyright_node.text.strip : ""
-    @rows      = xml_level_node.css('Level').attr('Height').text.strip.to_i
-    @cols      = xml_level_node.css('Level').attr('Width').text.strip.to_i
-    @pusher    = {}
-
-    initialize_grid(xml_level_node)
     initialize_pusher_position
     initialize_floor
+    initialize_size
     initialize_boxes_and_goals
   end
 
@@ -151,7 +150,7 @@ class Level
       end
     end
 
-    return state
+    state
   end
 
   def won?
@@ -171,17 +170,62 @@ class Level
     @grid == other_level.grid
   end
 
+  def self.inside_cells
+    ['$', '.', '*', '@', '+', 's']
+  end
+
   private
 
-  def initialize_grid(xml_level_node)
+  def initialize_grid_from_xml(xml_level_node)
+    @rows          = xml_level_node.attr('Height').strip.to_i
+    @cols          = xml_level_node.attr('Width').strip.to_i
+    @name          = xml_level_node.attr('Id').strip
+    copyright_node = xml_level_node.attr('Copyright')
+    @copyright     = copyright_node ? copyright_node.strip : ""
+
     lines = xml_level_node.css("L").collect(&:text)
     @grid = lines.collect { |line| line.ljust @cols }.join.split('')
   end
 
+  def initialize_grid_from_text(text_level)
+    lines      = text_level.split("\n")
+    @rows      = lines.size
+    @cols      = lines.first.length
+    @name      = ''
+    @copyright = ''
+    @grid      = lines.collect { |line| line.ljust @cols }.join.split('')
+  end
+
+  # Can't get exact position of pusher from a node
+  # Take first eligible position of pusher from pusher_zone
+  def initialize_grid_from_node(node, options)
+    pusher_zone = node.pusher_zone
+    boxes_zone  = node.boxes_zone
+    level       = pusher_zone.level
+
+    @rows      = level.rows
+    @cols      = level.cols
+    @name      = level.name
+    @copyright = level.copyright
+    @grid      = level.grid.collect do |cell|
+      cell
+    end
+  end
+
+  def initialize_size
+    @size = @cols * @rows
+
+    @inside_size = @grid.count do |cell|
+      Level.inside_cells.include? cell
+    end
+  end
+
   def initialize_pusher_position
     pos = @grid.index { |cell| ['@', '+'].include? cell }
-    @pusher[:pos_n] = pos % @cols
-    @pusher[:pos_m] = (pos / @cols).floor
+    @pusher = {
+      :pos_n => pos % @cols,
+      :pos_m => (pos / @cols).floor
+    }
   end
 
   # Transform empty spaces inside level in floor represented by 's'.
