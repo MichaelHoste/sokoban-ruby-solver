@@ -61,6 +61,8 @@ class Level
     m = @pusher[:pos_m]
     n = @pusher[:pos_n]
 
+    direction = direction.downcase
+
     # Following of the direction, test 2 cells
     if direction == 'u'
       move1 = read_pos(m-1, n)
@@ -160,6 +162,11 @@ class Level
     @grid.join.gsub('s', ' ').scan(/.{#{@cols}}/).join("\n")
   end
 
+  # compare on the grid only!
+  def ==(other_level)
+    @grid == other_level.grid
+  end
+
   private
 
   def initialize_grid(xml_level_node)
@@ -210,5 +217,9 @@ class Level
   def initialize_boxes_and_goals
     @boxes = @grid.count { |cell| ['*', '$'].include? cell }
     @goals = @grid.count { |cell| ['+', '*', '.'].include? cell }
+
+    if @boxes != @goals
+      raise 'Level error: there must be the same number of boxes and goals'
+    end
   end
 end
