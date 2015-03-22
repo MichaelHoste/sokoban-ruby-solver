@@ -15,7 +15,10 @@ class GoalsDistanceService
   private
 
   def valid?
-    @level.grid.count { |cell| ['*', '$'].include? cell } == 1
+    one_box  = @level.grid.count { |cell| ['*', '$'].include? cell      } == 1
+    no_goals = @level.grid.count { |cell| ['.', '*', '+'].include? cell } == 0
+
+    one_box && no_goals
   end
 
 end

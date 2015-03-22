@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe GoalsDistanceService do
-  # before :all do
-  #   @level = Pack.new('spec/support/files/level.slc').levels[0]
-  # end
 
   context "#valid?" do
     it "positive" do
@@ -31,19 +28,60 @@ describe GoalsDistanceService do
     end
   end
 
-  it '#run' do
+  it '#run (1)' do
     text = "  #####\n"\
-           "  #.  #\n"\
+           "  #   #\n"\
            "###   #\n"\
-           "#  *  #\n"\
+           "#  $  #\n"\
            "#   ###\n"\
-           "#@ .#  \n"\
+           "#@  #  \n"\
            "#####  "
 
     level = Level.new(text)
+    i     = Float::INFINITY
 
-    #GoalsDistanceService.new(level).run.should == [
-    #  []
-    #]
+    GoalsDistanceService.new(level).run.should == [       2, i, i,
+                                                          1, i, i,
+                                                    4, 3, 0, 1, 2,
+                                                    i, i, 3,
+                                                    i, i, 4        ]
+  end
+
+  it '#run (2)' do
+    text = "  #####\n"\
+           "  #   #\n"\
+           "###   #\n"\
+           "# @$  #\n"\
+           "#   ###\n"\
+           "#   #  \n"\
+           "#####  "
+
+    level = Level.new(text)
+    i     = Float::INFINITY
+
+    GoalsDistanceService.new(level).run.should == [       2, i, i,
+                                                          1, i, i,
+                                                    4, 3, 0, 1, 2,
+                                                    i, i, 3,
+                                                    i, i, 4        ]
+  end
+
+  it '#run (3)' do
+    text = "  #####\n"\
+           "  #   #\n"\
+           "###  @#\n"\
+           "#  $  #\n"\
+           "#   ###\n"\
+           "#   #  \n"\
+           "#####  "
+
+    level = Level.new(text)
+    i     = Float::INFINITY
+
+    GoalsDistanceService.new(level).run.should == [       4, i, i,
+                                                          3, i, i,
+                                                    2, 1, 0, 3, 4,
+                                                    i, i, 1,
+                                                    i, i, 2        ]
   end
 end
