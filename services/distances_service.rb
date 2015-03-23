@@ -98,10 +98,9 @@ class DistancesService
       if correct_pusher_position
         distances[pos][direction] = weight
 
-        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_bottom, :weight => weight + 1 }
-        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_top,    :weight => weight + 1 }
-        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_left,   :weight => weight + 1 }
-        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_right,  :weight => weight + 1 }
+        [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
+          heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => direction, :weight => weight + 1 }
+        end
       end
 
       # remove box and pusher
