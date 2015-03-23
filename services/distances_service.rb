@@ -31,9 +31,20 @@ class DistancesService
       end
     end
 
-    [:from_bottom].each do |direction|
-      heap << { :m => box_pos[:m], :n => box_pos[:n], :direction => direction, :weight => 0 }
+    [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
+      heap << {
+        :box_m     => box_pos[:m],
+        :box_n     => box_pos[:n],
+        :pusher_m  => @level.pusher[:pos_m],
+        :pusher_n  => @level.pusher[:pos_n],
+        :direction => direction,
+        :weight    => 0
+      }
     end
+
+    # remove pusher and box from level
+    @level.write_pos(@level.pusher[:pos_m], @level.pusher[:pos_n], 's')
+    @level.write_pos(box_pos[:m], box_pos[:n], 's')
 
     while heap.size > 0
       next_item = heap.min_by { |pos| pos[:weight] }
@@ -48,67 +59,54 @@ class DistancesService
   private
 
   def dijkstra(heap, distances, item)
-    pos       = item[:m]*@level.cols + item[:n]
-    cell      = @level.read_pos(item[:m], item[:n])
-    direction = item[:direction]
-    weight    = item[:weight]
+    pos          = item[:box_m]*@level.cols + item[:box_n]
+    box_cell     = @level.read_pos(item[:box_m],    item[:box_n])
+    pusher_cell  = @level.read_pos(item[:pusher_m], item[:pusher_n])
+    direction    = item[:direction]
+    weight       = item[:weight]
 
-    if ['@', '$', 's'].include?(cell) && distances[pos][direction] > weight
-      distances[pos][direction] = weight
+    if box_cell == 's' && pusher_cell == 's' && distances[pos][direction] > weight
+      # Place box and pusher
+      @level.write_pos(item[:box_m],    item[:box_n],    '$')
+      @level.write_pos(item[:pusher_m], item[:pusher_n], '@')
+      @level.send(:initialize_pusher_position)
 
-      # place box at pos
-      @level.write_pos(item[:m], item[:n], '$')
-
-      # place pusher based on last direction variable (if from_left, start left)
+      # Place new pusher (place where it will be before pushing the box in the direction)
       if direction == :from_bottom
-        @level.write_pos(item[:m] + 1, item[:n],     '@')
+        new_pusher  = { :m => item[:box_m] + 1, :n => item[:box_n] }
+        new_box_pos = { :m => item[:box_m] - 1, :n => item[:box_n] }
       elsif direction == :from_top
-        @level.write_pos(item[:m] - 1, item[:n],     '@')
+        new_pusher  = { :m => item[:box_m] - 1, :n => item[:box_n] }
+        new_box_pos = { :m => item[:box_m] + 1, :n => item[:box_n] }
       elsif direction == :from_left
-        @level.write_pos(item[:m],     item[:n] - 1, '@')
+        new_pusher  = { :m => item[:box_m], :n => item[:box_n] - 1 }
+        new_box_pos = { :m => item[:box_m], :n => item[:box_n] + 1 }
       elsif direction == :from_right
-        @level.write_pos(item[:m],     item[:n] + 1, '@')
+        new_pusher  = { :m => item[:box_m], :n => item[:box_n] + 1 }
+        new_box_pos = { :m => item[:box_m], :n => item[:box_n] - 1 }
       end
 
+      # Pusher zone from real pusher position
       pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
 
-      puts pusher_zone.to_s
+      # Zone where the pusher need to be for pushing in this direction (only 1 position)
+      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => new_pusher[:m], :n => new_pusher[:n]])
 
-      # For each move, execute only if new from_position is on pusherzone
-      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m] + 1, :n => item[:n]])
-      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
-        heap << { :m => item[:m] - 1, :n => item[:n],     :direction => :from_bottom, :weight => weight + 1 }
+      # Can the pusher push in the needed direction?
+      correct_pusher_position = (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
+
+      if correct_pusher_position
+        distances[pos][direction] = weight
+
+        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_bottom, :weight => weight + 1 }
+        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_top,    :weight => weight + 1 }
+        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_left,   :weight => weight + 1 }
+        heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => :from_right,  :weight => weight + 1 }
       end
 
-      puts custom_zone.to_s
-      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
-
-      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m] - 1, :n => item[:n]])
-      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
-        heap << { :m => item[:m] + 1, :n => item[:n],     :direction => :from_top,    :weight => weight + 1 }
-      end
-
-      puts custom_zone.to_s
-      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
-
-      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m]    , :n => item[:n] - 1])
-      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
-        heap << { :m => item[:m]    , :n => item[:n] + 1, :direction => :from_left,   :weight => weight + 1 }
-      end
-
-      puts custom_zone.to_s
-      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
-
-      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m]    , :n => item[:n] + 1])
-      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
-        heap << { :m => item[:m]    , :n => item[:n] - 1, :direction => :from_right,  :weight => weight + 1 }
-      end
-
-      puts custom_zone.to_s
-      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
-
-      # remove box from pos
-      @level.write_pos(item[:m], item[:n], 's')
+      # remove box and pusher
+      @level.write_pos(item[:box_m],    item[:box_n],    's')
+      @level.write_pos(item[:pusher_m], item[:pusher_n], 's')
     end
   end
 

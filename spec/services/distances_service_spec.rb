@@ -40,20 +40,14 @@ describe DistancesService do
     level = Level.new(text)
     i     = Float::INFINITY
 
-    DistancesService.new(level).run.should == [       2, 3, 4,
-                                                      1, 2, 3,
-                                                2, 1, 0, 1, 2,
-                                                3, 2, 1,
-                                                4, 3, 2       ]
-
-    #DistancesService.new(level).run.should == [       2, i, i,
-    #                                                      1, i, i,
-    #                                                4, 3, 0, 1, 2,
-    #                                                i, i, 3,
-    #                                                i, i, 4        ]
+    DistancesService.new(level).run.should == [       2, i, i,
+                                                      1, i, i,
+                                                4, 3, 0, 1, 2,
+                                                i, i, 3,
+                                                i, i, 4        ]
   end
 
-  it '#run (2)', :pending => true do
+  it '#run (2)' do
     text = "  #####\n"\
            "  #   #\n"\
            "###   #\n"\
@@ -72,7 +66,7 @@ describe DistancesService do
                                                 i, i, 4        ]
   end
 
-  it '#run (3)', :pending => true do
+  it '#run (3)' do
     text = "  #####\n"\
            "  #   #\n"\
            "###  @#\n"\
