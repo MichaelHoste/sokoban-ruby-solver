@@ -31,7 +31,7 @@ class DistancesService
       end
     end
 
-    [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
+    [:from_bottom].each do |direction|
       heap << { :m => box_pos[:m], :n => box_pos[:n], :direction => direction, :weight => 0 }
     end
 
@@ -106,8 +106,6 @@ class DistancesService
 
       puts custom_zone.to_s
       puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
-
-      raise
 
       # remove box from pos
       @level.write_pos(item[:m], item[:n], 's')
