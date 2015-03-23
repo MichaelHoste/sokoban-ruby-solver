@@ -35,8 +35,6 @@ class Level
       initialize_grid_from_text(level)
     elsif level.is_a? Node
       initialize_grid_from_node(level)
-    elsif level.is_a? Level
-      initialize_grid_from_level(level)
     end
 
     initialize_pusher_position
