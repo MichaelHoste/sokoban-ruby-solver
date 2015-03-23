@@ -41,10 +41,10 @@ describe DistancesService do
     i     = Float::INFINITY
 
     DistancesService.new(level).run.should == [       2, 3, 4,
-                                                          1, 2, 3,
-                                                    2, 1, 0, 1, 2,
-                                                    3, 2, 1,
-                                                    4, 3, 2       ]
+                                                      1, 2, 3,
+                                                2, 1, 0, 1, 2,
+                                                3, 2, 1,
+                                                4, 3, 2       ]
 
     #DistancesService.new(level).run.should == [       2, i, i,
     #                                                      1, i, i,
@@ -66,10 +66,10 @@ describe DistancesService do
     i     = Float::INFINITY
 
     DistancesService.new(level).run.should == [       2, i, i,
-                                                          1, i, i,
-                                                    4, 3, 0, 1, 2,
-                                                    i, i, 3,
-                                                    i, i, 4        ]
+                                                      1, i, i,
+                                                4, 3, 0, 1, 2,
+                                                i, i, 3,
+                                                i, i, 4        ]
   end
 
   it '#run (3)', :pending => true do
@@ -85,9 +85,9 @@ describe DistancesService do
     i     = Float::INFINITY
 
     DistancesService.new(level).run.should == [       4, i, i,
-                                                          3, i, i,
-                                                    2, 1, 0, 3, 4,
-                                                    i, i, 1,
-                                                    i, i, 2        ]
+                                                      3, i, i,
+                                                2, 1, 0, 3, 4,
+                                                i, i, 1,
+                                                i, i, 2        ]
   end
 end

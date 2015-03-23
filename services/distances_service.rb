@@ -57,13 +57,60 @@ class DistancesService
       distances[pos][direction] = weight
 
       # place box at pos
-      # place pusher based on direction variable (if from_left, start right)
+      @level.write_pos(item[:m], item[:n], '$')
 
-      # For each, execute only if position is on pusherzone
-      heap << { :m => item[:m] - 1, :n => item[:n],     :direction => :from_bottom, :weight => weight + 1 }
-      heap << { :m => item[:m] + 1, :n => item[:n],     :direction => :from_top,    :weight => weight + 1 }
-      heap << { :m => item[:m]    , :n => item[:n] + 1, :direction => :from_left,   :weight => weight + 1 }
-      heap << { :m => item[:m]    , :n => item[:n] - 1, :direction => :from_right,  :weight => weight + 1 }
+      # place pusher based on last direction variable (if from_left, start left)
+      if direction == :from_bottom
+        @level.write_pos(item[:m] + 1, item[:n],     '@')
+      elsif direction == :from_top
+        @level.write_pos(item[:m] - 1, item[:n],     '@')
+      elsif direction == :from_left
+        @level.write_pos(item[:m],     item[:n] - 1, '@')
+      elsif direction == :from_right
+        @level.write_pos(item[:m],     item[:n] + 1, '@')
+      end
+
+      pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
+
+      puts pusher_zone.to_s
+
+      # For each move, execute only if new from_position is on pusherzone
+      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m] + 1, :n => item[:n]])
+      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
+        heap << { :m => item[:m] - 1, :n => item[:n],     :direction => :from_bottom, :weight => weight + 1 }
+      end
+
+      puts custom_zone.to_s
+      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
+
+      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m] - 1, :n => item[:n]])
+      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
+        heap << { :m => item[:m] + 1, :n => item[:n],     :direction => :from_top,    :weight => weight + 1 }
+      end
+
+      puts custom_zone.to_s
+      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
+
+      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m]    , :n => item[:n] - 1])
+      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
+        heap << { :m => item[:m]    , :n => item[:n] + 1, :direction => :from_left,   :weight => weight + 1 }
+      end
+
+      puts custom_zone.to_s
+      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
+
+      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => item[:m]    , :n => item[:n] + 1])
+      if (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
+        heap << { :m => item[:m]    , :n => item[:n] - 1, :direction => :from_right,  :weight => weight + 1 }
+      end
+
+      puts custom_zone.to_s
+      puts ((custom_zone & pusher_zone).to_binary.scan(/1/).count == 1).to_s
+
+      raise
+
+      # remove box from pos
+      @level.write_pos(item[:m], item[:n], 's')
     end
   end
 
