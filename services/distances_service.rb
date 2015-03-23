@@ -14,8 +14,9 @@ class DistancesService
   def run
     heap      = []
     distances = []
-    box_pos   = {}
+    box       = {}
 
+    # Initialize distances and box position
     (0..@level.rows-1).each do |m|
       (0..@level.cols-1).each do |n|
         distances << {
@@ -26,15 +27,16 @@ class DistancesService
         }
 
         if @level.read_pos(m, n) == '$'
-          box_pos = { :m => m, :n => n }
+          box = { :m => m, :n => n }
         end
       end
     end
 
+    # Populate heap with first moves of box
     [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
       heap << {
-        :box_m     => box_pos[:m],
-        :box_n     => box_pos[:n],
+        :box_m     => box[:m],
+        :box_n     => box[:n],
         :pusher_m  => @level.pusher[:pos_m],
         :pusher_n  => @level.pusher[:pos_n],
         :direction => direction,
@@ -44,8 +46,9 @@ class DistancesService
 
     # remove pusher and box from level
     @level.write_pos(@level.pusher[:pos_m], @level.pusher[:pos_n], 's')
-    @level.write_pos(box_pos[:m], box_pos[:n], 's')
+    @level.write_pos(box[:m], box[:n], 's')
 
+    # Iterate through the heap starting with lover weights
     while heap.size > 0
       next_item = heap.min_by { |pos| pos[:weight] }
       heap.delete(next_item)
@@ -73,17 +76,17 @@ class DistancesService
 
       # Place new pusher (place where it will be before pushing the box in the direction)
       if direction == :from_bottom
-        new_pusher  = { :m => item[:box_m] + 1, :n => item[:box_n] }
-        new_box_pos = { :m => item[:box_m] - 1, :n => item[:box_n] }
+        new_pusher = { :m => item[:box_m] + 1, :n => item[:box_n] }
+        new_box    = { :m => item[:box_m] - 1, :n => item[:box_n] }
       elsif direction == :from_top
-        new_pusher  = { :m => item[:box_m] - 1, :n => item[:box_n] }
-        new_box_pos = { :m => item[:box_m] + 1, :n => item[:box_n] }
+        new_pusher = { :m => item[:box_m] - 1, :n => item[:box_n] }
+        new_box    = { :m => item[:box_m] + 1, :n => item[:box_n] }
       elsif direction == :from_left
-        new_pusher  = { :m => item[:box_m], :n => item[:box_n] - 1 }
-        new_box_pos = { :m => item[:box_m], :n => item[:box_n] + 1 }
+        new_pusher = { :m => item[:box_m], :n => item[:box_n] - 1 }
+        new_box    = { :m => item[:box_m], :n => item[:box_n] + 1 }
       elsif direction == :from_right
-        new_pusher  = { :m => item[:box_m], :n => item[:box_n] + 1 }
-        new_box_pos = { :m => item[:box_m], :n => item[:box_n] - 1 }
+        new_pusher = { :m => item[:box_m], :n => item[:box_n] + 1 }
+        new_box    = { :m => item[:box_m], :n => item[:box_n] - 1 }
       end
 
       # Pusher zone from real pusher position
@@ -99,7 +102,14 @@ class DistancesService
         distances[pos][direction] = weight
 
         [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
-          heap << { :box_m => new_box_pos[:m], :box_n => new_box_pos[:n], :pusher_m => item[:box_m], :pusher_n => item[:box_n], :direction => direction, :weight => weight + 1 }
+          heap << {
+            :box_m     => new_box[:m],
+            :box_n     => new_box[:n],
+            :pusher_m  => item[:box_m],
+            :pusher_n  => item[:box_n],
+            :direction => direction,
+            :weight    => weight + 1
+          }
         end
       end
 
