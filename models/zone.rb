@@ -41,6 +41,16 @@ class Zone
     @zone[@level.inside_size - position - 1] == 0
   end
 
+  def positions_of_1
+    b = to_full_binary
+    (0...b.length).find_all { |i| b[i,1] == '1' }
+  end
+
+  def positions_of_0
+    b = to_full_binary
+    (0...b.length).find_all { |i| b[i,1] == '0' }
+  end
+
   def to_s
     pos    = 0
     size   = @level.inside_size

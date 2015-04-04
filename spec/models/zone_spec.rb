@@ -153,6 +153,25 @@ describe Zone do
   end
 
   it '#bit_0?' do
+    zone = Zone.new(@level, Zone::BOXES_ZONE)
+    zone.bit_0?(0).should == true
+    zone.bit_0?(1).should == true
+    zone.bit_0?(2).should == true
+    zone.bit_0?(3).should == false
+  end
+
+  it '#positions_of_1' do
+    zone = Zone.new(@level, Zone::BOXES_ZONE)
+    zone.positions_of_1.should == [3, 8, 11, 13, 28, 31]
+  end
+
+  it '#positions_of_0' do
+    zone = Zone.new(@level, Zone::BOXES_ZONE)
+    zone.positions_of_0.should == [0, 1, 2, 4, 5, 6, 7, 9, 10, 12, 14, 15, 16,
+                                   17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
+                                   29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+                                   41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
+                                   52, 53, 54, 55]
   end
 
   it '#to_binary' do
