@@ -1,4 +1,11 @@
-class MinimalBoxesToGoalsDistanceService
+# Get the minimal cost to put all the boxes to the goals
+#
+# No penalities: each box is directed to a different goal but there isn't
+#                any other box in the way.
+#
+# use the hungarian algorithm (http://en.wikipedia.org/wiki/Hungarian_algorithm)
+
+class BoxesToGoalsMinimalCostService
 
   def initialize(node, distances_for_zone)
     @node        = node
