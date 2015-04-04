@@ -9,23 +9,25 @@ class LevelDistancesService
     empty_level(@level)
   end
 
-  def run(type = :for_zone)
-    distances = initialize_distances
+  def run
+    @distances = initialize_distances
 
     (0..@level.size-1).each do |pusher_index|
       (0..@level.size-1).each do |box_index|
         result = compute_distances(pusher_index, box_index)
-        distances[pusher_index][box_index] = result
+        @distances[pusher_index][box_index] = result
       end
     end
 
-    if type == :for_zone
-      format_distances_for_zone(distances)
-    elsif type == :for_level
-      distances
-    else
-      nil
-    end
+    self
+  end
+
+  def distances_for_level
+    @distances
+  end
+
+  def distances_for_zone
+    @zone_distances ||= format_distances_for_zone(@distances)
   end
 
   private
@@ -56,31 +58,36 @@ class LevelDistancesService
   end
 
   def format_distances_for_zone(distances)
+    inside_cells = Level.inside_cells
+
     pusher_index = -1
-    distances = distances.reject do |pusher_array|
+
+    distances.collect do |pusher_array|
       pusher_index += 1
-      !Level.inside_cells.include?(@level.grid[pusher_index])
-    end
+      if inside_cells.include?(@level.grid[pusher_index])
+        box_index = -1
 
-    distances.each_with_index do |pusher_array, pusher_index|
-      box_index = -1
-      distances[pusher_index] = pusher_array.reject do |box_array|
-        box_index += 1
-        !Level.inside_cells.include?(@level.grid[box_index])
+        pusher_array.collect do |box_array|
+          box_index += 1
+          if inside_cells.include?(@level.grid[box_index])
+            goal_index = -1
+
+            box_array.collect do |goal_array|
+              goal_index += 1
+              if inside_cells.include?(@level.grid[goal_index])
+                goal_array
+              else
+                nil
+              end
+            end.compact
+          else
+            nil
+          end
+        end.compact
+      else
+        nil
       end
-    end
-
-    distances.each_with_index do |pusher_array, pusher_index|
-      pusher_array.each_with_index do |box_array, box_index|
-        goal_index = -1
-        distances[pusher_index][box_index] = box_array.reject do |goal_array|
-          goal_index += 1
-          !Level.inside_cells.include?(@level.grid[goal_index])
-        end
-      end
-    end
-
-    distances
+    end.compact
   end
 
   def empty_level(level)
