@@ -1,5 +1,5 @@
-# Get distances from one box to any other position
-# depending on the pusher's start position
+# Get distances from one box to any other position of the level depending on
+# the pusher position
 
 class DistancesService
 
@@ -7,11 +7,11 @@ class DistancesService
     @level = level.clone
 
     if !valid?
-      raise 'Error: Assume the level contains only one box and no goals'
+      raise 'Error: Assumes the level contains only one box and one pusher (no goals)'
     end
   end
 
-  def run
+  def run(type = :for_zone)
     heap      = []
     distances = []
     box       = {}
@@ -56,7 +56,11 @@ class DistancesService
       dijkstra(heap, distances, next_item)
     end
 
-    format_distances(distances)
+    if [:for_zone, :for_level].include? type
+      send("format_distances_#{type}", distances)
+    else
+      nil
+    end
   end
 
   private
@@ -119,8 +123,8 @@ class DistancesService
     end
   end
 
-  # keep only useful distances (only inside, no walls or outside)
-  def format_distances(distances)
+  # keep only useful distances for zones (only inside, no walls or outside)
+  def format_distances_for_zone(distances)
     values = []
 
     distances.each_with_index do |distance, i|
@@ -133,11 +137,25 @@ class DistancesService
     values
   end
 
-  def valid?
-    one_box  = @level.grid.count { |cell| ['*', '$'].include? cell      } == 1
-    no_goals = @level.grid.count { |cell| ['.', '*', '+'].include? cell } == 0
+  # keep only useful distances for levels (every position)
+  def format_distances_for_level(distances)
+    values = []
 
-    one_box && no_goals
+    distances.each do |distance|
+      values << [ distance[:from_left], distance[:from_right],
+                  distance[:from_top], distance[:from_bottom] ].min
+    end
+
+    values
+  end
+
+  def valid?
+    one_box        = @level.grid.count { |cell| ['*', '$'].include? cell      }    == 1
+    no_goals       = @level.grid.count { |cell| ['.', '*', '+'].include? cell }    == 0
+    one_pusher     = @level.grid.count { |cell| '@' == cell                   }    == 1
+    correct_pusher = @level.read_pos(@level.pusher[:pos_m], @level.pusher[:pos_n]) == '@'
+
+    one_box && no_goals && one_pusher && correct_pusher
   end
 
 end
