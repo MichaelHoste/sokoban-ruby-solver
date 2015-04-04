@@ -1,7 +1,7 @@
-# Get distances from one box to any other position of the level depending on
-# the pusher position
+# From a level with one pusher and one box, compute number of pushes to any
+# position from the level
 
-class DistancesService
+class BoxDistancesService
 
   def initialize(level)
     @level = level.clone

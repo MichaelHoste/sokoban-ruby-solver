@@ -210,8 +210,9 @@ class Level
   # Can't get exact position of pusher from a node
   # Take first eligible position of pusher from pusher_zone
   def initialize_grid_from_node(node)
-    pusher_zone = node.pusher_zone
     boxes_zone  = node.boxes_zone
+    goals_zone  = node.goals_zone
+    pusher_zone = node.pusher_zone
     level       = pusher_zone.level
 
     @rows      = level.rows
@@ -222,16 +223,19 @@ class Level
     pos         = 0
     pusher_flag = false
     @grid = level.grid.collect do |cell|
-      # Only keep goals
-      if ['@', '$'].include? cell
+      # Only keep empty spaces
+      if ['@', '$', '*', '+'].include? cell
         new_cell = 's'
-      elsif ['*', '+'].include? cell
-        new_cell = '.'
       else
         new_cell = cell
       end
 
       if Level.inside_cells.include? new_cell
+        # Place goals from zone
+        if goals_zone.bit_1?(pos)
+          new_cell = '.'
+        end
+
         # Place boxes from zone
         if boxes_zone.bit_1?(pos)
           new_cell = new_cell == '.' ? '*' : '$'
