@@ -20,7 +20,7 @@ class Zone
 
   # Assume same level for speed
   def ==(other_zone)
-    @zone = other_zone.zone
+    @zone == other_zone.zone
   end
 
   # zone intersection

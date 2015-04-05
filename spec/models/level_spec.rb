@@ -66,7 +66,7 @@ describe Level do
     boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
     goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
     pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
-    node        = Node.new(boxes_zone, goals_zone, pusher_zone)
+    node        = Node.new([boxes_zone, goals_zone, pusher_zone])
 
     Level.new(node).to_s.should == "    #####          \n"\
                                    "    #   #          \n"\

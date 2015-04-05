@@ -17,18 +17,28 @@ class BoxesToGoalsMinimalCostService
   end
 
   def run
-    pusher_position = pusher_zone.positions_of_1.first
-    boxes_positions = boxes_zone.positions_of_1
-    goals_positions = goals_zone.positions_of_1
-
-    # Create matrix like this
-    #
-    #       goal1 goal2 goal3
-    # box1    4     3     1
-    # box2    3     6     4
-    # box3    3     7     3
+    matrix   = create_costs_matrix
+    munkres  = Munkres.new(matrix)
+    pairings = munkres.find_pairings
   end
 
   private
 
+  # Create matrix like this
+  #
+  #       goal1 goal2 goal3
+  # box1    4     3     1
+  # box2    3     6     4
+  # box3    3     7     3
+  def create_costs_matrix
+    pusher_position = @pusher_zone.positions_of_1.first
+    boxes_positions = @boxes_zone.positions_of_1
+    goals_positions = @goals_zone.positions_of_1
+
+    boxes_positions.collect do |box_position|
+      goals_positions.collect do |goal_position|
+        @distances[pusher_position][box_position][goal_position]
+      end
+    end
+  end
 end

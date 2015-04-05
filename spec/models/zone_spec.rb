@@ -137,7 +137,7 @@ describe Zone do
 
   it '#| (2)' do
     zone_1 = Zone.new(@level, Zone::PUSHER_ZONE)
-    zone_2 = Zone.new(@level, Zone::BOXES_ZONE)
+    zone_2 = Zone.new(@level, Zone::GOALS_ZONE)
 
     zone = zone_1 | zone_2
 

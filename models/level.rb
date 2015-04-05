@@ -213,7 +213,7 @@ class Level
     boxes_zone  = node.boxes_zone
     goals_zone  = node.goals_zone
     pusher_zone = node.pusher_zone
-    level       = pusher_zone.level
+    level       = node.level
 
     @rows      = level.rows
     @cols      = level.cols
