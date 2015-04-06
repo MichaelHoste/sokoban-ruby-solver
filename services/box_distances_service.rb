@@ -52,7 +52,6 @@ class BoxDistancesService
     # Iterate through the heap starting with lover weights
     i = 1
     while heap.size > 0
-      @i += 1
       i += 1
       next_item = heap.min_by { |pos| pos[:weight] }
       heap.delete(next_item)

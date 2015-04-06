@@ -8,9 +8,10 @@ class Zone
   attr_reader :level, :type, :zone
 
   def initialize(level, type = BOXES_ZONE, options = {})
-    @level = level
-    @type  = type
-    @zone  = 0
+    @level        = level
+    @type         = type
+    @zone         = 0
+    @inside_cells = Level.inside_cells
 
     initialize_boxes_zone           if @type == BOXES_ZONE
     initialize_pusher_zone          if @type == PUSHER_ZONE
@@ -57,7 +58,7 @@ class Zone
     string = ""
 
     @level.grid.each do |char|
-      if Level.inside_cells.include? char
+      if @inside_cells.include? char
         string += (@zone[size-pos-1] == 1 ? 'x' : ' ')
         pos += 1
       else
@@ -87,7 +88,7 @@ class Zone
   def initialize_boxes_zone
     bit = 2 ** (@level.inside_size - 1)
     @level.grid.each do |char|
-      if Level.inside_cells.include? char
+      if @inside_cells.include? char
         if ['$', '*'].include? char
           @zone += bit
         end
@@ -109,7 +110,7 @@ class Zone
   def pusher_positions_rec(m, n, positions)
     cell = @level.read_pos(m, n)
 
-    if !positions.include?({ :m => m, :n => n }) && Level.inside_cells.include?(cell)
+    if !positions.include?({ :m => m, :n => n }) && @inside_cells.include?(cell)
       positions << { :m => m, :n => n }
 
       if !['$', '*'].include? cell
@@ -124,7 +125,7 @@ class Zone
   def initialize_goal_zone
     bit = 2 ** (@level.inside_size - 1)
     @level.grid.each do |char|
-      if Level.inside_cells.include? char
+      if @inside_cells.include? char
         if ['.', '*', '+'].include? char
           @zone += bit
         end
@@ -169,7 +170,7 @@ class Zone
     (0..@level.rows-1).each do |m|
       (0..@level.cols-1).each do |n|
         cell = @level.read_pos(m, n)
-        if Level.inside_cells.include? cell
+        if @inside_cells.include? cell
           if level_positions.any? && level_positions.first[:m] == m && level_positions.first[:n] == n
             zone_positions << zone_position
             level_positions.shift
