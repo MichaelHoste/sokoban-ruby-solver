@@ -13,32 +13,79 @@ class NodeChildsService
   end
 
   def run
-    # childs = []
+    childs = []
 
-    # reachable_boxes_zone = @pusher_zone & @boxes_zone
+    reachable_boxes_zone = @pusher_zone & @boxes_zone
 
-    # # create special level where pusher_zone represents goals
-    # # and only reachable boxes are presents
-    # stripped_node = Node.new([
-    #   reachable_boxes_zone,
-    #   @pusher_zone,
-    #   @pusher_zone
-    # ])
-    # stripped_level = Level.new(stripped_node)
+    @level.zone_pos_to_level_pos.each_pair do |zone_pos, level_pos|
+      if reachable_boxes_zone.bit_1?(zone_pos)
+        [
+          {
+            :ahead_pos  => level_pos - 1,
+            :behind_pos => level_pos + 1
+          },
+          {
+            :ahead_pos  => level_pos + 1,
+            :behind_pos => level_pos - 1
+          },
+          {
+            :ahead_pos  => level_pos - @level.cols,
+            :behind_pos => level_pos + @level.cols
+          },
+          { :ahead_pos  => level_pos + @level.cols,
+            :behind_pos => level_pos - @level.cols
+          }
+        ].each do |move|
+          ahead_pos  = move[:ahead_pos]
+          behind_pos = move[:behind_pos]
 
-    # (0..@rows-1).each do |m|
-    #   (0..@rows-1).each do |n|
-    #     cell = @level.read_pos(m, n)
+          not_wall                = @level.grid[ahead_pos] != '#'
+          correct_pusher_position = @pusher_zone.bit_1?(@level.level_pos_to_zone_pos[ahead_pos]) if not_wall
+          nothing_behind_box      = ['.', '@', '+', 's'].include?(@level.grid[behind_pos])
 
-    #     if cell == '*'
-    #       if ['+', '.'].include? @level.read_pos(m-1, n) && @level.read_pos(m+1, n) == 's'
-    #         childs << Node.new([
-    #           @goals_zone, @
-    #         ])
-    #       end
-    #     end
-    #   end
-    # end
+          if not_wall && correct_pusher_position && nothing_behind_box
+            new_level = @level.clone
+
+            # Remove box from old position
+            if new_level.grid[level_pos] == '*'
+              new_level.grid[level_pos] = '.'
+            else
+              new_level.grid[level_pos] = 's'
+            end
+
+            # remove pusher from old position
+            old_pusher_m = new_level.pusher[:pos_m]
+            old_pusher_n = new_level.pusher[:pos_n]
+
+            if new_level.read_pos(old_pusher_m, old_pusher_n) == '+'
+              new_level.write_pos(old_pusher_m, old_pusher_n, '.')
+            else
+              new_level.write_pos(old_pusher_m, old_pusher_n, 's')
+            end
+
+            # place pusher to new position
+            if new_level.grid[level_pos] == '.'
+              new_level.grid[level_pos] = '+'
+            else
+              new_level.grid[level_pos] = '@'
+            end
+
+            new_level.send(:initialize_pusher_position)
+
+            # Add box to new position
+            if new_level.grid[behind_pos] == '.'
+              new_level.grid[behind_pos] = '*'
+            else
+              new_level.grid[behind_pos] = '$'
+            end
+
+            childs << new_level
+          end
+        end
+      end
+    end
+
+    childs
   end
 
   private

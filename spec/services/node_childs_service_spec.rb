@@ -6,9 +6,11 @@ describe NodeChildsService do
     level = Pack.new('spec/support/files/level.slc').levels[0]
     node  = level.to_node
 
-    puts node.to_s
+    #puts node.to_s
 
-    puts NodeChildsService.new(node).run
+    NodeChildsService.new(node).run.each do |child|
+      puts child.to_s
+    end
   end
 
 end

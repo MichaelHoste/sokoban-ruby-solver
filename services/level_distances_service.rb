@@ -105,13 +105,9 @@ class LevelDistancesService
 
       pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
 
-      zone_pos = 0
-      @level.grid.each_with_index do |cell, i|
-        if @inside_cells.include? cell
-          if pusher_zone.bit_1?(zone_pos)
-            @distances[i][box_index] = result
-          end
-          zone_pos += 1
+      @level.zone_pos_to_level_pos.each_pair do |zone_pos, level_pos|
+        if pusher_zone.bit_1?(zone_pos)
+          @distances[level_pos][box_index] = result
         end
       end
 
