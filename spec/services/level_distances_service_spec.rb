@@ -4,7 +4,7 @@ describe LevelDistancesService do
 
   i = Float::INFINITY
 
-  context "#run" do
+  context "#run", :focus => true do
     text = "  #####\n"\
            "  #   #\n"\
            "###   #\n"\

@@ -107,12 +107,12 @@ class Zone
   end
 
   def pusher_positions_rec(m, n, positions)
-    if !positions.include?({ :m => m, :n => n })
+    cell = @level.read_pos(m, n)
+
+    if !positions.include?({ :m => m, :n => n }) && Level.inside_cells.include?(cell)
       positions << { :m => m, :n => n }
 
-      cell = @level.read_pos(m, n)
-
-      if ['.', '@', '+', 's'].include?(cell)
+      if !['$', '*'].include? cell
         pusher_positions_rec(m+1, n,   positions)
         pusher_positions_rec(m-1, n,   positions)
         pusher_positions_rec(m,   n+1, positions)
@@ -137,23 +137,48 @@ class Zone
     if options[:number]
       @zone = options[:number]
     elsif options[:positions]
-      positions = options[:positions]
+      positions = deep_copy(options[:positions])
+      positions = convert_to_zone_positions(positions)
 
       bit = 2 ** (@level.inside_size - 1)
-      (0..@level.rows-1).each do |m|
-        (0..@level.cols-1).each do |n|
-          cell = @level.read_pos(m, n)
-          if Level.inside_cells.include? cell
-            positions.each do |position|
-              if position[:m] == m && position[:n] == n
-                @zone += bit
-                break
-              end
-            end
-            bit /= 2
+
+      (0..@level.inside_size-1).each do |zone_pos|
+        if positions.include? zone_pos
+          positions.delete(zone_pos)
+          @zone += bit
+        end
+        bit /= 2
+      end
+    end
+  end
+
+  # http://stackoverflow.com/a/4157635/1243212
+  def deep_copy(array)
+    Marshal.load(Marshal.dump(array))
+  end
+
+  def convert_to_zone_positions(level_positions)
+    zone_positions = []
+    zone_position  = 0
+    cols           = @level.cols
+
+    level_positions.sort! do |p1, p2|
+      p1[:m] * cols + p1[:n] <=> p2[:m] * cols + p2[:n]
+    end
+
+    (0..@level.rows-1).each do |m|
+      (0..@level.cols-1).each do |n|
+        cell = @level.read_pos(m, n)
+        if Level.inside_cells.include? cell
+          if level_positions.any? && level_positions.first[:m] == m && level_positions.first[:n] == n
+            zone_positions << zone_position
+            level_positions.shift
           end
+          zone_position += 1
         end
       end
     end
+
+    zone_positions
   end
 end

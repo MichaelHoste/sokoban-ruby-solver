@@ -5,6 +5,8 @@
 #
 # use the hungarian algorithm (http://en.wikipedia.org/wiki/Hungarian_algorithm)
 
+require 'munkres'
+
 class BoxesToGoalsMinimalCostService
 
   def initialize(node, distances_for_zone)
@@ -20,6 +22,7 @@ class BoxesToGoalsMinimalCostService
     matrix   = create_costs_matrix
     munkres  = Munkres.new(matrix)
     pairings = munkres.find_pairings
+    munkres.total_cost_of_pairing
   end
 
   private

@@ -1,9 +1,12 @@
 require 'spec_helper'
 
 describe Node do
+  before :all do
+    @level = Pack.new('spec/support/files/level.slc').levels[0]
+  end
+
   it '.initialize (level)' do
-    level = Pack.new('spec/support/files/level.slc').levels[0]
-    node  = Node.new(level)
+    node  = Node.new(@level)
 
     node.boxes_zone.to_s.should == "    #####          \n"\
                                    "    #   #          \n"\
@@ -43,11 +46,9 @@ describe Node do
   end
 
   it '.initialize (zones)' do
-    level = Pack.new('spec/support/files/level.slc').levels[0]
-
-    boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
-    goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
-    pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
+    boxes_zone  = Zone.new(@level, Zone::BOXES_ZONE)
+    goals_zone  = Zone.new(@level, Zone::GOALS_ZONE)
+    pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
 
     node  = Node.new([boxes_zone, goals_zone, pusher_zone])
 
@@ -95,8 +96,7 @@ describe Node do
   end
 
   it '#to_s' do
-    level = Pack.new('spec/support/files/level.slc').levels[0]
-    node  = Node.new(level)
+    node  = Node.new(@level)
 
     node.to_s.should ==  "    #####          \n"\
                          "    #   #          \n"\
@@ -111,13 +111,30 @@ describe Node do
                          "    #######        "
   end
 
-  it '#==' do
-    level  = Pack.new('spec/support/files/level.slc').levels[0]
-    node_1 = Node.new(level)
+  it '#to_level' do
+    node  = Node.new(@level)
 
-    boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
-    goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
-    pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
+    target_level = Level.new("    #####          \n"\
+                             "    #   #          \n"\
+                             "    #$  #          \n"\
+                             "  ###  $##         \n"\
+                             "  #  $ $@#         \n"\
+                             "### # ## #   ######\n"\
+                             "#   # ## #####  ..#\n"\
+                             "# $  $          ..#\n"\
+                             "##### ### # ##  ..#\n"\
+                             "    #     #########\n"\
+                             "    #######        ")
+
+    node.to_level.should == target_level
+  end
+
+  it '#==' do
+    node_1 = Node.new(@level)
+
+    boxes_zone  = Zone.new(@level, Zone::BOXES_ZONE)
+    goals_zone  = Zone.new(@level, Zone::GOALS_ZONE)
+    pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
 
     node_2 = Node.new([boxes_zone, goals_zone, pusher_zone])
 

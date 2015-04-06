@@ -14,8 +14,13 @@ class LevelDistancesService
 
     (0..@level.size-1).each do |pusher_index|
       (0..@level.size-1).each do |box_index|
-        result = compute_distances(pusher_index, box_index)
-        @distances[pusher_index][box_index] = result
+        if @distances[pusher_index][box_index].nil?
+          result = compute_distances(pusher_index, box_index)
+          @distances[pusher_index][box_index] = result
+
+          # to avoid similar recomputation of distances
+          apply_result_to_similar_pusher_positions(pusher_index, box_index, result)
+        end
       end
     end
 
@@ -88,6 +93,32 @@ class LevelDistancesService
         nil
       end
     end.compact
+  end
+
+  def apply_result_to_similar_pusher_positions(pusher_index, box_index, result)
+    pusher_inside = Level.inside_cells.include? @level.grid[pusher_index]
+    box_inside    = Level.inside_cells.include? @level.grid[box_index]
+
+    if pusher_inside && box_inside && pusher_index != box_index
+      @level.grid[pusher_index] = '@'
+      @level.grid[box_index]    = '$'
+      @level.send(:initialize_pusher_position)
+
+      pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
+
+      zone_pos = 0
+      @level.grid.each_with_index do |cell, i|
+        if Level.inside_cells.include? cell
+          if pusher_zone.bit_1?(zone_pos)
+            @distances[i][box_index] = result
+          end
+          zone_pos += 1
+        end
+      end
+
+      @level.grid[pusher_index] = 's'
+      @level.grid[box_index]    = 's'
+    end
   end
 
   def empty_level(level)

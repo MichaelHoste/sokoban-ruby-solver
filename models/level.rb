@@ -172,6 +172,10 @@ class Level
     @grid.join.gsub('s', ' ').scan(/.{#{@cols}}/).join("\n")
   end
 
+  def to_node
+    Node.new(self)
+  end
+
   # compare on the grid only!
   def ==(other_level)
     @grid == other_level.grid

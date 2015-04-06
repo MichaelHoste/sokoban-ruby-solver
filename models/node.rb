@@ -25,7 +25,11 @@ class Node
   end
 
   def to_s
-    Level.new(self).to_s
+    to_level.to_s
+  end
+
+  def to_level
+    Level.new(self)
   end
 
   def ==(other_node)
