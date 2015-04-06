@@ -138,7 +138,7 @@ class Zone
   def initialize_goal_zone
     bit = 2 ** (@level.inside_size - 1)
 
-    @level.zone_pos_to_level_pos.each_pair do |zone_pos, level_pos|
+    @level.zone_pos_to_level_pos.values.each do |level_pos|
       char = @level.grid[level_pos]
       if @inside_cells.include? char
         if ['.', '*', '+'].include? char
@@ -153,8 +153,7 @@ class Zone
     if options[:number]
       @zone = options[:number]
     elsif options[:positions]
-      positions = deep_copy(options[:positions])
-      positions = convert_to_zone_positions(positions)
+      positions = convert_to_zone_positions(options[:positions])
 
       bit = 2 ** (@level.inside_size - 1)
 
@@ -168,33 +167,11 @@ class Zone
     end
   end
 
-  # http://stackoverflow.com/a/4157635/1243212
-  def deep_copy(array)
-    Marshal.load(Marshal.dump(array))
-  end
-
   def convert_to_zone_positions(level_positions)
-    zone_positions = []
-    zone_position  = 0
-    cols           = @level.cols
+    cols = @level.cols
 
-    level_positions.sort! do |p1, p2|
-      p1[:m] * cols + p1[:n] <=> p2[:m] * cols + p2[:n]
+    level_positions.collect do |level_mn|
+      @level.level_pos_to_zone_pos[cols*level_mn[:m] + level_mn[:n]]
     end
-
-    (0..@level.rows-1).each do |m|
-      (0..@level.cols-1).each do |n|
-        cell = @level.read_pos(m, n)
-        if @inside_cells.include? cell
-          if level_positions.any? && level_positions.first[:m] == m && level_positions.first[:n] == n
-            zone_positions << zone_position
-            level_positions.shift
-          end
-          zone_position += 1
-        end
-      end
-    end
-
-    zone_positions
   end
 end
