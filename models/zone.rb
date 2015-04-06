@@ -104,14 +104,18 @@ class Zone
                          @level.pusher[:pos_n],
                          positions)
 
-    initialize_custom_zone(:positions => positions)
+    # don't use hash directly in pusher_position_rec for optimization
+    positions_hash = convert_positions_to_hash(positions)
+
+    initialize_custom_zone(:positions => positions_hash)
   end
 
   def pusher_positions_rec(m, n, positions)
-    cell = @level.read_pos(m, n)
+    cell     = @level.read_pos(m, n)
+    grid_pos = m * @level.cols + n
 
-    if cell != '#' && !positions.include?({ :m => m, :n => n })
-      positions << { :m => m, :n => n }
+    if cell != '#' && !positions.include?(grid_pos)
+      positions << grid_pos
 
       if cell != '$' && cell != '*'
         pusher_positions_rec(m+1, n,   positions)
@@ -119,6 +123,15 @@ class Zone
         pusher_positions_rec(m,   n+1, positions)
         pusher_positions_rec(m,   n-1, positions)
       end
+    end
+  end
+
+  def convert_positions_to_hash(positions)
+    positions.collect do |position|
+      {
+        :m => (position / @level.cols).floor,
+        :n => position % @level.cols
+      }
     end
   end
 

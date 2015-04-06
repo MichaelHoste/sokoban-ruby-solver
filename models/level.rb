@@ -267,8 +267,8 @@ class Level
   def initialize_pusher_position
     pos = @grid.index { |cell| ['@', '+'].include? cell }
     @pusher = {
-      :pos_n => pos % @cols,
-      :pos_m => (pos / @cols).floor
+      :pos_m => (pos / @cols).floor,
+      :pos_n => pos % @cols
     }
   end
 
