@@ -26,7 +26,8 @@ class Level
   BOX_MOVE    = 2
 
   attr_reader :name, :copyright, :rows, :cols, :grid, :boxes,
-              :goals, :pusher, :size, :inside_size
+              :goals, :pusher, :size, :inside_size,
+              :level_pos_to_zone_pos, :zone_pos_to_level_pos
 
   def initialize(level)
     if level.is_a? Nokogiri::XML::Element
@@ -41,6 +42,7 @@ class Level
     initialize_floor
     initialize_size
     initialize_boxes_and_goals
+    initialize_level_zone_positions
   end
 
   def read_pos(m, n)
@@ -309,5 +311,22 @@ class Level
   def initialize_boxes_and_goals
     @boxes = @grid.count { |cell| ['*', '$'].include? cell }
     @goals = @grid.count { |cell| ['+', '*', '.'].include? cell }
+  end
+
+  def initialize_level_zone_positions
+    @level_pos_to_zone_pos = {}
+    @zone_pos_to_level_pos = {}
+
+    zone_pos = 0
+    @grid.each_with_index do |cell, level_pos|
+      @level_pos_to_zone_pos[level_pos] = nil
+
+      if Level.inside_cells.include? cell
+        @level_pos_to_zone_pos[level_pos] = zone_pos
+        @zone_pos_to_level_pos[zone_pos]  = level_pos
+
+        zone_pos += 1
+      end
+    end
   end
 end

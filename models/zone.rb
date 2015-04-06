@@ -44,12 +44,12 @@ class Zone
 
   def positions_of_1
     b = to_full_binary
-    (0...b.length).find_all { |i| b[i,1] == '1' }
+    (0..b.length).find_all { |i| b[i,1] == '1' }
   end
 
   def positions_of_0
     b = to_full_binary
-    (0...b.length).find_all { |i| b[i,1] == '0' }
+    (0..b.length).find_all { |i| b[i,1] == '0' }
   end
 
   def to_s
@@ -137,7 +137,9 @@ class Zone
 
   def initialize_goal_zone
     bit = 2 ** (@level.inside_size - 1)
-    @level.grid.each do |char|
+
+    @level.zone_pos_to_level_pos.each_pair do |zone_pos, level_pos|
+      char = @level.grid[level_pos]
       if @inside_cells.include? char
         if ['.', '*', '+'].include? char
           @zone += bit

@@ -229,4 +229,17 @@ describe Level do
     solution.each_char { |move| level.move(move) }
     level.won?.should == true
   end
+
+  it 'Checks that zone_pos_to_level_pos and level_pos_to_zone_pos are correct' do
+    level = Pack.new('spec/support/files/level.slc').levels[0]
+
+    level.level_pos_to_zone_pos[0].should   == nil
+    level.level_pos_to_zone_pos[24].should  == 0
+    level.level_pos_to_zone_pos[25].should  == 1
+    level.level_pos_to_zone_pos.size.should == 209
+
+    level.zone_pos_to_level_pos[0].should   == 24
+    level.zone_pos_to_level_pos[1].should   == 25
+    level.zone_pos_to_level_pos.size.should == 56
+  end
 end
