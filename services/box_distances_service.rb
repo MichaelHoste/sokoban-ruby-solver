@@ -5,7 +5,6 @@ class BoxDistancesService
 
   def initialize(level)
     @level = level.clone
-    @i = 0
 
     if !valid?
       raise 'Error: Assumes the level contains only one box and one pusher (no goals)'
@@ -58,8 +57,6 @@ class BoxDistancesService
 
       dijkstra(heap, distances, next_item)
     end
-
-    puts @i
 
     if [:for_zone, :for_level].include? type
       send("format_distances_#{type}", distances)
