@@ -4,6 +4,6 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * optimize code thanks to level_pos_to_zone_pos and zone_pos_to_level_pos
+ * specs for NodeChildsService (use goals or pusher ahead and behind box to test)
  * A* (use TreeNode)
  * Specs for penalties (before writing code)
