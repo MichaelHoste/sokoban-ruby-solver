@@ -111,8 +111,8 @@ class Zone
   end
 
   def pusher_positions_rec(m, n, positions)
-    cell     = @level.read_pos(m, n)
     grid_pos = m * @level.cols + n
+    cell     = @level.grid[grid_pos]
 
     if cell != '#' && !positions.include?(grid_pos)
       positions << grid_pos

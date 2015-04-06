@@ -118,7 +118,7 @@ describe BoxDistancesService do
                                                                i, i, i, i, i, i,  i, i ]
   end
 
-  it '#run (5)', :focus => true, :profiling => true do
+  it '#run (5)' do
     level = Pack.new('spec/support/files/level.slc').levels[0]
 
     text =  "    #####          \n"\
