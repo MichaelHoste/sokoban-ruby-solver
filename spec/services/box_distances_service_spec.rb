@@ -136,7 +136,7 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level).run(:for_zone)
+    BoxDistancesService.new(level).run
                        .should == [ 4, i, i,
                                     3, i, i,
                                     2, i, i,
