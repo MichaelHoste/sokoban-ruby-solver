@@ -109,13 +109,14 @@ describe BoxDistancesService do
                                                                        0, 9,
                                                                        1, 10 ]
 
-    BoxDistancesService.new(level).run(:for_level).should == [ i, i, i, i, i, i,  i, i,
-                                                               i, i, i, i, i, 8,  9, i,
-                                                               i, 5, 4, 3, 2, 7,  8, i,
-                                                               i, i, i, i, 1, 8,  9, i,
-                                                               i, i, i, i, 0, 9,  i, i,
-                                                               i, i, i, i, 1, 10, i, i,
-                                                               i, i, i, i, i, i,  i, i ]
+    BoxDistancesService.new(level).run(:for_level)
+                       .should == [ i, i, i, i, i, i,  i, i,
+                                    i, i, i, i, i, 8,  9, i,
+                                    i, 5, 4, 3, 2, 7,  8, i,
+                                    i, i, i, i, 1, 8,  9, i,
+                                    i, i, i, i, 0, 9,  i, i,
+                                    i, i, i, i, 1, 10, i, i,
+                                    i, i, i, i, i, i,  i, i ]
   end
 
   it '#run (5)' do
@@ -135,14 +136,15 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level).run(:for_zone).should == [ 4, i, i,
-                                                              3, i, i,
-                                                              2, i, i,
-                                                        3, 2, 1, 0, 1, 2,
-                                                        i,    2,    i,
-                                                  i, i, i,    3,    i,                      16, 15, 16, 17,
-                                                  8, 7, 6, 5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-                                                              5,          i,     i,         16, 15, 16, 17,
-                                                              6, i, i, i, i ]
+    BoxDistancesService.new(level).run(:for_zone)
+                       .should == [ 4, i, i,
+                                    3, i, i,
+                                    2, i, i,
+                              3, 2, 1, 0, 1, 2,
+                              i,    2,    i,
+                        i, i, i,    3,    i,                      16, 15, 16, 17,
+                        8, 7, 6, 5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                                    5,          i,     i,         16, 15, 16, 17,
+                                    6, i, i, i, i ]
   end
 end
