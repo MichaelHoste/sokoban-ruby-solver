@@ -5,7 +5,8 @@
 class LevelDistancesService
 
   def initialize(level)
-    @level = level.clone
+    @level        = level.clone
+    @inside_cells = Level.inside_cells
     empty_level(@level)
   end
 
@@ -43,8 +44,8 @@ class LevelDistancesService
   end
 
   def compute_distances(pusher_index, box_index)
-    pusher_invalid = !Level.inside_cells.include?(@level.grid[pusher_index])
-    box_invalid    = !Level.inside_cells.include?(@level.grid[box_index])
+    pusher_invalid = !@inside_cells.include?(@level.grid[pusher_index])
+    box_invalid    = !@inside_cells.include?(@level.grid[box_index])
 
     # Cannot compute invalid pusher, or pusher and box on the same position
     if pusher_invalid || box_invalid || pusher_index == box_index
@@ -63,23 +64,21 @@ class LevelDistancesService
   end
 
   def format_distances_for_zone(distances)
-    inside_cells = Level.inside_cells
-
     pusher_index = -1
 
     distances.collect do |pusher_array|
       pusher_index += 1
-      if inside_cells.include?(@level.grid[pusher_index])
+      if @inside_cells.include?(@level.grid[pusher_index])
         box_index = -1
 
         pusher_array.collect do |box_array|
           box_index += 1
-          if inside_cells.include?(@level.grid[box_index])
+          if @inside_cells.include?(@level.grid[box_index])
             goal_index = -1
 
             box_array.collect do |goal_array|
               goal_index += 1
-              if inside_cells.include?(@level.grid[goal_index])
+              if @inside_cells.include?(@level.grid[goal_index])
                 goal_array
               else
                 nil
@@ -96,8 +95,8 @@ class LevelDistancesService
   end
 
   def apply_result_to_similar_pusher_positions(pusher_index, box_index, result)
-    pusher_inside = Level.inside_cells.include? @level.grid[pusher_index]
-    box_inside    = Level.inside_cells.include? @level.grid[box_index]
+    pusher_inside = @inside_cells.include? @level.grid[pusher_index]
+    box_inside    = @inside_cells.include? @level.grid[box_index]
 
     if pusher_inside && box_inside && pusher_index != box_index
       @level.grid[pusher_index] = '@'
@@ -108,7 +107,7 @@ class LevelDistancesService
 
       zone_pos = 0
       @level.grid.each_with_index do |cell, i|
-        if Level.inside_cells.include? cell
+        if @inside_cells.include? cell
           if pusher_zone.bit_1?(zone_pos)
             @distances[i][box_index] = result
           end
@@ -123,7 +122,7 @@ class LevelDistancesService
 
   def empty_level(level)
     @level.grid.each_with_index do |cell, i|
-      if Level.inside_cells.include? cell
+      if @inside_cells.include? cell
         @level.grid[i] = 's'
       end
     end

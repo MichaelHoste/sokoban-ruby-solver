@@ -117,4 +117,32 @@ describe BoxDistancesService do
                                                                i, i, i, i, 1, 10, i, i,
                                                                i, i, i, i, i, i,  i, i ]
   end
+
+  it '#run (5)', :focus => true do
+    level = Pack.new('spec/support/files/level.slc').levels[0]
+
+    text =  "    #####          \n"\
+            "    #   #          \n"\
+            "    #   #          \n"\
+            "  ###   ##         \n"\
+            "  #   $  #         \n"\
+            "### # ## #   ######\n"\
+            "#   # ## #####    #\n"\
+            "#                 #\n"\
+            "##### ### #@##    #\n"\
+            "    #     #########\n"\
+            "    #######        "
+
+    level = Level.new(text)
+
+    BoxDistancesService.new(level).run(:for_zone).should == [ 4, i, i,
+                                                              3, i, i,
+                                                              2, i, i,
+                                                        3, 2, 1, 0, 1, 2,
+                                                        i,    2,    i,
+                                                  i, i, i,    3,    i,                      16, 15, 16, 17,
+                                                  8, 7, 6, 5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                                                              5,          i,     i,         16, 15, 16, 17,
+                                                              6, i, i, i, i ]
+  end
 end
