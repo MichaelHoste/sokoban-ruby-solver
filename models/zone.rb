@@ -110,7 +110,7 @@ class Zone
   def pusher_positions_rec(m, n, positions)
     cell = @level.read_pos(m, n)
 
-    if !positions.include?({ :m => m, :n => n }) && @inside_cells.include?(cell)
+    if @inside_cells.include?(cell) && !positions.include?({ :m => m, :n => n })
       positions << { :m => m, :n => n }
 
       if !['$', '*'].include? cell
