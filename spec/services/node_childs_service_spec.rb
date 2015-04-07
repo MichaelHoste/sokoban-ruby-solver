@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe NodeChildsService do
+describe NodeChildrenService do
 
   describe '#run (first level)' do
     before :each do
       level    = Pack.new('spec/support/files/level.slc').levels[0]
       node     = level.to_node
-      @service = NodeChildsService.new(node).run
+      @service = NodeChildrenService.new(node).run
     end
 
     it '#levels' do
@@ -106,7 +106,7 @@ describe NodeChildsService do
 
       level    = Level.new(text)
       node     = level.to_node
-      @service = NodeChildsService.new(node).run
+      @service = NodeChildrenService.new(node).run
 
       child_levels = @service.levels
 
@@ -146,7 +146,7 @@ describe NodeChildsService do
 
       level    = Level.new(text)
       node     = level.to_node
-      @service = NodeChildsService.new(node).run
+      @service = NodeChildrenService.new(node).run
 
       child_levels = @service.levels
 
@@ -186,7 +186,7 @@ describe NodeChildsService do
 
       level    = Level.new(text)
       node     = level.to_node
-      @service = NodeChildsService.new(node).run
+      @service = NodeChildrenService.new(node).run
 
       child_levels = @service.levels
 
@@ -238,7 +238,7 @@ describe NodeChildsService do
 
       level    = Level.new(text)
       node     = level.to_node
-      @service = NodeChildsService.new(node).run
+      @service = NodeChildrenService.new(node).run
 
       child_levels = @service.levels
 

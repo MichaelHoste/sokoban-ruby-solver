@@ -4,6 +4,11 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * specs for NodeChildsService (use goals or pusher ahead and behind box to test)
- * A* (use TreeNode)
+ * check memory size of bigdecimal (and use integers if necessary)
+ * Use hashs correctly to optimize open_node time (remove node.id and find a better way (manual hashtable?))
+ * Si sous-ensemble de caisse provoque pénalité (infinie ou pas) pour toutes les
+   sous-combinaisons possibles de goals, alors l'ajouter systématiquement à l'estimation de la
+   méthode hongroise (c'est juste dans le cas où la pénalité n'est valable que
+   pour certains goals que c'est plus difficile à mettre en place)
+ * A*
  * Specs for penalties (before writing code)

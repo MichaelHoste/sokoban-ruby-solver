@@ -28,6 +28,10 @@ class Node
     to_level.to_s
   end
 
+  def id
+    boxes_zone.to_full_binary + goals_zone.to_full_binary + pusher_zone.to_full_binary
+  end
+
   def to_level
     Level.new(self)
   end

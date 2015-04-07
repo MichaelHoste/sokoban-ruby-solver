@@ -1,6 +1,6 @@
-# Find childs of a node (nodes created by 1 box push from this node)
+# Find children of a node (nodes created by 1 box push from this node)
 
-class NodeChildsService
+class NodeChildrenService
 
   def initialize(node)
     @node        = node
