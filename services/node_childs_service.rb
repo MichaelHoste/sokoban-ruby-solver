@@ -32,11 +32,8 @@ class NodeChildsService
             new_level = @level.clone
 
             remove_box_from_old_position(new_level, level_pos)
-
             remove_pusher_from_old_position(new_level)
-
             place_pusher_to_new_position(new_level, level_pos)
-
             add_box_to_new_position(new_level, behind_pos)
 
             @child_levels << new_level

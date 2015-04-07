@@ -228,5 +228,33 @@ describe NodeChildsService do
                                       "#     #\n"\
                                       "#######"
     end
+
+    it '#run when box against wall' do
+      text =  "#######\n"\
+              "#  $  #\n"\
+              "#     #\n"\
+              "#  @ $#\n"\
+              "#######"
+
+      level    = Level.new(text)
+      node     = level.to_node
+      @service = NodeChildsService.new(node).run
+
+      child_levels = @service.levels
+
+      child_levels.count.should == 2
+
+      child_levels[0].to_s.should ==  "#######\n"\
+                                      "#  @$ #\n"\
+                                      "#     #\n"\
+                                      "#    $#\n"\
+                                      "#######"
+
+      child_levels[1].to_s.should ==  "#######\n"\
+                                      "# $@  #\n"\
+                                      "#     #\n"\
+                                      "#    $#\n"\
+                                      "#######"
+    end
   end
 end
