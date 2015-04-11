@@ -7,7 +7,7 @@ class HashTable
     @table = Array.new(SIZE) { Array.new }
   end
 
-  def present?(node)
+  def include?(node)
     @table[index(node)].each do |node_from_table|
       if node_from_table == node
         return true

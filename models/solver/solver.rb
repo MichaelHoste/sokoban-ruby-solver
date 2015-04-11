@@ -1,5 +1,7 @@
 class Solver
 
+  attr_reader :tries
+
   def initialize(level)
     @level              = level
     @node               = level.to_node
@@ -8,18 +10,18 @@ class Solver
     @deadlock_positions = DeadlockService.new(@level).run
     @deadlock_zone      = Zone.new(@level, Zone::CUSTOM_ZONE, { :positions => @deadlock_positions })
     @null_zone          = Zone.new(@level, Zone::CUSTOM_ZONE, { :number => 0 })
+    @tries              = 0
   end
 
   def run
     @list       = [@root]
     @open_nodes = HashTable.new
 
-    i = 0
     while !@list.first.won? && !@list.empty?
       current = @list.shift
 
       current.children.each do |child|
-        if !@open_nodes.present?(child.node)
+        if !@open_nodes.include?(child.node)
           @open_nodes.add(child.node)
 
           if !deadlocked?(child.node)
@@ -28,14 +30,16 @@ class Solver
           end
         end
       end
-      i += 1
-      if i % 100 == 0
-        puts i
+
+      @tries += 1
+      if @tries % 100 == 0
+        puts @tries
         puts @list.first.node.to_s
       end
     end
 
-    puts @list.first.node.to_s
+    puts @tries
+    return self
   end
 
   private

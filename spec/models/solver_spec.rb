@@ -2,13 +2,15 @@ require 'spec_helper'
 
 describe Solver do
 
-  it '#run (first level)', :focus => true do
-    level = Pack.new('spec/support/files/level.slc').levels[0]
+  it '#run (first level)' do
+    level  = Pack.new('spec/support/files/level.slc').levels[0]
+    solver = Solver.new(level)
+    run    = solver.run
 
-    Solver.new(level).run
+    run.tries.should == 25453
   end
 
-  it '#run (simple level)', :pending => true do
+  it '#run (simple level)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\
@@ -19,9 +21,11 @@ describe Solver do
             "  #. ###\n"\
             "  ####  "
 
-    level = Level.new(text)
+    level  = Level.new(text)
+    solver = Solver.new(level)
+    run    = solver.run
 
-    Solver.new(level).run
+    run.tries.should == 166
   end
 
 end
