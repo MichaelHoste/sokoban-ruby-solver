@@ -4,7 +4,6 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * Zone.zone is weird, change to Zone.number
  * A*
  * Si sous-ensemble de caisse provoque pénalité (infinie ou pas) pour toutes les
    sous-combinaisons possibles de goals, alors l'ajouter systématiquement à l'estimation de la
