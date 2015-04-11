@@ -21,15 +21,11 @@ class Node
   end
 
   def level
-    boxes_zone.level
+    @boxes_zone.level
   end
 
   def to_s
     to_level.to_s
-  end
-
-  def id
-    boxes_zone.to_full_binary + goals_zone.to_full_binary + pusher_zone.to_full_binary
   end
 
   def to_level
@@ -37,10 +33,7 @@ class Node
   end
 
   def ==(other_node)
-    a = boxes_zone  == other_node.boxes_zone
-    b = goals_zone  == other_node.goals_zone
-    c = pusher_zone == other_node.pusher_zone
-    a && b && c
+    @boxes_zone == other_node.boxes_zone && @goals_zone == other_node.goals_zone && @pusher_zone == other_node.pusher_zone
   end
 
 end
