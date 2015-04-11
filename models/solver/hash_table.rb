@@ -35,9 +35,9 @@ class HashTable
 
   def index(node)
     (
-     (node.boxes_zone.zone  % SIZE) +
-     (node.goals_zone.zone  % SIZE) +
-     (node.pusher_zone.zone % SIZE)
+     (node.boxes_zone.number  % SIZE) +
+     (node.goals_zone.number  % SIZE) +
+     (node.pusher_zone.number % SIZE)
     ) % SIZE
   end
 end

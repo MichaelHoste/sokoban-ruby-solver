@@ -5,12 +5,12 @@ class Zone
   GOALS_ZONE  = 2
   CUSTOM_ZONE = 3
 
-  attr_reader :level, :type, :zone
+  attr_reader :level, :type, :number
 
   def initialize(level, type = BOXES_ZONE, options = {})
     @level        = level
     @type         = type
-    @zone         = 0
+    @number       = 0
     @inside_cells = Level.inside_cells
 
     initialize_boxes_zone           if @type == BOXES_ZONE
@@ -21,25 +21,25 @@ class Zone
 
   # Assume same level for speed
   def ==(other_zone)
-    @zone == other_zone.zone
+    @number == other_zone.number
   end
 
   # zone intersection
   def &(other_zone)
-    Zone.new(@level, CUSTOM_ZONE, { :number =>  @zone & other_zone.zone })
+    Zone.new(@level, CUSTOM_ZONE, { :number =>  @number & other_zone.number })
   end
 
   # zone union
   def |(other_zone)
-    Zone.new(@level, CUSTOM_ZONE, { :number =>  @zone | other_zone.zone })
+    Zone.new(@level, CUSTOM_ZONE, { :number =>  @number | other_zone.number })
   end
 
   def bit_1?(position)
-    @zone[@level.inside_size - position - 1] == 1
+    @number[@level.inside_size - position - 1] == 1
   end
 
   def bit_0?(position)
-    @zone[@level.inside_size - position - 1] == 0
+    @number[@level.inside_size - position - 1] == 0
   end
 
   def positions_of_1
@@ -59,7 +59,7 @@ class Zone
 
     @level.grid.each do |char|
       if @inside_cells.include? char
-        string += (@zone[size-pos-1] == 1 ? 'x' : ' ')
+        string += (@number[size-pos-1] == 1 ? 'x' : ' ')
         pos += 1
       else
         string += char
@@ -71,16 +71,16 @@ class Zone
 
   # binary representation of zone
   def to_binary
-    @zone.to_s(2)
+    @number.to_s(2)
   end
 
   # full binary representation (includes extra 0 at beginning)
   def to_full_binary
-    "%0#{@level.inside_size}b" % @zone
+    "%0#{@level.inside_size}b" % @number
   end
 
   def to_integer
-    @zone
+    @number
   end
 
   private
@@ -90,7 +90,7 @@ class Zone
     @level.grid.each do |char|
       if @inside_cells.include? char
         if ['$', '*'].include? char
-          @zone += bit
+          @number += bit
         end
         bit /= 2
       end
@@ -142,7 +142,7 @@ class Zone
       char = @level.grid[level_pos]
       if @inside_cells.include? char
         if ['.', '*', '+'].include? char
-          @zone += bit
+          @number += bit
         end
         bit /= 2
       end
@@ -151,7 +151,7 @@ class Zone
 
   def initialize_custom_zone(options)
     if options[:number]
-      @zone = options[:number]
+      @number = options[:number]
     elsif options[:positions]
       positions = convert_to_zone_positions(options[:positions])
 
@@ -160,7 +160,7 @@ class Zone
       (0..@level.inside_size-1).each do |zone_pos|
         if positions.include? zone_pos
           positions.delete(zone_pos)
-          @zone += bit
+          @number += bit
         end
         bit /= 2
       end
