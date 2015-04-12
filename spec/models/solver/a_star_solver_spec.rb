@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AStarSolver, :focus => true do
+describe AStarSolver do
 
   it '#run (first level)'  do
     level  = Pack.new('spec/support/files/level.slc').levels[0]

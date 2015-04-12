@@ -2,19 +2,23 @@ class AStarSolver
 
   attr_reader :tries
 
-  def initialize(level)
-    @level  = level
-    @node   = level.to_node
+  def initialize(level, bound = Float::INFINITY, options = {})
+    @level = level
+    @node  = level.to_node
+    @bound = bound
 
     # Deadlocks
-    @deadlock_positions = DeadlockService.new(@level).run
+    @deadlock_positions = options[:deadlock_positions] || DeadlockService.new(@level).run
     @deadlock_zone      = Zone.new(@level, Zone::CUSTOM_ZONE, { :positions => @deadlock_positions })
     @null_zone          = Zone.new(@level, Zone::CUSTOM_ZONE, { :number    => 0 })
 
     # Distances for level
-    distances_service    = LevelDistancesService.new(@level).run
-    @distances_for_level = distances_service.distances_for_level
-    @distances_for_zone  = distances_service.distances_for_zone
+    if options[:distances_for_zone]
+      @distances_for_zone = options[:distances_for_zone]
+    else
+      distances_service    = LevelDistancesService.new(@level).run
+      @distances_for_zone  = distances_service.distances_for_zone
+    end
 
     # Hashtable
     @open_nodes   = HashTable.new
@@ -29,14 +33,16 @@ class AStarSolver
   def run
     @list = [@root]
 
-    while !next_candidate.won? && !@list.empty?
+    while !@list.empty? && !next_candidate.won?
       current = process_next_candidate
+
+      #puts @list.collect { |a| "#{a.f} - #{a.g}" }.to_s
 
       current.find_children.each do |child|
         if !deadlocked?(child)
           estimate(child)
 
-          if !waiting?(child) && !processed?(child)
+          if child.f <= @bound && !waiting?(child) && !processed?(child)
             add_to_waiting_list(child)
             add_to_tree(current, child)
           end
@@ -45,6 +51,8 @@ class AStarSolver
 
       print_log
     end
+
+    !@list.empty? && next_candidate.won?
   end
 
   private
