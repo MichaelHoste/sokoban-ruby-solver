@@ -1,4 +1,4 @@
-class Solver
+class AStarSolver
 
   attr_reader :tries
 
