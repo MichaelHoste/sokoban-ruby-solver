@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HashTable, :focus => true do
+describe HashTable do
   it '.initialize' do
     hash_table = HashTable.new
     hash_table.instance_variable_get('@table').size.should == HashTable::SIZE

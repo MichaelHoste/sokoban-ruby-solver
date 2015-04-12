@@ -144,6 +144,42 @@ describe Zone do
     zone.should == zone_1
   end
 
+  context 'Zone inclusions' do
+    text_1 =  "#######\n"\
+              "#  $. #\n"\
+              "# @$. #\n"\
+              "#  $. #\n"\
+              "#######"
+
+    text_2 =  "#######\n"\
+              "# $ . #\n"\
+              "#@$ . #\n"\
+              "# $ . #\n"\
+              "#######"
+
+    level_1 = Level.new(text_1)
+    node_1  = level_1.to_node
+
+    level_2 = Level.new(text_2)
+    node_2  = level_2.to_node
+
+    it '#in?' do
+      node_2.pusher_zone.in?(node_1.pusher_zone).should == true
+      node_1.pusher_zone.in?(node_2.pusher_zone).should == false
+
+      node_2.goals_zone.in?(node_1.goals_zone).should == true
+      node_1.goals_zone.in?(node_2.goals_zone).should == true
+    end
+
+    it '#include?' do
+      node_1.pusher_zone.include?(node_2.pusher_zone).should == true
+      node_2.pusher_zone.include?(node_1.pusher_zone).should == false
+
+      node_1.goals_zone.include?(node_2.goals_zone).should == true
+      node_2.goals_zone.include?(node_1.goals_zone).should == true
+    end
+  end
+
   it '#bit_1?' do
     zone = Zone.new(@level, Zone::BOXES_ZONE)
     zone.bit_1?(0).should == false

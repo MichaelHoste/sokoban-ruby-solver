@@ -17,7 +17,7 @@ class Node
   end
 
   def won?
-    @boxes_zone == @goals_zone
+    @boxes_zone.in? @goals_zone
   end
 
   def level

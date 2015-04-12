@@ -89,10 +89,31 @@ describe Node do
                                     "    #######        "
   end
 
-  it '#won?' do
-    level = Pack.new('spec/support/files/won_level.slc').levels[0]
-    node  = Node.new(level)
-    node.won?.should == true
+  describe '#won?' do
+    it 'same number of boxes and goals' do
+      level = Pack.new('spec/support/files/won_level.slc').levels[0]
+      node  = Node.new(level)
+      node.won?.should == true
+    end
+
+    it "different number of boxes and goals "\
+       "(not 'legal' but useful in intermediate algorithms)" do
+      text =  "    #####          \n"\
+              "    #   #          \n"\
+              "    #   #          \n"\
+              "  ###   ##         \n"\
+              "  #      #         \n"\
+              "### # ## #   ######\n"\
+              "#   # ## #####  ..#\n"\
+              "#              @**#\n"\
+              "##### ### # ##  .*#\n"\
+              "    #     #########\n"\
+              "    #######        "
+
+      level = Level.new(text)
+      node  = Node.new(level)
+      node.won?.should == true
+    end
   end
 
   it '#to_s' do

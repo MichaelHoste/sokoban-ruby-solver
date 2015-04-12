@@ -34,6 +34,16 @@ class Zone
     Zone.new(@level, CUSTOM_ZONE, { :number =>  @number | other_zone.number })
   end
 
+  # zone inclusion
+  def in?(other_zone)
+    (self | other_zone) == other_zone
+  end
+
+  # zone inclusion
+  def include?(other_zone)
+    (self | other_zone) == self
+  end
+
   def bit_1?(position)
     @number[@level.inside_size - position - 1] == 1
   end
