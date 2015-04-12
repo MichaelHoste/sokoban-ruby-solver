@@ -1,3 +1,7 @@
+# Quick deadlock detection (for optimization since the behaviour would stay
+#                           the same using munkres and box_to_goal infinite
+#                           penality, but way slower)
+
 class DeadlockService
 
   def initialize(level)
