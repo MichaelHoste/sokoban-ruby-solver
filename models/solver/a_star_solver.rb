@@ -21,8 +21,7 @@ class AStarSolver
     end
 
     # Hashtable
-    @open_nodes   = HashTable.new
-    @closed_nodes = HashTable.new
+    @processed_nodes = HashTable.new
 
     @root   = TreeNode.new(@node)
     @root.h = estimate(@root)
@@ -36,13 +35,11 @@ class AStarSolver
     while !@list.empty? && !next_candidate.won?
       current = process_next_candidate
 
-      #puts @list.collect { |a| "#{a.f} - #{a.g}" }.to_s
-
       current.find_children.each do |child|
         if !deadlocked?(child)
           estimate(child)
 
-          if child.f <= @bound && !waiting?(child) && !processed?(child)
+          if child.f <= @bound && !processed?(child)
             add_to_waiting_list(child)
             add_to_tree(current, child)
           end
@@ -62,19 +59,11 @@ class AStarSolver
   end
 
   def process_next_candidate
-    candidate = @list.shift
-    @open_nodes.remove(candidate.node)
-    @closed_nodes.add(candidate.node)
-
-    candidate
-  end
-
-  def waiting?(tree_node)
-    @open_nodes.include?(tree_node.node)
+    @list.shift
   end
 
   def processed?(tree_node)
-    @closed_nodes.include?(tree_node.node)
+    @processed_nodes.include?(tree_node.node)
   end
 
   def deadlocked?(tree_node)
@@ -89,8 +78,8 @@ class AStarSolver
   end
 
   def add_to_waiting_list(tree_node)
-    # Add to open nodes
-    @open_nodes.add(tree_node.node)
+    # Add to processed nodes
+    @processed_nodes.add(tree_node.node)
 
     # add to waiting list
     index = @list.bsearch_lower_boundary do |item|
