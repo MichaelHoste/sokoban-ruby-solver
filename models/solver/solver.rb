@@ -38,6 +38,7 @@ class Solver
       end
     end
 
+    puts @list.first.pushes
     puts @tries
     return self
   end
