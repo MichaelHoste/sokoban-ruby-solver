@@ -1,12 +1,13 @@
 class TreeNode
 
   attr_reader   :node, :children
-  attr_accessor :pushes
+  attr_accessor :g
 
-  def initialize(node, pushes = 0)
+  def initialize(node, g = 0)
     @node     = node
     @children = []
-    @pushes   = pushes
+    @g        = g
+    @h        = Float::INFINITY
   end
 
   def add_child(tree_node)
@@ -25,9 +26,9 @@ class TreeNode
     DeadlockService.new(@node.to_level).run
   end
 
-  def children
+  def find_children
     NodeChildrenService.new(@node).run.nodes.collect do |node|
-      TreeNode.new(node, @pushes + 1)
+      TreeNode.new(node, @g + 1)
     end
   end
 
