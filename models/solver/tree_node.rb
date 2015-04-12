@@ -1,7 +1,7 @@
 class TreeNode
 
-  attr_reader   :node, :children
-  attr_accessor :g
+  attr_reader   :node, :children, :g
+  attr_accessor :h
 
   def initialize(node, g = 0)
     @node     = node
@@ -16,6 +16,10 @@ class TreeNode
 
   def remove_child(tree_node)
     @children.delete(tree_node)
+  end
+
+  def f
+    @g + @h
   end
 
   def won?

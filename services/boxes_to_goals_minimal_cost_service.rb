@@ -9,6 +9,8 @@ require 'munkres'
 
 class BoxesToGoalsMinimalCostService
 
+  BIG_NUMBER = 10_000_000
+
   def initialize(node, distances_for_zone)
     @node        = node
     @boxes_zone  = node.boxes_zone
@@ -22,7 +24,10 @@ class BoxesToGoalsMinimalCostService
     matrix   = create_costs_matrix
     munkres  = Munkres.new(matrix)
     pairings = munkres.find_pairings
-    munkres.total_cost_of_pairing
+    cost     = munkres.total_cost_of_pairing
+
+    # Fix because Munkres doesn't support Infinity
+    cost >= BIG_NUMBER ? Float::INFINITY : cost
   end
 
   private
@@ -40,7 +45,10 @@ class BoxesToGoalsMinimalCostService
 
     boxes_positions.collect do |box_position|
       goals_positions.collect do |goal_position|
-        @distances[pusher_position][box_position][goal_position]
+        distance = @distances[pusher_position][box_position][goal_position]
+
+        # Fix because Munkres doesn't support Infinity
+        distance == Float::INFINITY ? BIG_NUMBER : distance
       end
     end
   end
