@@ -196,6 +196,42 @@ describe Zone do
     zone.bit_0?(3).should == false
   end
 
+  it '#set_bit_1' do
+    zone = Zone.new(@level, Zone::BOXES_ZONE)
+    zone.set_bit_1(0)
+    zone.set_bit_1(7)
+
+    zone.to_s.should == "    #####          \n"\
+                        "    #x  #          \n"\
+                        "    #x  #          \n"\
+                        "  ### xx##         \n"\
+                        "  #  x x #         \n"\
+                        "### # ## #   ######\n"\
+                        "#   # ## #####    #\n"\
+                        "# x  x            #\n"\
+                        "##### ### # ##    #\n"\
+                        "    #     #########\n"\
+                        "    #######        "
+  end
+
+  it '#set_bit_0' do
+    zone = Zone.new(@level, Zone::BOXES_ZONE)
+    zone.set_bit_0(3)
+    zone.set_bit_0(5) # no effect
+
+    zone.to_s.should == "    #####          \n"\
+                        "    #   #          \n"\
+                        "    #   #          \n"\
+                        "  ###  x##         \n"\
+                        "  #  x x #         \n"\
+                        "### # ## #   ######\n"\
+                        "#   # ## #####    #\n"\
+                        "# x  x            #\n"\
+                        "##### ### # ##    #\n"\
+                        "    #     #########\n"\
+                        "    #######        "
+  end
+
   it '#positions_of_1' do
     zone = Zone.new(@level, Zone::BOXES_ZONE)
     zone.positions_of_1.should == [3, 8, 11, 13, 28, 31]
@@ -208,6 +244,19 @@ describe Zone do
                                    29, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40,
                                    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
                                    52, 53, 54, 55]
+  end
+
+  it '#clone' do
+    zone_1 = Zone.new(@level, Zone::BOXES_ZONE)
+    zone_2 = zone_1.clone
+
+    zone_1.should      == zone_2
+    zone_1.to_s.should == zone_2.to_s
+
+    zone_1.set_bit_1(0)
+
+    zone_1.should_not      == zone_2
+    zone_1.to_s.should_not == zone_2.to_s
   end
 
   it '#to_binary' do

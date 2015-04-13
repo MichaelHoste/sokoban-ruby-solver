@@ -1,10 +1,16 @@
 class AStarSolver
 
-  attr_reader :tries
+  attr_reader :found, :pushes, :tries
 
-  def initialize(level, bound = Float::INFINITY, options = {})
-    @level = level
-    @node  = level.to_node
+  def initialize(level_or_node, bound = Float::INFINITY, options = {})
+    if level_or_node.is_a? Level
+      @level = level_or_node
+      @node  = level_or_node.to_node
+    elsif level_or_node.is_a? Node
+      @node  = level_or_node
+      @level = level_or_node.to_level
+    end
+
     @bound = bound
 
     # Deadlocks
@@ -26,7 +32,9 @@ class AStarSolver
     @root   = TreeNode.new(@node)
     @root.h = estimate(@root)
 
-    @tries = 0
+    @found  = false
+    @pushes = Float::INFINITY
+    @tries  = 0
   end
 
   def run
@@ -49,7 +57,8 @@ class AStarSolver
       print_log
     end
 
-    !@list.empty? && next_candidate.won?
+    @found  = !@list.empty? && next_candidate.won?
+    @pushes = next_candidate.g if @found
   end
 
   private

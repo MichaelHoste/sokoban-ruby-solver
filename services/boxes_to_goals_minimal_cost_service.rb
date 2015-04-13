@@ -43,12 +43,19 @@ class BoxesToGoalsMinimalCostService
     boxes_positions = @boxes_zone.positions_of_1
     goals_positions = @goals_zone.positions_of_1
 
-    boxes_positions.collect do |box_position|
+    costs = boxes_positions.collect do |box_position|
       goals_positions.collect do |goal_position|
         distance = @distances[pusher_position][box_position][goal_position]
 
         # Fix because Munkres doesn't support Infinity
         distance == Float::INFINITY ? BIG_NUMBER : distance
+      end
+    end
+
+    # Artificially prevent Munkres matrix to be wider than tall and crash (when less boxes than goals)
+    costs += (1..goals_positions.count - boxes_positions.count).collect do |box_position|
+      goals_positions.collect do |goal_position|
+        distance = 0
       end
     end
   end

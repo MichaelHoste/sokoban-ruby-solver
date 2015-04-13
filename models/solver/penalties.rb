@@ -1,16 +1,13 @@
-# class Penalties
+# List of penalties
 
-#   def initialize(node, penalties = [])
-#     @node      = node
-#     @penalties = penalties
-#   end
+class Penalties
 
-#   private
+  def initialize(node)
+    @node = node
+    @list = []
+  end
 
-#   def run(node)
-#     pour chaque caisse de node (parcours de bits '1')
-#       on enlève la caisse
-#         si il reste encore au moins 2 caisses
-#           Penalties.new(node_modifié, @penalties).run (retourne noeud et pénalité ?)
-#   end
-# end
+  private
+
+
+end

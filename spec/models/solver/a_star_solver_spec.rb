@@ -7,7 +7,8 @@ describe AStarSolver do
     solver = AStarSolver.new(level)
     solver.run
 
-    solver.tries.should == 4883
+    solver.tries.should  == 4883
+    solver.pushes.should == 97
   end
 
   it '#run (simple level)' do
@@ -25,7 +26,8 @@ describe AStarSolver do
     solver = AStarSolver.new(level)
     solver.run
 
-    solver.tries.should == 129
+    solver.tries.should  == 129
+    solver.pushes.should == 25
   end
 
 end

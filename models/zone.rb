@@ -5,18 +5,17 @@ class Zone
   GOALS_ZONE  = 2
   CUSTOM_ZONE = 3
 
-  attr_reader :level, :type, :number
+  attr_reader :level, :number
 
   def initialize(level, type = BOXES_ZONE, options = {})
     @level        = level
-    @type         = type
     @number       = 0
     @inside_cells = Level.inside_cells
 
-    initialize_boxes_zone           if @type == BOXES_ZONE
-    initialize_pusher_zone          if @type == PUSHER_ZONE
-    initialize_goal_zone            if @type == GOALS_ZONE
-    initialize_custom_zone(options) if @type == CUSTOM_ZONE
+    initialize_boxes_zone           if type == BOXES_ZONE
+    initialize_pusher_zone          if type == PUSHER_ZONE
+    initialize_goal_zone            if type == GOALS_ZONE
+    initialize_custom_zone(options) if type == CUSTOM_ZONE
   end
 
   # Assume same level for speed
@@ -52,6 +51,18 @@ class Zone
     @number[@level.inside_size - position - 1] == 0
   end
 
+  def set_bit_1(position)
+    if @number[@level.inside_size - position - 1] == 0
+      @number += 2**(@level.inside_size - position - 1)
+    end
+  end
+
+  def set_bit_0(position)
+    if @number[@level.inside_size - position - 1] == 1
+      @number -= 2**(@level.inside_size - position - 1)
+    end
+  end
+
   def positions_of_1
     b = to_full_binary
     (0..b.length).find_all { |i| b[i,1] == '1' }
@@ -60,6 +71,10 @@ class Zone
   def positions_of_0
     b = to_full_binary
     (0..b.length).find_all { |i| b[i,1] == '0' }
+  end
+
+  def clone
+    Zone.new(@level, CUSTOM_ZONE, { :number => @number })
   end
 
   def to_s

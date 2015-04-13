@@ -1,38 +1,49 @@
 class IdaStarSolver
 
-  attr_reader :tries
+  attr_reader :found, :pushes, :tries
 
-  def initialize(level)
-    @level = level
-    @node  = level.to_node
+  def initialize(level_or_node, options = {})
+    if level_or_node.is_a? Level
+      @level = level_or_node
+      @node  = level_or_node.to_node
+    elsif level_or_node.is_a? Node
+      @node  = level_or_node
+      @level = level_or_node.to_level
+    end
 
     # Deadlocks
-    @deadlock_positions = DeadlockService.new(@level).run
+    @deadlock_positions = options[:deadlock_positions] || DeadlockService.new(@level).run
 
     # Distances for level
-    distances_service   = LevelDistancesService.new(@level).run
-    @distances_for_zone = distances_service.distances_for_zone
+    if options[:distances_for_zone]
+      @distances_for_zone = options[:distances_for_zone]
+    else
+      distances_service    = LevelDistancesService.new(@level).run
+      @distances_for_zone  = distances_service.distances_for_zone
+    end
 
-    @tries = 0
+    @found  = false
+    @pushes = Float::INFINITY
+    @tries  = 0
   end
 
   def run
     bound = estimate(@node)
-    found = false
 
-    while !found
+    while !@found
       solver = AStarSolver.new(@level, bound, {
         :deadlock_positions => @deadlock_positions,
         :distances_for_zone => @distances_for_zone
       })
+      solver.run
 
-      found  = solver.run
-      @tries = solver.tries
+      @found =  solver.found
+      @tries += solver.tries
 
       bound  = bound + 1
     end
 
-    return true
+    @pushes = bound
   end
 
   private
