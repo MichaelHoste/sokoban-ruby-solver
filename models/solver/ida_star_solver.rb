@@ -28,7 +28,7 @@ class IdaStarSolver
   end
 
   def run
-    bound = estimate(@node)
+    @pushes = bound = estimate(@node)
 
     while !@found
       solver = AStarSolver.new(@level, bound, {
@@ -40,10 +40,10 @@ class IdaStarSolver
       @found =  solver.found
       @tries += solver.tries
 
-      bound  = bound + 1
+      if !@found
+        @pushes = bound = bound + 1
+      end
     end
-
-    @pushes = bound
   end
 
   private

@@ -55,7 +55,7 @@ class BoxesToGoalsMinimalCostService
     # Artificially prevent Munkres matrix to be wider than tall and crash (when less boxes than goals)
     costs += (1..goals_positions.count - boxes_positions.count).collect do |box_position|
       goals_positions.collect do |goal_position|
-        distance = 0
+        0
       end
     end
   end
