@@ -1,13 +1,7 @@
 class AStarSolver < Solver
 
   def initialize(level_or_node, bound = Float::INFINITY, parent_solver = nil)
-    if level_or_node.is_a? Level
-      @level = level_or_node
-      @node  = level_or_node.to_node
-    elsif level_or_node.is_a? Node
-      @node  = level_or_node
-      @level = level_or_node.to_level
-    end
+    initialize_level(level_or_node)
 
     @bound         = bound
     @parent_solver = parent_solver
@@ -18,7 +12,7 @@ class AStarSolver < Solver
     @processed_nodes = HashTable.new
 
     @root   = TreeNode.new(@node)
-    @root.h = estimate(@root)
+    @root.h = estimate(@root.node)
 
     @found  = false
     @pushes = Float::INFINITY
@@ -33,7 +27,7 @@ class AStarSolver < Solver
 
       current.find_children.each do |child|
         if !deadlocked?(child)
-          estimate(child)
+          child.h = estimate(child.node)
 
           if child.f <= @bound && !processed?(child)
             add_to_waiting_list(child)
@@ -65,13 +59,6 @@ class AStarSolver < Solver
 
   def deadlocked?(tree_node)
     (tree_node.node.boxes_zone & @deadlock_zone) != @null_zone
-  end
-
-  def estimate(tree_node)
-    tree_node.h = BoxesToGoalsMinimalCostService.new(
-      tree_node.node,
-      @distances_for_zone
-    ).run
   end
 
   def add_to_waiting_list(tree_node)

@@ -1,13 +1,7 @@
 class IdaStarSolver < Solver
 
   def initialize(level_or_node, parent_solver = nil)
-    if level_or_node.is_a? Level
-      @level = level_or_node
-      @node  = level_or_node.to_node
-    elsif level_or_node.is_a? Node
-      @node  = level_or_node
-      @level = level_or_node.to_level
-    end
+    initialize_level(level_or_node)
 
     @parent_solver = parent_solver
     @found         = false
@@ -36,10 +30,4 @@ class IdaStarSolver < Solver
 
   private
 
-  def estimate(node)
-    BoxesToGoalsMinimalCostService.new(
-      node,
-      @distances_for_zone
-    ).run
-  end
 end

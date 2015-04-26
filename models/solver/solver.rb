@@ -8,6 +8,16 @@ class Solver
 
   private
 
+  def initialize_level(level_or_node)
+    if level_or_node.is_a? Level
+      @level = level_or_node
+      @node  = level_or_node.to_node
+    elsif level_or_node.is_a? Node
+      @node  = level_or_node
+      @level = level_or_node.to_level
+    end
+  end
+
   def initialize_deadlocks
     if @parent_solver.nil?
       @deadlock_positions = DeadlockService.new(@level).run
