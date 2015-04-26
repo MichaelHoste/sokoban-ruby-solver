@@ -18,11 +18,11 @@ describe PenaltiesService, :focus => true do
 
     penalties = PenaltiesService.new(node).run
 
-    puts penalties.count
+    penalties.count.should == 2
 
-    penalties.count.should == 3
     penalties.each do |penalty|
-      puts penalty.to_s
+      puts penalty[:node].to_s
+      puts penalty[:value].to_s
     end
   end
 

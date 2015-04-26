@@ -11,13 +11,14 @@ class BoxesToGoalsMinimalCostService
 
   BIG_NUMBER = 10_000_000
 
-  def initialize(node, distances_for_zone)
+  def initialize(node, distances_for_zone, penalties = [])
     @node        = node
     @boxes_zone  = node.boxes_zone
     @goals_zone  = node.goals_zone
     @pusher_zone = node.pusher_zone
     @level       = Level.new(node)
     @distances   = distances_for_zone
+    @penalties   = penalties
   end
 
   def run
