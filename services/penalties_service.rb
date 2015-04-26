@@ -8,7 +8,7 @@ class PenaltiesService
   end
 
   def run
-    box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
+    a = box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
       sub_node = Node.new([sub_boxes_zone, @node.goals_zone, @node.pusher_zone])
 
       @penalties += PenaltiesService.new(sub_node).run
@@ -21,14 +21,11 @@ class PenaltiesService
       # real
       @distances_for_zone = LevelDistancesService.new(@node.to_level).run.distances_for_zone
       estimate = BoxesToGoalsMinimalCostService.new(sub_node, @distances_for_zone).run
-
-      if estimate < real
-        puts "------"
-        puts sub_node
-        puts real - estimate
-        puts "------"
-      end
     end
+
+    puts a.inspect
+
+    return a
   end
 
   private

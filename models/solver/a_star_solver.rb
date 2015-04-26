@@ -1,8 +1,6 @@
-class AStarSolver
+class AStarSolver < Solver
 
-  attr_reader :found, :pushes, :tries
-
-  def initialize(level_or_node, bound = Float::INFINITY, options = {})
+  def initialize(level_or_node, bound = Float::INFINITY, parent_solver = nil)
     if level_or_node.is_a? Level
       @level = level_or_node
       @node  = level_or_node.to_node
@@ -11,22 +9,12 @@ class AStarSolver
       @level = level_or_node.to_level
     end
 
-    @bound = bound
+    @bound         = bound
+    @parent_solver = parent_solver
 
-    # Deadlocks
-    @deadlock_positions = options[:deadlock_positions] || DeadlockService.new(@level).run
-    @deadlock_zone      = Zone.new(@level, Zone::CUSTOM_ZONE, { :positions => @deadlock_positions })
-    @null_zone          = Zone.new(@level, Zone::CUSTOM_ZONE, { :number    => 0 })
+    initialize_deadlocks
+    initialize_distances
 
-    # Distances for level
-    if options[:distances_for_zone]
-      @distances_for_zone = options[:distances_for_zone]
-    else
-      distances_service    = LevelDistancesService.new(@level).run
-      @distances_for_zone  = distances_service.distances_for_zone
-    end
-
-    # Hashtable
     @processed_nodes = HashTable.new
 
     @root   = TreeNode.new(@node)

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IdaStarSolver do
 
-  it '#run (first level)'  do
+  it '#run (first level)' do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = IdaStarSolver.new(level)
     solver.run
