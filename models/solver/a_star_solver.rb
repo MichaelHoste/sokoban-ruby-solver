@@ -5,18 +5,14 @@ class AStarSolver < Solver
 
     @bound         = bound
     @parent_solver = parent_solver
+    @found         = false
+    @pushes        = Float::INFINITY
+    @tries         = 0
 
     initialize_deadlocks
     initialize_distances
-
-    @processed_nodes = HashTable.new
-
-    @root   = TreeNode.new(@node)
-    @root.h = estimate(@root.node)
-
-    @found  = false
-    @pushes = Float::INFINITY
-    @tries  = 0
+    initialize_hashtable
+    initialize_tree
   end
 
   def run
@@ -44,6 +40,15 @@ class AStarSolver < Solver
   end
 
   private
+
+  def initialize_hashtable
+    @processed_nodes = HashTable.new
+  end
+
+  def initialize_tree
+    @root   = TreeNode.new(@node)
+    @root.h = estimate(@root.node)
+  end
 
   def next_candidate
     @list.first

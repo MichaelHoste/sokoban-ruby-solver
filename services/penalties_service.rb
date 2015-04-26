@@ -23,8 +23,6 @@ class PenaltiesService
       estimate = BoxesToGoalsMinimalCostService.new(sub_node, @distances_for_zone).run
     end
 
-    puts a.inspect
-
     return a
   end
 

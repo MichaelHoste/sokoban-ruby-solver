@@ -3,9 +3,6 @@ class Solver
   attr_reader :found, :pushes, :tries,
               :deadlock_positions, :distances_for_zone, :deadlock_zone, :null_zone
 
-  def initialize
-  end
-
   private
 
   def initialize_level(level_or_node)
