@@ -11,7 +11,7 @@ describe IdaStarSolver do
     solver.pushes.should == 97
   end
 
-  it '#run (simple level)' do
+  it '#run (simple level)', :focus => true do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\

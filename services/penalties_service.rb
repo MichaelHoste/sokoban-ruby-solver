@@ -1,4 +1,4 @@
-# Find penalties of current node
+# Find penalties list of current node
 
 class PenaltiesService
 
@@ -16,19 +16,25 @@ class PenaltiesService
     box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
       # TODO optimize creation of pusherzone here!
       sub_node = Node.new([sub_boxes_zone, @node.goals_zone, Zone.new(@node.to_level, Zone::PUSHER_ZONE)])
-
       find_new_penalties(sub_node)
+    end
+
+    box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
+      # TODO optimize creation of pusherzone here!
+      sub_node = Node.new([sub_boxes_zone, @node.goals_zone, Zone.new(@node.to_level, Zone::PUSHER_ZONE)])
 
       penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
-      if penalty_value > 0
-        # puts "-------"
-        # if @parent_solver
-        #   puts @parent_solver.penalties.count + @penalties.count
-        # end
-        # puts sub_node.to_s
-        # puts penalty_value
-        # puts "-------"
+      if penalty_value > 0 && !@penalties.any? { |p| p[:node] == sub_node }
+        puts "-------"
+        if @parent_solver
+          puts @parent_solver.penalties.count + @penalties.count
+        end
+        puts sub_node.to_s
+        puts sub_node.pusher_zone.to_s
+        puts penalty_value
+        puts "-------"
+
         @penalties << {
           :node  => sub_node,
           :value => penalty_value
@@ -84,6 +90,7 @@ class PenaltiesService
     if @parent_solver.nil?
       total_penalties = @penalties
     else
+      # TODO is the order of penalties correct here?
       total_penalties = @parent_solver.penalties + @penalties
     end
 
