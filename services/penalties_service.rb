@@ -17,22 +17,18 @@ class PenaltiesService
       # TODO optimize creation of pusherzone here!
       sub_node = Node.new([sub_boxes_zone, @node.goals_zone, Zone.new(@node.to_level, Zone::PUSHER_ZONE)])
 
-      new_penalties = PenaltiesService.new(sub_node, @parent_solver).run
-      new_penalties.each do |new_penalty|
-        @penalties << new_penalty
-      end
+      find_new_penalties(sub_node)
 
       penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
       if penalty_value > 0
-        puts "-------"
-        if @parent_solver
-          puts @parent_solver.penalties.count + @penalties.count
-        end
-        puts sub_node.to_s
-        puts penalty_value
-        puts "-------"
-
+        # puts "-------"
+        # if @parent_solver
+        #   puts @parent_solver.penalties.count + @penalties.count
+        # end
+        # puts sub_node.to_s
+        # puts penalty_value
+        # puts "-------"
         @penalties << {
           :node  => sub_node,
           :value => penalty_value
@@ -68,6 +64,13 @@ class PenaltiesService
       end
     else
       []
+    end
+  end
+
+  def find_new_penalties(node)
+    new_penalties = PenaltiesService.new(node, @parent_solver).run
+    new_penalties.each do |new_penalty|
+      @penalties << new_penalty
     end
   end
 
