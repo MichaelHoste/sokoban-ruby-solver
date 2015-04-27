@@ -26,7 +26,9 @@ class PenaltiesService
 
       if penalty_value > 0
         puts "-------"
-        puts @parent_solver.penalties.count + @penalties.count
+        if @parent_solver
+          puts @parent_solver.penalties.count + @penalties.count
+        end
         puts sub_node.to_s
         puts penalty_value
         puts "-------"
