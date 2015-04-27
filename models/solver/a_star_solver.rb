@@ -24,7 +24,8 @@ class AStarSolver < Solver
 
       current.find_children.each do |child|
         if !deadlocked?(child)
-          child.h = estimate(child.node)
+          #@penalties += PenaltiesService.new(child.node, self).run
+          child.h     = estimate(child.node)
 
           if child.f <= @bound && !processed?(child)
             add_to_waiting_list(child)
@@ -37,7 +38,7 @@ class AStarSolver < Solver
     end
 
     @found  = !@list.empty? && next_candidate.won?
-    @pushes = next_candidate.g if @found
+    @pushes = @found ? next_candidate.g : Float::INFINITY
   end
 
   private
@@ -88,10 +89,14 @@ class AStarSolver < Solver
   end
 
   def print_log
-    @tries += 1
-    if @tries % 100 == 0
-      puts @tries
-      puts @list.first.node.to_s
+    if @list.empty?
+      puts "Empty list"
+    else
+      @tries += 1
+      if @tries % 100 == 0
+        puts @tries
+        puts @list.first.node.to_s
+      end
     end
   end
 

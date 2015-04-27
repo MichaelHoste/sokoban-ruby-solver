@@ -49,4 +49,23 @@ describe AStarSolver do
     solver.pushes.should == 5
   end
 
+  it '#run (impossible level)' do
+    text =  "  ####  \n"\
+            "###  #  \n"\
+            "#  $ #  \n"\
+            "#   .###\n"\
+            "###$#@.#\n"\
+            "  #    #\n"\
+            "  #    #\n"\
+            "  #. ###\n"\
+            "  ####  "
+
+    level  = Level.new(text)
+    solver = AStarSolver.new(level)
+    solver.run
+
+    solver.tries.should  == 1
+    solver.pushes.should == Float::INFINITY
+  end
+
 end

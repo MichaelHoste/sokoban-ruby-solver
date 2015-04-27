@@ -43,7 +43,8 @@ class Solver
   def estimate(node)
     BoxesToGoalsMinimalCostService.new(
       node,
-      @distances_for_zone
+      @distances_for_zone,
+      @penalties
     ).run
   end
 end
