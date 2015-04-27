@@ -89,9 +89,34 @@ describe BoxesToGoalsMinimalCostService do
 
     service   = LevelDistancesService.new(level).run
     distances = service.distances_for_zone
-    penalties = PenaltiesService.new(node).run
+    penalties = [
+      {
+        :node => Level.new("  ####  \n"\
+                           "###  #  \n"\
+                           "#    #  \n"\
+                           "#   .###\n"\
+                           "### #@.#\n"\
+                           "  # $  #\n"\
+                           "  #  $ #\n"\
+                           "  #. ###\n"\
+                           "  ####  ").to_node,
+        :value => 3
+      },
+      {
+        :node => Level.new("  ####  \n"\
+                           "###  #  \n"\
+                           "#    #  \n"\
+                           "#   .###\n"\
+                           "### #@.#\n"\
+                           "  # $$ #\n"\
+                           "  #    #\n"\
+                           "  #. ###\n"\
+                           "  ####  ").to_node,
+        :value => 3
+      }
+    ]
 
-    BoxesToGoalsMinimalCostService.new(node, distances, penalties).run.should == 11
+    BoxesToGoalsMinimalCostService.new(node, distances, penalties).run.should == 17
   end
 
 end

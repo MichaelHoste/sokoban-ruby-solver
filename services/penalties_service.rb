@@ -14,10 +14,10 @@ class PenaltiesService
 
   def run
     box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
-      # create pusher_zone based on new sub_boxes_zone (only if removed box is on pusher_zone)
+      # TODO create pusher_zone based on new sub_boxes_zone (only if removed box is on pusher_zone)
       sub_node = Node.new([sub_boxes_zone, @node.goals_zone, @node.pusher_zone])
 
-      @penalties += PenaltiesService.new(sub_node).run
+      @penalties += PenaltiesService.new(sub_node, @parent_solver).run
 
       penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
@@ -67,6 +67,12 @@ class PenaltiesService
   end
 
   def estimate_pushes(node)
-    BoxesToGoalsMinimalCostService.new(node, @distances_for_zone, @penalties).run
+    if @parent_solver.nil?
+      total_penalties = @penalties
+    else
+      total_penalties = @parent_solver.penalties + @penalties
+    end
+
+    BoxesToGoalsMinimalCostService.new(node, @distances_for_zone, total_penalties).run
   end
 end

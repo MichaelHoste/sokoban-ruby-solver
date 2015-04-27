@@ -1,7 +1,8 @@
 class Solver
 
   attr_reader :found, :pushes, :tries,
-              :deadlock_positions, :distances_for_zone, :deadlock_zone, :null_zone
+              :deadlock_positions, :distances_for_zone, :deadlock_zone, :null_zone,
+              :penalties
 
   private
 
@@ -33,6 +34,10 @@ class Solver
     else
       @distances_for_zone = @parent_solver.distances_for_zone
     end
+  end
+
+  def initialize_penalties
+    @penalties = @parent_solver.nil? ? [] : @parent_solver.penalties
   end
 
   def estimate(node)

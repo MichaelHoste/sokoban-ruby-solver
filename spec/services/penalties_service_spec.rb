@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PenaltiesService do
+describe PenaltiesService, :focus => true do
 
   it '#run' do
     text =  "  ####  \n"\

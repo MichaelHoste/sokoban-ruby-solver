@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Node, :focus => true do
+describe Node do
   before :all do
     @level = Pack.new('spec/support/files/level.slc').levels[0]
   end

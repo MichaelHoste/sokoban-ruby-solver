@@ -28,7 +28,7 @@ class BoxesToGoalsMinimalCostService
     cost     = munkres.total_cost_of_pairing
 
     # add penalty to cost
-    penalties.each do |penalty|
+    @penalties.each do |penalty|
       if @node.include?(penalty[:node])
         cost += penalty[:value]
       end
