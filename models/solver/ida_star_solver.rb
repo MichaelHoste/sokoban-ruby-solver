@@ -18,7 +18,9 @@ class IdaStarSolver < Solver
     @pushes = bound = estimate(@node)
     i       = 0
 
-    while !@found
+    while !@found && bound != Float::INFINITY
+      puts "START IDA with bound: #{bound}" if @parent_solver.nil?
+
       solver = AStarSolver.new(@level, bound, self)
       solver.run
 
@@ -27,9 +29,9 @@ class IdaStarSolver < Solver
       @tries         += solver.tries
 
       if !@found
-        @pushes = bound = bound + 1
+        @pushes = bound = [estimate(@node), bound + 1].max
         # TODO FIXME need to find a better solution to know where we really don't have any solution
-        break if (i >= 10 && @loop_tries[i] == @loop_tries[i-10])
+        break if (i >= 100 && @loop_tries[i] == @loop_tries[i-100])
         i += 1
       end
     end

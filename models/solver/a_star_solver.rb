@@ -24,8 +24,8 @@ class AStarSolver < Solver
 
       current.find_children.each do |child|
         if !deadlocked?(child)
-          #@penalties += PenaltiesService.new(child.node, self).run
-          child.h     = estimate(child.node)
+          find_new_penalties(child.node)
+          child.h = estimate(child.node)
 
           if child.f <= @bound && !processed?(child)
             add_to_waiting_list(child)
@@ -68,6 +68,13 @@ class AStarSolver < Solver
     (tree_node.node.boxes_zone & @deadlock_zone) != @null_zone
   end
 
+  def find_new_penalties(node)
+    new_penalties = PenaltiesService.new(node, self).run
+    new_penalties.each do |new_penalty|
+      @penalties << new_penalty
+    end
+  end
+
   def add_to_waiting_list(tree_node)
     # Add to processed nodes
     @processed_nodes.add(tree_node.node)
@@ -89,9 +96,7 @@ class AStarSolver < Solver
   end
 
   def print_log
-    if @list.empty?
-      puts "Empty list"
-    else
+    if !@list.empty?
       @tries += 1
       if @tries % 100 == 0
         puts @tries

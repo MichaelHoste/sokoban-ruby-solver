@@ -4,6 +4,8 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
+ * Utiliser file dans penalties_service pour d'abord calculer tous les petits puis tous les grands sous-noeuds
+ * Mettre dans un hash les noeuds pour lesquels les pénalités ont déjà été appliquées
  * specs for treenode
  * Try to optimize zone with zone_pos_to_level_pos and level_pos_to_zone_pos
  * Si sous-ensemble de caisse provoque pénalité (infinie ou pas) pour toutes les

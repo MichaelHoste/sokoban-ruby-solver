@@ -14,14 +14,23 @@ class PenaltiesService
 
   def run
     box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
-      # TODO create pusher_zone based on new sub_boxes_zone (only if removed box is on pusher_zone)
-      sub_node = Node.new([sub_boxes_zone, @node.goals_zone, @node.pusher_zone])
+      # TODO optimize creation of pusherzone here!
+      sub_node = Node.new([sub_boxes_zone, @node.goals_zone, Zone.new(@node.to_level, Zone::PUSHER_ZONE)])
 
-      @penalties += PenaltiesService.new(sub_node, @parent_solver).run
+      new_penalties = PenaltiesService.new(sub_node, @parent_solver).run
+      new_penalties.each do |new_penalty|
+        @penalties << new_penalty
+      end
 
       penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
       if penalty_value > 0
+        puts "-------"
+        puts @parent_solver.penalties.count + @penalties.count
+        puts sub_node.to_s
+        puts penalty_value
+        puts "-------"
+
         @penalties << {
           :node  => sub_node,
           :value => penalty_value

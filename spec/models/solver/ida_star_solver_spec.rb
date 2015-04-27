@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe IdaStarSolver, :focus => true do
+describe IdaStarSolver do
 
-  it '#run (first level)' do
+  it '#run (first level)', :focus => true do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = IdaStarSolver.new(level)
     solver.run
@@ -26,7 +26,7 @@ describe IdaStarSolver, :focus => true do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.tries.should  == 745
+    solver.tries.should  == 67
     solver.pushes.should == 25
   end
 
