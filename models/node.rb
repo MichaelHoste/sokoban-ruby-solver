@@ -32,6 +32,17 @@ class Node
     Level.new(self)
   end
 
+  # A node that's "in" another node means that boxes and goals of the
+  # node are a subset of the other node. Pusherzone is the opposite since
+  # less boxes means bigger pusherzone.
+  def in?(other_node)
+    @pusher_zone.include?(other_node.pusher_zone) && other_node.boxes_zone.include?(@boxes_zone) && other_node.goals_zone.include?(@goals_zone)
+  end
+
+  def include?(other_node)
+    other_node.pusher_zone.include?(@pusher_zone) && @boxes_zone.include?(other_node.boxes_zone) && @goals_zone.include?(other_node.goals_zone)
+  end
+
   def ==(other_node)
     @boxes_zone == other_node.boxes_zone && @goals_zone == other_node.goals_zone && @pusher_zone == other_node.pusher_zone
   end

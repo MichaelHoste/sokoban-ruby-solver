@@ -89,8 +89,9 @@ describe BoxesToGoalsMinimalCostService do
 
     service   = LevelDistancesService.new(level).run
     distances = service.distances_for_zone
+    penalties = PenaltiesService.new(node).run
 
-    BoxesToGoalsMinimalCostService.new(node, distances).run.should == 11
+    BoxesToGoalsMinimalCostService.new(node, distances, penalties).run.should == 11
   end
 
 end

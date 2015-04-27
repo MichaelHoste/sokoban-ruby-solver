@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Node do
+describe Node, :focus => true do
   before :all do
     @level = Pack.new('spec/support/files/level.slc').levels[0]
   end
 
   it '.initialize (level)' do
-    node  = Node.new(@level)
+    node = Node.new(@level)
 
     node.boxes_zone.to_s.should == "    #####          \n"\
                                    "    #   #          \n"\
@@ -50,7 +50,7 @@ describe Node do
     goals_zone  = Zone.new(@level, Zone::GOALS_ZONE)
     pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
 
-    node  = Node.new([boxes_zone, goals_zone, pusher_zone])
+    node = Node.new([boxes_zone, goals_zone, pusher_zone])
 
     node.boxes_zone.to_s.should == "    #####          \n"\
                                    "    #   #          \n"\
@@ -117,7 +117,7 @@ describe Node do
   end
 
   it '#to_s' do
-    node  = Node.new(@level)
+    node = Node.new(@level)
 
     node.to_s.should ==  "    #####          \n"\
                          "    #   #          \n"\
@@ -133,7 +133,7 @@ describe Node do
   end
 
   it '#to_level' do
-    node  = Node.new(@level)
+    node = Node.new(@level)
 
     target_level = Level.new("    #####          \n"\
                              "    #   #          \n"\
@@ -148,6 +148,116 @@ describe Node do
                              "    #######        ")
 
     node.to_level.should == target_level
+  end
+
+  it '#in? and #include? (less boxes)' do
+    node = Node.new(@level)
+
+    sub_node = Level.new("    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #  $  @#         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $          ..#\n"\
+                         "##### ### # ##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        ").to_node
+
+    sub_node.in?(node).should == true
+    node.in?(sub_node).should == false
+
+    sub_node.include?(node).should == false
+    node.include?(sub_node).should == true
+  end
+
+  it '#in? and #include? (box is different)' do
+    node = Node.new(@level)
+
+    sub_node = Level.new("    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  # $   @#         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $          ..#\n"\
+                         "##### ### # ##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        ").to_node
+
+    sub_node.in?(node).should == false
+    node.in?(sub_node).should == false
+
+    sub_node.include?(node).should == false
+    node.include?(sub_node).should == false
+  end
+
+  it '#in? and #include? (same node)' do
+    node = Node.new(@level)
+
+    sub_node = Level.new("    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #  $ $ #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $          ..#\n"\
+                         "##### ### #@##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        ").to_node
+
+    sub_node.in?(node).should == true
+    node.in?(sub_node).should == true
+
+    sub_node.include?(node).should == true
+    node.include?(sub_node).should == true
+  end
+
+  it '#in? and #include? (less boxes and goals)' do
+    node = Node.new(@level)
+
+    sub_node = Level.new("    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###   ##         \n"\
+                         "  #      #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $             . #\n"\
+                         "##### ### #@##   .#\n"\
+                         "    #     #########\n"\
+                         "    #######        ").to_node
+
+    sub_node.in?(node).should == true
+    node.in?(sub_node).should == false
+
+    sub_node.include?(node).should == false
+    node.include?(sub_node).should == true
+  end
+
+  it '#in? and #include? (different pusher zone)' do
+    node = Node.new(@level)
+
+    sub_node = Level.new("    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #@ $ $ #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $          ..#\n"\
+                         "##### ### # ##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        ").to_node
+
+    sub_node.in?(node).should == false
+    node.in?(sub_node).should == false
+
+    sub_node.include?(node).should == false
+    node.include?(sub_node).should == false
   end
 
   it '#==' do

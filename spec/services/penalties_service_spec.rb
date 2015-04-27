@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PenaltiesService, :focus => true do
+describe PenaltiesService do
 
   it '#run' do
     text =  "  ####  \n"\
@@ -20,10 +20,27 @@ describe PenaltiesService, :focus => true do
 
     penalties.count.should == 2
 
-    penalties.each do |penalty|
-      puts penalty[:node].to_s
-      puts penalty[:value].to_s
-    end
+    penalties[0][:node].to_s.should == "  ####  \n"\
+                                       "###  #  \n"\
+                                       "#    #  \n"\
+                                       "#   .###\n"\
+                                       "### #@.#\n"\
+                                       "  # $  #\n"\
+                                       "  #  $ #\n"\
+                                       "  #. ###\n"\
+                                       "  ####  "
+    penalties[0][:value].should == 3
+
+    penalties[1][:node].to_s.should == "  ####  \n"\
+                                       "###  #  \n"\
+                                       "#    #  \n"\
+                                       "#   .###\n"\
+                                       "### #@.#\n"\
+                                       "  # $$ #\n"\
+                                       "  #    #\n"\
+                                       "  #. ###\n"\
+                                       "  ####  "
+    penalties[1][:value].should == 3
   end
 
 end
