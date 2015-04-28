@@ -26,7 +26,7 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.tries.should  == 67
+    solver.tries.should  == 235
     solver.pushes.should == 25
   end
 
