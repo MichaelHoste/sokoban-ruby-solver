@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IdaStarSolver do
 
-  it '#run (first level)' do
+  it '#run (first level)', :focus => true do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = IdaStarSolver.new(level)
     solver.run
@@ -11,7 +11,7 @@ describe IdaStarSolver do
     solver.pushes.should == 97
   end
 
-  it '#run (simple level)', :focus => true do
+  it '#run (simple level)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\

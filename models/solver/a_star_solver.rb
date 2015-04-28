@@ -12,6 +12,7 @@ class AStarSolver < Solver
     initialize_deadlocks
     initialize_distances
     initialize_penalties
+    initialize_penalties_hashtable
     initialize_hashtable
     initialize_tree
   end

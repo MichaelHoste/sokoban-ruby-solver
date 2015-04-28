@@ -12,6 +12,7 @@ class IdaStarSolver < Solver
     initialize_deadlocks
     initialize_distances
     initialize_penalties
+    initialize_penalties_hashtable
   end
 
   def run

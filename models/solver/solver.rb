@@ -2,7 +2,7 @@ class Solver
 
   attr_reader :found, :pushes, :tries,
               :deadlock_positions, :distances_for_zone, :deadlock_zone, :null_zone,
-              :penalties
+              :penalties, :processed_penalties_nodes
 
   private
 
@@ -38,6 +38,10 @@ class Solver
 
   def initialize_penalties
     @penalties = @parent_solver.nil? ? [] : @parent_solver.penalties
+  end
+
+  def initialize_penalties_hashtable
+    @processed_penalties_nodes = @parent_solver.nil? ? HashTable.new : @parent_solver.processed_penalties_nodes
   end
 
   def estimate(node)

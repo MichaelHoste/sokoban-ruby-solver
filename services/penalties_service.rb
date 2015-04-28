@@ -13,16 +13,17 @@ class PenaltiesService
   end
 
   def run
-    box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
-      # TODO optimize creation of pusherzone here!
-      sub_node = Node.new([sub_boxes_zone, @node.goals_zone, build_pusher_zone(sub_boxes_zone, @node)])
+    sub_nodes = box_zones_minus_1_box(@node.boxes_zone).collect do |sub_boxes_zone|
+      Node.new([sub_boxes_zone, @node.goals_zone, build_pusher_zone(sub_boxes_zone, @node)])
+    end.reject do |sub_node|
+      !@parent_solver.nil? && @parent_solver.processed_penalties_nodes.include?(sub_node)
+    end
+
+    sub_nodes.each do |sub_node|
       find_new_penalties(sub_node)
     end
 
-    box_zones_minus_1_box(@node.boxes_zone).each do |sub_boxes_zone|
-      # TODO optimize creation of pusherzone here!
-      sub_node = Node.new([sub_boxes_zone, @node.goals_zone, build_pusher_zone(sub_boxes_zone, @node)])
-
+    sub_nodes.each do |sub_node|
       penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
       if penalty_value > 0 && !@penalties.any? { |p| p[:node] == sub_node }
@@ -40,6 +41,8 @@ class PenaltiesService
           :value => penalty_value
         }
       end
+
+      @parent_solver.processed_penalties_nodes.add(sub_node) if !@parent_solver.nil?
     end
 
     @penalties
@@ -73,6 +76,7 @@ class PenaltiesService
     end
   end
 
+  # TODO optimize creation of pusherzone here!
   def build_pusher_zone(boxes_zone, node)
     level = node.to_level
     level.grid.each_with_index do |cell, i|
