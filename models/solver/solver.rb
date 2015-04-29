@@ -1,6 +1,6 @@
 class Solver
 
-  attr_reader :found, :pushes, :tries,
+  attr_reader :found, :pushes, :tries, :parent_solver,
               :deadlock_positions, :distances_for_zone, :deadlock_zone, :null_zone,
               :penalties, :processed_penalties_nodes
 
