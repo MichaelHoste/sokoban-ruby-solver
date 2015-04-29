@@ -15,8 +15,6 @@ class PenaltiesService
   def run
     sub_nodes = box_zones_minus_1_box(@node.boxes_zone).collect do |sub_boxes_zone|
       Node.new([sub_boxes_zone, @node.goals_zone, build_pusher_zone(sub_boxes_zone, @node)])
-    end.reject do |sub_node|
-      !@parent_solver.nil? && @parent_solver.processed_penalties_nodes.include?(sub_node)
     end
 
     sub_nodes.each do |sub_node|
@@ -32,7 +30,6 @@ class PenaltiesService
           puts @parent_solver.penalties.count + @penalties.count
         end
         puts sub_node.to_s
-        puts sub_node.pusher_zone.to_s
         puts penalty_value
         puts "-------"
 
@@ -41,8 +38,6 @@ class PenaltiesService
           :value => penalty_value
         }
       end
-
-      @parent_solver.processed_penalties_nodes.add(sub_node) if !@parent_solver.nil?
     end
 
     @penalties

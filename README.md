@@ -4,9 +4,12 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * Mieux calculer les zones dnas penalties service
- * Utiliser (corriger?) file dans penalties_service pour d'abord calculer tous les petits puis tous les grands sous-noeuds
- * Mettre dans un hash les noeuds pour lesquels les pénalités ont déjà été appliquées (utiliser hashtable du solver?)
+ * spec for "size" on hashtable
+ * Dans penalties_service, on utilise IDA et on utilise penalties_service récursivement.
+   Est-ce que l'un des deux ne serait pas suffisant ? Ne fait-on pas deux fois le travail ?
+ * Faut-il vraiment garder box_zones_minus_1_box tel qu'il est ? Ou peut-on se satisfaire
+   des sous-zones impliquant la dernière caisse poussée ?
+ * Mieux calculer les zones dans penalties service
  * specs for treenode
  * Try to optimize zone with zone_pos_to_level_pos and level_pos_to_zone_pos
  * Si sous-ensemble de caisse provoque pénalité (infinie ou pas) pour toutes les

@@ -31,6 +31,12 @@ class HashTable
     end
   end
 
+  def size
+    @table.collect do |array|
+      array.length
+    end.inject(:+)
+  end
+
   private
 
   def index(node)
