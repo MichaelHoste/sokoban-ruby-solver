@@ -30,7 +30,7 @@ describe IdaStarSolver do
 
     solver.tries.should                          == 49
     solver.pushes.should                         == 49
-    solver.processed_penalties_nodes.size.should == 277
+    solver.processed_penalties_nodes.size.should == 131
   end
 
   it '#run (less simplified first level)' do
@@ -74,9 +74,9 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.tries.should                          == 356
+    solver.tries.should                          == 235
     solver.pushes.should                         == 25
-    solver.processed_penalties_nodes.size.should == 259
+    solver.processed_penalties_nodes.size.should == 94
   end
 
   it '#run (level with less boxes than goals)' do

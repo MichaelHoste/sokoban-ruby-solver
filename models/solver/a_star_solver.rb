@@ -70,10 +70,7 @@ class AStarSolver < Solver
   end
 
   def find_new_penalties(node)
-    new_penalties = PenaltiesService.new(node, self).run
-    new_penalties.each do |new_penalty|
-      @penalties << new_penalty
-    end
+    PenaltiesService.new(node, self).run
   end
 
   def add_to_waiting_list(tree_node)
@@ -101,7 +98,7 @@ class AStarSolver < Solver
       @tries += 1
       if @tries % 1 == 0 && @parent_solver.parent_solver.nil?
         puts @tries
-        puts @list.first.node.to_s
+        #puts @list.first.node.to_s
       end
     end
   end
