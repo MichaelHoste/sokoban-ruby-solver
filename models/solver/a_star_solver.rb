@@ -24,11 +24,11 @@ class AStarSolver < Solver
       current = process_next_candidate
 
       current.find_children.each do |child|
-        if !deadlocked?(child)
-          find_new_penalties(child.node)
+        if !deadlocked?(child) && !processed?(child)
+          find_penalties(child.node)
           child.h = estimate(child.node)
 
-          if child.f <= @bound && !processed?(child)
+          if child.f <= @bound
             add_to_waiting_list(child)
             add_to_tree(current, child)
           end
@@ -67,10 +67,14 @@ class AStarSolver < Solver
 
   def deadlocked?(tree_node)
     (tree_node.node.boxes_zone & @deadlock_zone) != @null_zone
+    #1_box_deadlock   = (tree_node.node.boxes_zone & @deadlock_zone) != @null_zone
+    #n_boxes_deadlock = @penalties.include?(tree_node.node)
   end
 
-  def find_new_penalties(node)
-    PenaltiesService.new(node, self).run
+  def find_penalties(node)
+    if !@processed_penalties_nodes.include?(node)
+      PenaltiesService.new(node, self).run
+    end
   end
 
   def add_to_waiting_list(tree_node)
