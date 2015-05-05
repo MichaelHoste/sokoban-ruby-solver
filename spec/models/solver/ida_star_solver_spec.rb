@@ -11,7 +11,7 @@ describe IdaStarSolver do
     solver.pushes.should == 97
   end
 
-  it '#run (simplified first level)', :focus => true do
+  it '#run (simplified first level)' do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\
@@ -59,7 +59,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 967
   end
 
-  it '#run (simple level)' do
+  it '#run (simple level)', :focus => true do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\

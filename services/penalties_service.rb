@@ -15,7 +15,7 @@ class PenaltiesService
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@parent_solver.processed_penalties_nodes.include?(sub_node) # && !@penalties.any? { |p| p[:node] == sub_node }
+      if !@parent_solver.processed_penalties_nodes.include?(sub_node)
         penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
         if penalty_value > 0

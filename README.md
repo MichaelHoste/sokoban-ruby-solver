@@ -4,12 +4,19 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * Eviter la boucle supplémentaire pour faire << en utilisant un concat (vérifier la vitesse)
+ * réparer les appels cassés à parent_solver partout
  * spec for "size" on hashtable
- * Faut-il vraiment garder box_zones_minus_1_box tel qu'il est ? Ou peut-on se satisfaire
-   des sous-zones impliquant la dernière caisse poussée ?
- * Changer code de munkres pour un n2 plutôt qu'un n3?
+ * Réduire la taille des hashtables des sous-solveurs
+ * specs pour subnodes
+ * specs pour penalties
  * specs for treenode
- * Try to optimize zone with zone_pos_to_level_pos and level_pos_to_zone_pos
+ * Faire passer tous les specs sauf les solver trop longs à mettre en pending
+ * Eviter la boucle supplémentaire pour faire << en utilisant un concat (vérifier la vitesse)
+ * plutôt que de lancer un IDA* dans les pénalités, lancer un star avec un bound ?
+ * Faut-il activer la recherche de pénalité dans tous les cas au niveau des sous-nodes?
+
  * améliorer SubNodesService et PenaltiesService pour ne prendre en compte que la dernière caisse
    poussée ?
+ * Vérifier que notre A* est bien optimal (avec des tests !). Doit-il vraiment l'être ?
+ * Changer code de munkres pour un n2 plutôt qu'un n3?
+ * Try to optimize zone with zone_pos_to_level_pos and level_pos_to_zone_pos
