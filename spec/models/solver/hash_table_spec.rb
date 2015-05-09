@@ -3,7 +3,7 @@ require 'spec_helper'
 describe HashTable do
   it '.initialize' do
     hash_table = HashTable.new
-    hash_table.instance_variable_get('@table').size.should == HashTable::SIZE
+    hash_table.instance_variable_get('@table').size.should == hash_table.table_size
   end
 
   it '#include?' do
@@ -57,6 +57,20 @@ describe HashTable do
 
     hash_table.include?(node_1).should == false
     hash_table.include?(node_2).should == true
+  end
 
+  it '#size' do
+    level_1 = Pack.new('spec/support/files/level.slc').levels[0]
+    node_1  = Node.new(level_1)
+
+    level_2 = level_1.clone
+    level_2.move('u')
+    node_2  = Node.new(level_2)
+
+    hash_table = HashTable.new
+    hash_table.add(node_1)
+    hash_table.add(node_2)
+
+    hash_table.size.should == 2
   end
 end

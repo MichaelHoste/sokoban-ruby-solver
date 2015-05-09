@@ -43,7 +43,7 @@ describe PenaltiesService do
     penalties[1][:value].should == 3
   end
 
-  it '#run', :focus => true do
+  it '#run' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "# $ .#  \n"\

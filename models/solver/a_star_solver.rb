@@ -1,13 +1,14 @@
 class AStarSolver < Solver
 
-  def initialize(level_or_node, bound = Float::INFINITY, parent_solver = nil)
+  def initialize(level_or_node, bound = Float::INFINITY, parent_solver = nil, check_penalties = true)
     initialize_level(level_or_node)
 
-    @bound         = bound
-    @parent_solver = parent_solver
-    @found         = false
-    @pushes        = Float::INFINITY
-    @tries         = 0
+    @bound           = bound
+    @parent_solver   = parent_solver
+    @check_penalties = check_penalties
+    @found           = false
+    @pushes          = Float::INFINITY
+    @tries           = 0
 
     initialize_deadlocks
     initialize_distances
@@ -80,8 +81,10 @@ class AStarSolver < Solver
   end
 
   def find_penalties(node)
-    if !@processed_penalties_nodes.include?(node)
-      PenaltiesService.new(node, self).run
+    if @check_penalties
+      if !@processed_penalties_nodes.include?(node)
+        PenaltiesService.new(node, self).run
+      end
     end
   end
 
@@ -108,7 +111,7 @@ class AStarSolver < Solver
   def print_log
     if !@list.empty?
       @tries += 1
-      if @tries % 1 == 0 && @parent_solver.parent_solver.nil?
+      if @tries % 100 == 0 && @parent_solver && @parent_solver.parent_solver.nil?
         puts @tries
         #puts @list.first.node.to_s
       end

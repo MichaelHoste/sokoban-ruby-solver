@@ -22,6 +22,9 @@ class PenaltiesService
 
         if penalty_value > 0
           puts "add penalty"
+          puts sub_node.to_s
+          puts penalty_value
+          puts '------'
           @penalties << {
             :node  => sub_node,
             :value => penalty_value

@@ -1,10 +1,16 @@
 class HashTable
 
-  SIZE = 83609 # prime number not too close to a power of 2 and close to the
-               # to te wanted elements we want to store
+  HUGE_SIZE    = 83609 # prime number not too close to a power of 2 and close to the
+  BIG_SIZE     = 13463 # to te wanted elements we want to store
+  MEDIUM_SIZE  = 1759
+  SMALL_SIZE   = 97
 
-  def initialize
-    @table = Array.new(SIZE) { Array.new }
+  attr_reader :table_size, :size
+
+  def initialize(size = :medium)
+    @table_size = HashTable.const_get("#{size.to_s.upcase}_SIZE")
+    @table      = Array.new(@table_size) { Array.new }
+    @size       = 0
   end
 
   def include?(node)
@@ -19,6 +25,7 @@ class HashTable
 
   def add(node)
     @table[index(node)] << node
+    @size = @size + 1
   end
 
   def remove(node)
@@ -27,6 +34,8 @@ class HashTable
     @table[node_index].each_with_index do |node_from_table, i|
       if node_from_table == node
         @table[node_index].delete_at(i)
+        @size = @size - 1
+        break
       end
     end
   end
@@ -41,9 +50,9 @@ class HashTable
 
   def index(node)
     (
-     (node.boxes_zone.number  % SIZE) +
-     (node.goals_zone.number  % SIZE) +
-     (node.pusher_zone.number % SIZE)
-    ) % SIZE
+     (node.boxes_zone.number  % @table_size) +
+     (node.goals_zone.number  % @table_size) +
+     (node.pusher_zone.number % @table_size)
+    ) % @table_size
   end
 end

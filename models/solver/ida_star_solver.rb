@@ -1,13 +1,14 @@
 class IdaStarSolver < Solver
 
-  def initialize(level_or_node, parent_solver = nil)
+  def initialize(level_or_node, parent_solver = nil, check_penalties = true)
     initialize_level(level_or_node)
 
-    @parent_solver = parent_solver
-    @found         = false
-    @pushes        = Float::INFINITY
-    @loop_tries    = []
-    @tries         = 0
+    @parent_solver   = parent_solver
+    @check_penalties = check_penalties
+    @found           = false
+    @pushes          = Float::INFINITY
+    @loop_tries      = []
+    @tries           = 0
 
     initialize_deadlocks
     initialize_distances
@@ -20,7 +21,7 @@ class IdaStarSolver < Solver
     i       = 0
 
     while !@found && bound != Float::INFINITY
-      solver = AStarSolver.new(@level, bound, self)
+      solver = AStarSolver.new(@level, bound, self, @check_penalties)
       solver.run
 
       @found         =  solver.found

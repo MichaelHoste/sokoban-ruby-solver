@@ -41,7 +41,11 @@ class Solver
   end
 
   def initialize_penalties_hashtable
-    @processed_penalties_nodes = @parent_solver.nil? ? HashTable.new : @parent_solver.processed_penalties_nodes
+    if @parent_solver.nil?
+      @processed_penalties_nodes = HashTable.new
+    else
+      @processed_penalties_nodes = @parent_solver.processed_penalties_nodes
+    end
   end
 
   def estimate(node)

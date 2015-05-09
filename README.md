@@ -4,9 +4,6 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * refaire passer les specs
- * spec for "size" on hashtable
- * Réduire la taille des hashtables des sous-solveurs
  * specs pour subnodes
  * specs pour penalties
  * specs for treenode
