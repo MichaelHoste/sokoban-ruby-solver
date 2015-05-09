@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe IdaStarSolver do
+describe IdaStarSolver, :pending => true do
 
-  it '#run (first level)' do
+  xit '#run (first level)' do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = IdaStarSolver.new(level)
     solver.run
@@ -11,7 +11,7 @@ describe IdaStarSolver do
     solver.pushes.should == 97
   end
 
-  it '#run (simplified first level)' do
+  xit '#run (simplified first level)' do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\
@@ -33,7 +33,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 131
   end
 
-  it '#run (less simplified first level)' do
+  xit '#run (less simplified first level)' do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\
@@ -59,7 +59,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 967
   end
 
-  it '#run (simple level)', :focus => true do
+  xit '#run (simple level)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\
@@ -79,7 +79,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 94
   end
 
-  it '#run (level with less boxes than goals)' do
+  xit '#run (level with less boxes than goals)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\
@@ -100,7 +100,7 @@ describe IdaStarSolver do
 
   end
 
-  it '#run (impossible level)' do
+  xit '#run (impossible level)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#  $ #  \n"\
@@ -118,7 +118,6 @@ describe IdaStarSolver do
     solver.tries.should                          == 101 # because of 1push + 100 loop_tries used to detect impossible solution
     solver.pushes.should                         == Float::INFINITY
     solver.processed_penalties_nodes.size.should == 1
-
   end
 
 end

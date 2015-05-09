@@ -80,11 +80,9 @@ class AStarSolver < Solver
   end
 
   def find_penalties(node)
-    #if @parent_solver.parent_solver.nil?
-      if !@processed_penalties_nodes.include?(node)
-        PenaltiesService.new(node, self).run
-      end
-    #end
+    if !@processed_penalties_nodes.include?(node)
+      PenaltiesService.new(node, self).run
+    end
   end
 
   def add_to_waiting_list(tree_node)

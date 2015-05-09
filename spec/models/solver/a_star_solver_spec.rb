@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe AStarSolver do
+describe AStarSolver, :pending => true do
 
-  it '#run (first level)' do
+  xit '#run (first level)' do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = AStarSolver.new(level)
     solver.run
@@ -11,7 +11,7 @@ describe AStarSolver do
     solver.pushes.should == 97
   end
 
-  it '#run (simple level)' do
+  xit '#run (simple level)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\
@@ -30,7 +30,7 @@ describe AStarSolver do
     solver.pushes.should == 25
   end
 
-  it '#run (level with less boxes than goals)' do
+  xit '#run (level with less boxes than goals)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\
@@ -49,7 +49,7 @@ describe AStarSolver do
     solver.pushes.should == 5
   end
 
-  it '#run (impossible level)' do
+  xit '#run (impossible level)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#  $ #  \n"\

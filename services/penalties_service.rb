@@ -1,13 +1,15 @@
 # Find penalties list of current node
+# Careful:
+#  * When run without parent_solver, returns only the local penalties of node
+#  * When run with parent_solver, returns also penalties of child nodes
 
 class PenaltiesService
-
-  #attr_reader :penalties
 
   def initialize(node, parent_solver = nil)
     @node          = node
     @parent_solver = parent_solver
 
+    initialize_penalties
     initialize_distances
   end
 
@@ -15,32 +17,35 @@ class PenaltiesService
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@parent_solver.processed_penalties_nodes.include?(sub_node)
+      if !@processed_penalties_nodes.include?(sub_node)
         penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
         if penalty_value > 0
-          puts "-------"
-          # if @parent_solver
-          puts @parent_solver.penalties.count
-          # end
-          puts sub_node.to_s
-          puts penalty_value
-          puts "-------"
-
-          @parent_solver.penalties << {
+          puts "add penalty"
+          @penalties << {
             :node  => sub_node,
             :value => penalty_value
           }
         end
 
-        @parent_solver.processed_penalties_nodes.add(sub_node)
+        @processed_penalties_nodes.add(sub_node)
       end
     end
 
-    @parent_solver.penalties
+    @penalties
   end
 
   private
+
+  def initialize_penalties
+    if @parent_solver.nil?
+      @penalties                 = []
+      @processed_penalties_nodes = HashTable.new
+    else
+      @penalties                 = @parent_solver.penalties
+      @processed_penalties_nodes = @parent_solver.processed_penalties_nodes
+    end
+  end
 
   def initialize_distances
     if @parent_solver.nil?
@@ -58,12 +63,10 @@ class PenaltiesService
   end
 
   def estimate_pushes(node)
-    # if @parent_solver.nil?
-    #   total_penalties = @penalties
-    # else
-    #   total_penalties = @parent_solver.penalties + @penalties
-    # end
-
-    BoxesToGoalsMinimalCostService.new(node, @distances_for_zone, @parent_solver.penalties).run
+    BoxesToGoalsMinimalCostService.new(
+      node,
+      @distances_for_zone,
+      @penalties
+    ).run
   end
 end
