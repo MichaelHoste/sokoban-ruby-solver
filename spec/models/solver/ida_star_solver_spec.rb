@@ -12,10 +12,11 @@ describe IdaStarSolver do
     puts solver.penalties.size
     puts solver.processed_penalties_nodes.size
 
-    solver.tries.should                          == 6797
+    # with only penalties 2 boxes
+    solver.tries.should                          == 100
     solver.pushes.should                         == 97
-    solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 0
+    solver.penalties.size.should                 == 5
+    solver.processed_penalties_nodes.size.should == 328
   end
 
   it '#run (little bit simplified first level)', :slow => true do
@@ -41,7 +42,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 427
   end
 
-  it '#run (very simplified first level)', :focus => true do
+  it '#run (very simplified first level)' do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\

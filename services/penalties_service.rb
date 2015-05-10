@@ -20,7 +20,7 @@ class PenaltiesService
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@processed_penalties_nodes.include?(sub_node)
+      if !@processed_penalties_nodes.include?(sub_node) # && sub_node.boxes_zone.positions_of_1.count <= 2
         penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
         if penalty_value > 0
@@ -31,7 +31,7 @@ class PenaltiesService
 
           @found_new_penalty = true
 
-          #print_penalty(sub_node, penalty_value)
+          print_penalty(sub_node, penalty_value)
         end
 
         @processed_penalties_nodes.add(sub_node)
@@ -78,9 +78,10 @@ class PenaltiesService
   end
 
   def print_penalty(sub_node, penalty_value)
+    puts "-----------------------------------"
     puts "new penalty (#{@penalties.size})"
     puts sub_node.to_s
     puts penalty_value
-    puts '------'
+    puts "-----------------------------------"
   end
 end
