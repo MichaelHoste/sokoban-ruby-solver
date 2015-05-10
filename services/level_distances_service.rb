@@ -12,7 +12,6 @@ class LevelDistancesService
 
   def run
     @distances = initialize_distances
-    puts "salut"
 
     (0..@level.size-1).each do |pusher_index|
       (0..@level.size-1).each do |box_index|
