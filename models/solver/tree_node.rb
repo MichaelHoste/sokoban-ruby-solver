@@ -26,10 +26,6 @@ class TreeNode
     @node.won?
   end
 
-  def deadlocked?
-    DeadlockService.new(@node.to_level).run
-  end
-
   def find_children
     NodeChildrenService.new(@node).run.nodes.collect do |node|
       TreeNode.new(node, @g + 1)
