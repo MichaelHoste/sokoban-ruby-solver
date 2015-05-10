@@ -112,13 +112,13 @@ class Zone
 
   def initialize_boxes_zone
     bit = 2 ** (@level.inside_size - 1)
-    @level.grid.each do |char|
-      if @inside_cells.include? char
-        if ['$', '*'].include? char
-          @number += bit
-        end
-        bit /= 2
+
+    @level.zone_pos_to_level_pos.values.each do |level_pos|
+      char = @level.grid[level_pos]
+      if ['$', '*'].include? char
+        @number += bit
       end
+      bit /= 2
     end
   end
 
@@ -127,12 +127,10 @@ class Zone
 
     @level.zone_pos_to_level_pos.values.each do |level_pos|
       char = @level.grid[level_pos]
-      if @inside_cells.include? char
-        if ['.', '*', '+'].include? char
-          @number += bit
-        end
-        bit /= 2
+      if ['.', '*', '+'].include? char
+        @number += bit
       end
+      bit /= 2
     end
   end
 
