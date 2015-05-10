@@ -9,7 +9,6 @@ class AStarSolver < Solver
     @found           = false
     @pushes          = Float::INFINITY
     @tries           = 0
-    @start_time      = Time.now
 
     initialize_deadlocks
     initialize_distances
@@ -17,6 +16,8 @@ class AStarSolver < Solver
     initialize_penalties_hashtable
     initialize_hashtable
     initialize_tree
+
+    @start_time      = Time.now
   end
 
   def run
