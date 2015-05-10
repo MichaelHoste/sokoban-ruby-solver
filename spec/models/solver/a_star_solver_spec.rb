@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe AStarSolver do
 
-  xit '#run (first level)', :focus => true do
+  it '#run (first level)' do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
-    solver = AStarSolver.new(level)
+    solver = AStarSolver.new(level, Float::INFINITY, nil, false)
     solver.run
 
     puts solver.tries
