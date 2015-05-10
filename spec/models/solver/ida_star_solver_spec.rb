@@ -41,7 +41,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 642
   end
 
-  it '#run (very simplified first level)' do
+  it '#run (very simplified first level)', :focus => true, :profiling => true do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\

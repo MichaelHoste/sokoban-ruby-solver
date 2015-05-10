@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Zone do
+describe Zone, :smart_focus => true do
   before :all do
     @level = Pack.new('spec/support/files/level.slc').levels[0]
   end

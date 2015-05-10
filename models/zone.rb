@@ -13,9 +13,9 @@ class Zone
     @inside_cells = Level.inside_cells
 
     initialize_boxes_zone           if type == BOXES_ZONE
-    initialize_pusher_zone          if type == PUSHER_ZONE
     initialize_goal_zone            if type == GOALS_ZONE
     initialize_custom_zone(options) if type == CUSTOM_ZONE
+    initialize_pusher_zone          if type == PUSHER_ZONE
   end
 
   # Assume same level for speed
@@ -122,6 +122,32 @@ class Zone
     end
   end
 
+  def initialize_goal_zone
+    bit = 2 ** (@level.inside_size - 1)
+
+    @level.zone_pos_to_level_pos.values.each do |level_pos|
+      char = @level.grid[level_pos]
+      if @inside_cells.include? char
+        if ['.', '*', '+'].include? char
+          @number += bit
+        end
+        bit /= 2
+      end
+    end
+  end
+
+  def initialize_custom_zone(options)
+    if options[:number]
+      @number = options[:number]
+    elsif options[:positions]
+      positions = convert_to_zone_positions(options[:positions])
+
+      positions.each do |position|
+        @number += 2 ** (@level.inside_size - position - 1)
+      end
+    end
+  end
+
   def initialize_pusher_zone
     positions = []
 
@@ -160,43 +186,11 @@ class Zone
     end
   end
 
-  def initialize_goal_zone
-    bit = 2 ** (@level.inside_size - 1)
-
-    @level.zone_pos_to_level_pos.values.each do |level_pos|
-      char = @level.grid[level_pos]
-      if @inside_cells.include? char
-        if ['.', '*', '+'].include? char
-          @number += bit
-        end
-        bit /= 2
-      end
-    end
-  end
-
-  def initialize_custom_zone(options)
-    if options[:number]
-      @number = options[:number]
-    elsif options[:positions]
-      positions = convert_to_zone_positions(options[:positions])
-
-      bit = 2 ** (@level.inside_size - 1)
-
-      (0..@level.inside_size-1).each do |zone_pos|
-        if positions.include? zone_pos
-          positions.delete(zone_pos)
-          @number += bit
-        end
-        bit /= 2
-      end
-    end
-  end
-
   def convert_to_zone_positions(level_positions)
     cols = @level.cols
 
-    level_positions.collect do |level_mn|
-      @level.level_pos_to_zone_pos[cols*level_mn[:m] + level_mn[:n]]
-    end
+    level_positions.collect do |pos|
+      @level.level_pos_to_zone_pos[cols*pos[:m] + pos[:n]]
+    end.compact
   end
 end
