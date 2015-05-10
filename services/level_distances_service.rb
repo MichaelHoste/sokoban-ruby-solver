@@ -54,6 +54,7 @@ class LevelDistancesService
 
     @level.grid[pusher_index] = '@'
     @level.grid[box_index]    = '$'
+    @level.send(:initialize_pusher_position)
 
     distances = BoxDistancesService.new(@level).run(:for_level)
 

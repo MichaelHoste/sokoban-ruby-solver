@@ -32,21 +32,23 @@ class Level
   def initialize(level)
     @inside_cells = Level.inside_cells
 
-    if level.is_a? Nokogiri::XML::Element
-      initialize_grid_from_xml(level)
-    elsif level.is_a? String
-      initialize_grid_from_text(level)
-    elsif level.is_a? Node
-      initialize_grid_from_node(level)
-    elsif level.is_a? Level
-      initialize_grid_from_level(level)
-    end
+    if level.is_a? Level
+      create_level_from_level(level)
+    else
+      if level.is_a? Nokogiri::XML::Element
+        initialize_grid_from_xml(level)
+      elsif level.is_a? String
+        initialize_grid_from_text(level)
+      elsif level.is_a? Node
+        initialize_grid_from_node(level)
+      end
 
-    initialize_pusher_position
-    initialize_floor
-    initialize_size
-    initialize_boxes_and_goals
-    initialize_level_zone_positions
+      initialize_pusher_position
+      initialize_floor
+      initialize_size
+      initialize_boxes_and_goals
+      initialize_level_zone_positions
+    end
   end
 
   def read_pos(m, n)
@@ -262,14 +264,28 @@ class Level
     end
   end
 
-  def initialize_grid_from_level(level)
-    @rows      = level.rows
-    @cols      = level.cols
-    @name      = level.name
-    @copyright = level.copyright
-    @grid      = level.grid.collect do |cell|
+  def create_level_from_level(level)
+    @rows        = level.rows
+    @cols        = level.cols
+    @size        = @cols * @rows
+    @inside_size = level.inside_size
+    @name        = level.name
+    @boxes       = level.boxes
+    @goals       = level.goals
+    @copyright   = level.copyright
+
+    @grid        = level.grid.collect do |cell|
       cell
     end
+
+    @pusher = {
+      :pos_m => level.pusher[:pos_m],
+      :pos_n => level.pusher[:pos_n]
+    }
+
+    # Don't need to copy, reference is ok because doesn't change
+    @level_pos_to_zone_pos = level.level_pos_to_zone_pos
+    @zone_pos_to_level_pos = level.zone_pos_to_level_pos
   end
 
   def initialize_size
