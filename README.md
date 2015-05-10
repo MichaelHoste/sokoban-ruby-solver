@@ -5,7 +5,6 @@ Master Thesis implementation of Sokoban solver in Ruby
 ## Todo
 
  * specs pour subnodes
- * specs pour penalties
  * specs for treenode
  * Faire passer tous les specs sauf les solver trop longs à mettre en pending
  * Eviter la boucle supplémentaire pour faire << en utilisant un concat (vérifier la vitesse)

@@ -111,7 +111,7 @@ class AStarSolver < Solver
   def print_log
     if !@list.empty?
       @tries += 1
-      if @tries % 100 == 0 && @parent_solver && @parent_solver.parent_solver.nil?
+      if @tries % 100 == 0 && (@parent_solver.nil? || @parent_solver.parent_solver.nil?)
         puts @tries
         #puts @list.first.node.to_s
       end
