@@ -14,6 +14,8 @@ class IdaStarSolver < Solver
     initialize_distances
     initialize_penalties
     initialize_penalties_hashtable
+
+    @start_time      = Time.now
   end
 
   def run
@@ -22,6 +24,7 @@ class IdaStarSolver < Solver
 
     while !@found && bound != Float::INFINITY
       puts "START IDA with bound: #{bound}" if @parent_solver.nil?
+      puts @level.to_s
 
       solver = AStarSolver.new(@level, self, bound, @check_penalties)
       solver.run
@@ -37,6 +40,8 @@ class IdaStarSolver < Solver
         i += 1
       end
     end
+
+    puts "#{elapsed_time.to_i} ms (#{i+1} loop(s))"
 
     @pushes = Float::INFINITY if !@found
   end

@@ -41,7 +41,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 642
   end
 
-  it '#run (very simplified first level)' do
+  it '#run (very simplified first level)', :focus => true, :profiling => true do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\
@@ -62,6 +62,29 @@ describe IdaStarSolver do
     solver.pushes.should                         == 49
     solver.penalties.size.should                 == 2
     solver.processed_penalties_nodes.size.should == 131
+  end
+
+  it '#run (very *very* simplified level)' do
+    text =  "    #####          \n"\
+            "    #@  #          \n"\
+            "    #   #          \n"\
+            "  ###$  ##         \n"\
+            "  #    $ #         \n"\
+            "### # ## #   ######\n"\
+            "#   # ## #####   .#\n"\
+            "#                .#\n"\
+            "##### ### # ##    #\n"\
+            "    #     #########\n"\
+            "    #######        "
+
+    level = Level.new(text)
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.tries.should                          == 35
+    solver.pushes.should                         == 34
+    solver.penalties.size.should                 == 0
+    solver.processed_penalties_nodes.size.should == 0
   end
 
   it '#run (simple level)' do

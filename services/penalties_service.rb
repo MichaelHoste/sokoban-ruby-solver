@@ -26,7 +26,7 @@ class PenaltiesService
             :value => penalty_value
           }
 
-          print_penalty(sub_node, penalty_value)
+          #print_penalty(sub_node, penalty_value)
         end
 
         @processed_penalties_nodes.add(sub_node)

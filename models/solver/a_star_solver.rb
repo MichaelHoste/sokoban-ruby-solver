@@ -9,6 +9,7 @@ class AStarSolver < Solver
     @found           = false
     @pushes          = Float::INFINITY
     @tries           = 0
+    @start_time      = Time.now
 
     initialize_deadlocks
     initialize_distances

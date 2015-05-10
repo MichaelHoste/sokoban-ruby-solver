@@ -55,4 +55,8 @@ class Solver
       @penalties
     ).run
   end
+
+  def elapsed_time
+    (Time.now - @start_time) * 1000.0
+  end
 end
