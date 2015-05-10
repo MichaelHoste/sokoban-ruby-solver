@@ -30,6 +30,8 @@ class Level
               :level_pos_to_zone_pos, :zone_pos_to_level_pos
 
   def initialize(level)
+    @inside_cells = Level.inside_cells
+
     if level.is_a? Nokogiri::XML::Element
       initialize_grid_from_xml(level)
     elsif level.is_a? String
@@ -236,7 +238,7 @@ class Level
         new_cell = cell
       end
 
-      if Level.inside_cells.include? new_cell
+      if @inside_cells.include? new_cell
         # Place goals from zone
         if goals_zone.bit_1?(pos)
           new_cell = '.'
@@ -262,7 +264,7 @@ class Level
     @size = @cols * @rows
 
     @inside_size = @grid.count do |cell|
-      Level.inside_cells.include? cell
+      @inside_cells.include? cell
     end
   end
 
@@ -321,7 +323,7 @@ class Level
     @grid.each_with_index do |cell, level_pos|
       @level_pos_to_zone_pos[level_pos] = nil
 
-      if Level.inside_cells.include? cell
+      if @inside_cells.include? cell
         @level_pos_to_zone_pos[level_pos] = zone_pos
         @zone_pos_to_level_pos[zone_pos]  = level_pos
 
