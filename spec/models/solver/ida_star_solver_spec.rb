@@ -37,8 +37,8 @@ describe IdaStarSolver do
 
     solver.tries.should                          == 64
     solver.pushes.should                         == 64
-    solver.penalties.size.should                 == 12
-    solver.processed_penalties_nodes.size.should == 642
+    solver.penalties.size.should                 == 3
+    solver.processed_penalties_nodes.size.should == 427
   end
 
   it '#run (very simplified first level)', :focus => true do
@@ -60,8 +60,8 @@ describe IdaStarSolver do
 
     solver.tries.should                          == 49
     solver.pushes.should                         == 49
-    solver.penalties.size.should                 == 2
-    solver.processed_penalties_nodes.size.should == 131
+    solver.penalties.size.should                 == 1
+    solver.processed_penalties_nodes.size.should == 112
   end
 
   it '#run (very *very* simplified level)' do
@@ -104,8 +104,8 @@ describe IdaStarSolver do
 
     solver.tries.should                          == 235
     solver.pushes.should                         == 25
-    solver.penalties.size.should                 == 16
-    solver.processed_penalties_nodes.size.should == 94
+    solver.penalties.size.should                 == 12
+    solver.processed_penalties_nodes.size.should == 88
   end
 
   it '#run (level with less boxes than goals)' do

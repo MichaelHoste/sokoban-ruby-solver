@@ -11,8 +11,8 @@ RSpec.configure do |config|
 
   config.after :example, :profiling => true do
     result  = RubyProf.stop
-    #result.eliminate_methods!([/Unknown#column_indices/])
-    #result.eliminate_methods!([/Unknown#row_indices/])
+    # result.eliminate_methods!([/Unknown#column_indices/])
+    # result.eliminate_methods!([/Unknown#row_indices/])
     printer = RubyProf::FlatPrinter.new(result)
     printer.print(STDOUT)
   end

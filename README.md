@@ -6,10 +6,8 @@ Master Thesis implementation of Sokoban solver in Ruby
 
  * specs pour subnodes
  * specs for treenode
- * Faire passer tous les specs sauf les solver trop longs à mettre en pending
- * plutôt que de lancer un IDA* dans les pénalités, lancer un star avec un bound ?
  * Faut-il activer la recherche de pénalité dans tous les cas au niveau des sous-nodes?
- * Modifier munkres pour celui-ci: https://github.com/maandree/hungarian-algorithm-n3
+ * Modifier munkres pour celui-ci: https://github.com/maandree/hungarian-algorithm-n3 ?
 
  * améliorer SubNodesService et PenaltiesService pour ne prendre en compte que la dernière caisse
    poussée ? + éviter de construire tout si un node du dessus est déjà dans le hashtable (améliorer service)

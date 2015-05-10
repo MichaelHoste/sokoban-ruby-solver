@@ -16,7 +16,9 @@ describe PenaltiesService do
     level = Level.new(text)
     node  = level.to_node
 
-    penalties = PenaltiesService.new(node).run
+    service = PenaltiesService.new(node)
+    service.run
+    penalties = service.penalties
 
     penalties.count.should == 2
 
@@ -57,7 +59,9 @@ describe PenaltiesService do
     level = Level.new(text)
     node  = level.to_node
 
-    penalties = PenaltiesService.new(node).run
+    service = PenaltiesService.new(node)
+    service.run
+    penalties = service.penalties
 
     penalties.count.should == 5
 

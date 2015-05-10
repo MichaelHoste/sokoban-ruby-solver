@@ -5,9 +5,12 @@
 
 class PenaltiesService
 
+  attr_reader :penalties
+
   def initialize(node, parent_solver = nil)
-    @node          = node
-    @parent_solver = parent_solver
+    @node              = node
+    @parent_solver     = parent_solver
+    @found_new_penalty = false
 
     initialize_penalties
     initialize_distances
@@ -26,6 +29,8 @@ class PenaltiesService
             :value => penalty_value
           }
 
+          @found_new_penalty = true
+
           #print_penalty(sub_node, penalty_value)
         end
 
@@ -34,7 +39,7 @@ class PenaltiesService
       end
     end
 
-    @penalties
+    @found_new_penalty
   end
 
   private

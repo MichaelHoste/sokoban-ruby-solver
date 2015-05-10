@@ -28,12 +28,16 @@ class AStarSolver < Solver
 
       current.find_children.each do |child|
         if !deadlocked?(child) && !processed?(child)
-          find_penalties(child.node)
           child.h = estimate(child.node)
 
           if child.f <= @bound
-            add_to_waiting_list(child)
-            add_to_tree(current, child)
+            found_new_penalty = find_penalties(child.node)
+            child.h           = estimate(child.node) if found_new_penalty
+
+            if child.f <= @bound
+              add_to_waiting_list(child)
+              add_to_tree(current, child)
+            end
           end
         end
       end
@@ -85,9 +89,10 @@ class AStarSolver < Solver
   def find_penalties(node)
     if @check_penalties
       if !@processed_penalties_nodes.include?(node)
-        PenaltiesService.new(node, self).run
+        return PenaltiesService.new(node, self).run
       end
     end
+    return false
   end
 
   def add_to_waiting_list(tree_node)
