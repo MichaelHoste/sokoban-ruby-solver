@@ -1,6 +1,6 @@
 class AStarSolver < Solver
 
-  def initialize(level_or_node, bound = Float::INFINITY, parent_solver = nil, check_penalties = true)
+  def initialize(level_or_node, parent_solver = nil, bound = Float::INFINITY, check_penalties = true)
     initialize_level(level_or_node)
 
     @bound           = bound

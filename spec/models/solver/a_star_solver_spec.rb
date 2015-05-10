@@ -4,7 +4,7 @@ describe AStarSolver do
 
   it '#run (first level)', :slow => true do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
-    solver = AStarSolver.new(level, Float::INFINITY, nil, false)
+    solver = AStarSolver.new(level, nil, Float::INFINITY, false)
     solver.run
 
     solver.tries.should                          == 4883

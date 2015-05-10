@@ -23,7 +23,7 @@ class IdaStarSolver < Solver
     while !@found && bound != Float::INFINITY
       puts "START IDA with bound: #{bound}" if @parent_solver.nil?
 
-      solver = AStarSolver.new(@level, bound, self, @check_penalties)
+      solver = AStarSolver.new(@level, self, bound, @check_penalties)
       solver.run
 
       @found         =  solver.found

@@ -30,9 +30,7 @@ class PenaltiesService
         end
 
         @processed_penalties_nodes.add(sub_node)
-        if @processed_penalties_nodes.size % 10 == 0
-          puts "processed penalties nodes: #{@processed_penalties_nodes.size}"
-        end
+        puts "processed penalties nodes: #{@processed_penalties_nodes.size}" if @processed_penalties_nodes.size % 10 == 0
       end
     end
 
