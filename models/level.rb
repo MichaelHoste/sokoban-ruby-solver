@@ -38,6 +38,8 @@ class Level
       initialize_grid_from_text(level)
     elsif level.is_a? Node
       initialize_grid_from_node(level)
+    elsif level.is_a? Level
+      initialize_grid_from_level(level)
     end
 
     initialize_pusher_position
@@ -186,7 +188,7 @@ class Level
   end
 
   def clone
-    Level.new(to_s)
+    Level.new(self)
   end
 
   def self.inside_cells
@@ -257,6 +259,16 @@ class Level
       end
 
       new_cell
+    end
+  end
+
+  def initialize_grid_from_level(level)
+    @rows      = level.rows
+    @cols      = level.cols
+    @name      = level.name
+    @copyright = level.copyright
+    @grid      = level.grid.collect do |cell|
+      cell
     end
   end
 
