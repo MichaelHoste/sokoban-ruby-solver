@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TreeNode, :focus => true do
+describe TreeNode do
 
   it '.initialize (without g)' do
     level = Pack.new('spec/support/files/level.slc').levels[0]
