@@ -2,7 +2,40 @@ require 'spec_helper'
 
 describe IdaStarSolver do
 
-  xit '#run (first level)' do
+  xit '#run (complex level)', :slow => true do
+    text = "################ \n"\
+           "#              # \n"\
+           "# # ######     # \n"\
+           "# #  $ $ $ $#  # \n"\
+           "# #   $@$   ## ##\n"\
+           "# #  $ $ $###...#\n"\
+           "# #   $ $  ##...#\n"\
+           "# ##\#$$$ $ ##...#\n"\
+           "#     # ## ##...#\n"\
+           "#####   ## ##...#\n"\
+           "    #####     ###\n"\
+           "        #     #  \n"\
+           "        #######  "
+    # because #$$ == interpolation of process id
+
+    level = Level.new(text)
+
+    puts level.to_s
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    puts solver.tries
+    puts solver.pushes
+    puts solver.penalties.size
+    puts solver.processed_penalties_nodes.size
+
+    solver.tries.should                          == 64
+    solver.pushes.should                         == 64
+    solver.penalties.size.should                 == 3
+    solver.processed_penalties_nodes.size.should == 427
+  end
+
+  xit '#run (first level)', :slow => true do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = IdaStarSolver.new(level)
     solver.run
