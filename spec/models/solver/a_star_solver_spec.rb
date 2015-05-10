@@ -2,15 +2,10 @@ require 'spec_helper'
 
 describe AStarSolver do
 
-  it '#run (first level)' do
+  it '#run (first level)', :slow => true do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = AStarSolver.new(level, Float::INFINITY, nil, false)
     solver.run
-
-    puts solver.tries
-    puts solver.pushes
-    puts solver.penalties.size
-    puts solver.processed_penalties_nodes.size
 
     solver.tries.should                          == 4883
     solver.pushes.should                         == 97
@@ -53,7 +48,6 @@ describe AStarSolver do
     level  = Level.new(text)
     solver = AStarSolver.new(level)
     solver.run
-
 
     solver.tries.should                          == 5
     solver.pushes.should                         == 5

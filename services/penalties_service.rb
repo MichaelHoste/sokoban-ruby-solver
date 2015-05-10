@@ -21,17 +21,18 @@ class PenaltiesService
         penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
         if penalty_value > 0
-          puts "add penalty"
-          puts sub_node.to_s
-          puts penalty_value
-          puts '------'
           @penalties << {
             :node  => sub_node,
             :value => penalty_value
           }
+
+          print_penalty(sub_node, penalty_value)
         end
 
         @processed_penalties_nodes.add(sub_node)
+        if @processed_penalties_nodes.size % 10 == 0
+          puts "processed penalties nodes: #{@processed_penalties_nodes.size}"
+        end
       end
     end
 
@@ -71,5 +72,12 @@ class PenaltiesService
       @distances_for_zone,
       @penalties
     ).run
+  end
+
+  def print_penalty(sub_node, penalty_value)
+    puts "new penalty (#{@penalties.size})"
+    puts sub_node.to_s
+    puts penalty_value
+    puts '------'
   end
 end
