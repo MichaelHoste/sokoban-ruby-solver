@@ -7,6 +7,7 @@ describe AStarSolver do
     solver = AStarSolver.new(level, nil, Float::INFINITY, false)
     solver.run
 
+    solver.found.should                          == true
     solver.tries.should                          == 4883
     solver.pushes.should                         == 97
     solver.penalties.size.should                 == 0
@@ -28,10 +29,11 @@ describe AStarSolver do
     solver = AStarSolver.new(level)
     solver.run
 
-    solver.tries.should                          == 51
+    solver.found.should                          == true
+    solver.tries.should                          == 79
     solver.pushes.should                         == 25
-    solver.penalties.size.should                 == 16
-    solver.processed_penalties_nodes.size.should == 94
+    solver.penalties.size.should                 == 22
+    solver.processed_penalties_nodes.size.should == 92
   end
 
   it '#run (level with less boxes than goals)' do
@@ -49,6 +51,7 @@ describe AStarSolver do
     solver = AStarSolver.new(level)
     solver.run
 
+    solver.found.should                          == true
     solver.tries.should                          == 5
     solver.pushes.should                         == 5
     solver.penalties.size.should                 == 0
@@ -70,6 +73,7 @@ describe AStarSolver do
     solver = AStarSolver.new(level)
     solver.run
 
+    solver.found.should                          == false
     solver.tries.should                          == 1
     solver.pushes.should                         == Float::INFINITY
     solver.penalties.size.should                 == 0

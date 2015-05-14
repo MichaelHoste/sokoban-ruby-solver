@@ -14,7 +14,8 @@ class AStarSolver < Solver
     initialize_distances
     initialize_penalties
     initialize_penalties_hashtable
-    initialize_hashtable
+    initialize_processed
+    initialize_waiting
     initialize_tree
 
     @start_time      = Time.now
@@ -24,15 +25,17 @@ class AStarSolver < Solver
     @list = [@root]
 
     while !@list.empty? && !next_candidate.won?
-      current = process_next_candidate
+      current   = extract_next_candidate
 
-      current.find_children.each do |child|
-        if !deadlocked?(child) && !processed?(child)
-          child.h = estimate(child.node)
+      found     = find_penalties(current.node)
+      current.h = estimate(current.node) if found
 
-          if child.f <= @bound
-            found_new_penalty = find_penalties(child.node)
-            child.h           = estimate(child.node) if found_new_penalty
+      if current.f <= @bound && !processed?(current)
+        process(current)
+
+        current.find_children.each do |child|
+          if !deadlocked?(child) && !processed?(child) && !waiting?(child)
+            child.h = estimate(child.node)
 
             if child.f <= @bound
               add_to_waiting_list(child)
@@ -51,8 +54,12 @@ class AStarSolver < Solver
 
   private
 
-  def initialize_hashtable
+  def initialize_processed
     @processed_nodes = HashTable.new
+  end
+
+  def initialize_waiting
+    @waiting_nodes = HashTable.new
   end
 
   def initialize_tree
@@ -64,12 +71,21 @@ class AStarSolver < Solver
     @list.first
   end
 
-  def process_next_candidate
+  def extract_next_candidate
     @list.shift
+  end
+
+  def process(tree_node)
+    @waiting_nodes.remove(tree_node.node)
+    @processed_nodes.add(tree_node.node)
   end
 
   def processed?(tree_node)
     @processed_nodes.include?(tree_node.node)
+  end
+
+  def waiting?(tree_node)
+    @waiting_nodes.include?(tree_node.node)
   end
 
   def deadlocked?(tree_node)
@@ -96,8 +112,8 @@ class AStarSolver < Solver
   end
 
   def add_to_waiting_list(tree_node)
-    # Add to processed nodes
-    @processed_nodes.add(tree_node.node)
+    # Add to waiting nodes
+    @waiting_nodes.add(tree_node.node)
 
     # add to waiting list
     index = @list.bsearch_lower_boundary do |item|
