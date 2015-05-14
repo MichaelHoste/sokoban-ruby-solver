@@ -26,13 +26,17 @@ class AStarSolver < Solver
     while !@list.empty? && !next_candidate.won?
       current = process_next_candidate
 
-      current.find_children.each do |child|
-        if !deadlocked?(child) && !processed?(child)
-          child.h = estimate(child.node)
+      found = false
+      found = find_penalties(current.node) if (!@parent_solver || (@parent_solver.tries == 0 && @parent_solver.parent_solver.nil?))
 
-          if child.f <= @bound
-            found_new_penalty = find_penalties(child.node)
-            child.h           = estimate(child.node) if found_new_penalty
+      if found
+        current.h = estimate(current.node)
+      end
+
+      if current.f <= @bound
+        current.find_children.each do |child|
+          if !deadlocked?(child) && !processed?(child)
+            child.h = estimate(child.node)
 
             if child.f <= @bound
               add_to_waiting_list(child)
@@ -118,7 +122,7 @@ class AStarSolver < Solver
   def print_log
     if !@list.empty?
       @tries += 1
-      if @tries % 100 == 0 && (@parent_solver.nil? || @parent_solver.parent_solver.nil?)
+      if @tries % 1 == 0 && (@parent_solver.nil? || @parent_solver.parent_solver.nil?)
         puts @tries
         #puts @list.first.node.to_s
       end

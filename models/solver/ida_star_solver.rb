@@ -41,7 +41,7 @@ class IdaStarSolver < Solver
       end
     end
 
-    puts "#{elapsed_time.to_i} ms (#{i+1} loop(s))"
+    puts "#{elapsed_time.to_i} ms"
 
     @pushes = Float::INFINITY if !@found
   end
