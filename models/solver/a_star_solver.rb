@@ -1,5 +1,7 @@
 class AStarSolver < Solver
 
+  attr_reader :bound
+
   def initialize(level_or_node, parent_solver = nil, bound = Float::INFINITY, check_penalties = true)
     initialize_level(level_or_node)
 
@@ -13,10 +15,11 @@ class AStarSolver < Solver
     initialize_deadlocks
     initialize_distances
     initialize_penalties
-    initialize_total_nodes
+    initialize_processed_penalties
     initialize_processed
     initialize_waiting
     initialize_tree
+    initialize_log
 
     @start_time      = Time.now
   end
@@ -43,7 +46,6 @@ class AStarSolver < Solver
         end
 
         process(current)
-        @total_nodes << current.node
       end
 
       print_log
@@ -105,7 +107,7 @@ class AStarSolver < Solver
 
   def find_penalties(node)
     if @check_penalties
-      if !@total_nodes.include?(node)
+      if !@processed_penalties.include?(node)
         return PenaltiesService.new(node, self).run
       end
     end

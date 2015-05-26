@@ -13,7 +13,8 @@ class IdaStarSolver < Solver
     initialize_deadlocks
     initialize_distances
     initialize_penalties
-    initialize_total_nodes
+    initialize_processed_penalties
+    initialize_log
 
     @start_time      = Time.now
   end
@@ -23,9 +24,6 @@ class IdaStarSolver < Solver
     i       = 0
 
     while !@found && bound != Float::INFINITY
-      puts "START IDA with bound: #{bound}" if @parent_solver.nil?
-      puts @level.to_s
-
       solver = AStarSolver.new(@level, self, bound, @check_penalties)
       solver.run
 
@@ -34,7 +32,7 @@ class IdaStarSolver < Solver
       @tries         += solver.tries
 
       if !@found
-        @pushes = bound = [estimate(@node), bound + 1].max
+        @pushes = bound = [estimate(@node), bound].max + 1
         # TODO FIXME need to find a better solution to know where we really don't have any solution
         break if (i >= 100 && @loop_tries[i] == @loop_tries[i-100])
         i += 1

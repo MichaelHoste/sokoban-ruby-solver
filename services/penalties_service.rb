@@ -8,10 +8,11 @@ class PenaltiesService
   attr_reader :penalties
 
   def initialize(node, parent_solver = nil)
-    @node              = node
-    @parent_solver     = parent_solver
+    @node          = node
+    @parent_solver = parent_solver
 
     initialize_penalties
+    initialize_processed_penalties
     initialize_distances
   end
 
@@ -21,7 +22,9 @@ class PenaltiesService
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if @parent_solver.nil? || !@parent_solver.total_nodes.include?(sub_node)
+      if !@processed_penalties.include?(sub_node)
+        @processed_penalties << sub_node
+
         penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
         if penalty_value > 0
@@ -32,7 +35,7 @@ class PenaltiesService
 
           found_new_penalty = true
 
-          print_penalty(sub_node, penalty_value)
+          @parent_solver.log.print_penalty(@penalties.last) if !@parent_solver.nil?
         end
       end
     end
@@ -47,6 +50,14 @@ class PenaltiesService
       @penalties = []
     else
       @penalties = @parent_solver.penalties
+    end
+  end
+
+  def initialize_processed_penalties
+    if @parent_solver.nil?
+      @processed_penalties = HashTable.new
+    else
+      @processed_penalties = @parent_solver.processed_penalties
     end
   end
 
@@ -71,13 +82,5 @@ class PenaltiesService
       @distances_for_zone,
       @penalties
     ).run
-  end
-
-  def print_penalty(sub_node, penalty_value)
-    puts "-----------------------------------"
-    puts "new penalty (#{@penalties.size})"
-    puts sub_node.to_s
-    puts penalty_value
-    puts "-----------------------------------"
   end
 end

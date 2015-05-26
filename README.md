@@ -20,40 +20,4 @@ Master Thesis implementation of Sokoban solver in Ruby
  * Should we update munkres for this one? https://github.com/maandree/hungarian-algorithm-n3
  * Tester une vraie situation en JRuby pour comparer les perfs
 
-Pas logique de trouver ça :
 
-```
-################
-#@             #
-# # ######     #
-# #  $$     #  #
-# #         ## ##
-# #       ###...#
-# #        ##...#
-# ###      ##...#
-#     # ## ##...#
-#####   ## ##...#
-    #####   $ ###
-        #     #
-        #######
-INFINITY
-```
-
-Avant ça
-
-```
-################
-#@             #
-# # ######     #
-# #  $$     #  #
-# #         ## ##
-# #       ###...#
-# #        ##...#
-# ###      ##...#
-#     # ## ##...#
-#####   ## ##...#
-    #####     ###
-        #     #
-        #######
-INFINITY
-```

@@ -1,8 +1,8 @@
 class Solver
 
-  attr_reader :found, :pushes, :tries, :parent_solver,
+  attr_reader :level, :node, :found, :pushes, :tries, :parent_solver,
               :deadlock_positions, :distances_for_zone, :deadlock_zone, :null_zone,
-              :penalties, :total_nodes
+              :penalties, :processed_penalties, :log
 
   private
 
@@ -40,8 +40,12 @@ class Solver
     @penalties = @parent_solver.nil? ? [] : @parent_solver.penalties
   end
 
-  def initialize_total_nodes
-    @total_nodes = @parent_solver.nil? ? HashTable.new(:big) : @parent_solver.total_nodes
+  def initialize_processed_penalties
+    @processed_penalties = @parent_solver.nil? ? HashTable.new(:big) : @parent_solver.processed_penalties
+  end
+
+  def initialize_log
+    @log = Logger.new(self)
   end
 
   def estimate(node)
