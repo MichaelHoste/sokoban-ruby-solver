@@ -1,8 +1,9 @@
 # sokoban-ruby-solver
 
+Master Thesis implementation of Sokoban solver in Ruby
+
 ![Build Status](https://www.codeship.io/projects/6e6488b0-b2b1-0132-f32a-2e477b22f50d/status)
 
-Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
@@ -21,6 +22,7 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 Pas logique de trouver ça :
 
+```
 ################
 #@             #
 # # ######     #
@@ -35,9 +37,11 @@ Pas logique de trouver ça :
         #     #
         #######
 INFINITY
+```
 
 Avant ça
 
+```
 ################
 #@             #
 # # ######     #
@@ -52,3 +56,4 @@ Avant ça
         #     #
         #######
 INFINITY
+```
