@@ -1,10 +1,11 @@
 # sokoban-ruby-solver
 
+![Build Status](https://www.codeship.io/projects/6e6488b0-b2b1-0132-f32a-2e477b22f50d/status)
+
 Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * Ajouter lien ![Build Status](https://www.codeship.io/projects/6e6488b0-b2b1-0132-f32a-2e477b22f50d/status)
  * Créer fichier log par solver.
  * Téléporter une caisse vers chaque goal possible accélérerait fortement l'algo !
    (optimisation: si toutes les caisses d'un état peuvent être téléportées vers tous les goals, on peut
