@@ -30,10 +30,10 @@ describe AStarSolver do
     solver.run
 
     solver.found.should                          == true
-    solver.tries.should                          == 79
+    solver.tries.should                          == 128
     solver.pushes.should                         == 25
-    solver.penalties.size.should                 == 22
-    solver.processed_penalties_nodes.size.should == 92
+    solver.penalties.size.should                 == 8
+    solver.processed_penalties_nodes.size.should == 34
   end
 
   it '#run (level with less boxes than goals)' do

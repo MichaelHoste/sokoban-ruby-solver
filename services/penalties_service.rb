@@ -20,7 +20,7 @@ class PenaltiesService
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@processed_penalties_nodes.include?(sub_node) # && sub_node.boxes_zone.positions_of_1.count <= 3
+      if !@processed_penalties_nodes.include?(sub_node) && (@parent_solver.nil? || !@parent_solver.total_nodes.include?(sub_node))
         penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
         if penalty_value > 0

@@ -31,8 +31,6 @@ class AStarSolver < Solver
       current.h = estimate(current.node) if found
 
       if current.f <= @bound && !processed?(current)
-        process(current)
-
         current.find_children.each do |child|
           if !deadlocked?(child) && !processed?(child) && !waiting?(child)
             child.h = estimate(child.node)
@@ -43,6 +41,9 @@ class AStarSolver < Solver
             end
           end
         end
+
+        process(current)
+        @total_nodes << current.node
       end
 
       print_log
@@ -104,7 +105,7 @@ class AStarSolver < Solver
 
   def find_penalties(node)
     if @check_penalties
-      if !@processed_penalties_nodes.include?(node)
+      if !@processed_penalties_nodes.include?(node) && !@total_nodes.include?(node)
         return PenaltiesService.new(node, self).run
       end
     end

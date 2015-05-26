@@ -20,7 +20,6 @@ describe IdaStarSolver do
 
     level = Level.new(text)
 
-    puts level.to_s
     solver = IdaStarSolver.new(level)
     solver.run
 
@@ -36,7 +35,7 @@ describe IdaStarSolver do
     solver.processed_penalties_nodes.size.should == 427
   end
 
-  xit '#run (first level)', :slow => true do
+  it '#run (first level)', :slow => true do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = IdaStarSolver.new(level)
     solver.run
@@ -48,10 +47,10 @@ describe IdaStarSolver do
 
     # with only penalties 2 boxes
     solver.found.should                          == true
-    solver.tries.should                          == 100
+    solver.tries.should                          == 98
     solver.pushes.should                         == 97
-    solver.penalties.size.should                 == 5
-    solver.processed_penalties_nodes.size.should == 328
+    solver.penalties.size.should                 == 6
+    solver.processed_penalties_nodes.size.should == 330
   end
 
   it '#run (little bit simplified first level)', :slow => true do
@@ -75,10 +74,10 @@ describe IdaStarSolver do
     solver.tries.should                          == 64
     solver.pushes.should                         == 64
     solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 291
+    solver.processed_penalties_nodes.size.should == 29
   end
 
-  it '#run (very simplified first level)', :focus => true do
+  it '#run (very simplified first level)' do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\
@@ -99,7 +98,7 @@ describe IdaStarSolver do
     solver.tries.should                          == 49
     solver.pushes.should                         == 49
     solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 74
+    solver.processed_penalties_nodes.size.should == 7
   end
 
   it '#run (very *very* simplified level)' do
@@ -142,10 +141,10 @@ describe IdaStarSolver do
     solver.run
 
     solver.found.should                          == true
-    solver.tries.should                          == 253
+    solver.tries.should                          == 458
     solver.pushes.should                         == 25
-    solver.penalties.size.should                 == 16
-    solver.processed_penalties_nodes.size.should == 86
+    solver.penalties.size.should                 == 8
+    solver.processed_penalties_nodes.size.should == 34
   end
 
   it '#run (level with less boxes than goals)' do
