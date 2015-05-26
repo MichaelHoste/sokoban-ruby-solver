@@ -10,17 +10,18 @@ class PenaltiesService
   def initialize(node, parent_solver = nil)
     @node              = node
     @parent_solver     = parent_solver
-    @found_new_penalty = false
 
     initialize_penalties
     initialize_distances
   end
 
   def run
+    found_new_penalty = false
+
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@processed_penalties_nodes.include?(sub_node) && (@parent_solver.nil? || !@parent_solver.total_nodes.include?(sub_node))
+      if @parent_solver.nil? || !@parent_solver.total_nodes.include?(sub_node)
         penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
 
         if penalty_value > 0
@@ -29,28 +30,23 @@ class PenaltiesService
             :value => penalty_value
           }
 
-          @found_new_penalty = true
+          found_new_penalty = true
 
           print_penalty(sub_node, penalty_value)
         end
-
-        @processed_penalties_nodes.add(sub_node)
-        puts "processed penalties nodes: #{@processed_penalties_nodes.size}" if @processed_penalties_nodes.size % 10 == 0
       end
     end
 
-    @found_new_penalty
+    found_new_penalty
   end
 
   private
 
   def initialize_penalties
     if @parent_solver.nil?
-      @penalties                 = []
-      @processed_penalties_nodes = HashTable.new
+      @penalties = []
     else
-      @penalties                 = @parent_solver.penalties
-      @processed_penalties_nodes = @parent_solver.processed_penalties_nodes
+      @penalties = @parent_solver.penalties
     end
   end
 

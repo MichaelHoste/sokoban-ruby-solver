@@ -13,7 +13,7 @@ class IdaStarSolver < Solver
     initialize_deadlocks
     initialize_distances
     initialize_penalties
-    initialize_penalties_hashtable
+    initialize_total_nodes
 
     @start_time      = Time.now
   end

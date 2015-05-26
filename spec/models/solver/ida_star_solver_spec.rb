@@ -23,16 +23,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    puts solver.tries
-    puts solver.pushes
-    puts solver.penalties.size
-    puts solver.processed_penalties_nodes.size
-
-    solver.found.should                          == true
-    solver.tries.should                          == 64
-    solver.pushes.should                         == 64
-    solver.penalties.size.should                 == 3
-    solver.processed_penalties_nodes.size.should == 427
+    solver.found.should            == true
+    solver.tries.should            == 64
+    solver.pushes.should           == 64
+    solver.penalties.size.should   == 3
+    solver.total_nodes.size.should == 0
   end
 
   xit '#run (first level)', :slow => true do
@@ -40,17 +35,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    puts solver.tries
-    puts solver.pushes
-    puts solver.penalties.size
-    puts solver.processed_penalties_nodes.size
-
-    # with only penalties 2 boxes
-    solver.found.should                          == true
-    solver.tries.should                          == 98
-    solver.pushes.should                         == 97
-    solver.penalties.size.should                 == 6
-    solver.processed_penalties_nodes.size.should == 330
+    solver.found.should            == true
+    solver.tries.should            == 98
+    solver.pushes.should           == 97
+    solver.penalties.size.should   == 6
+    solver.total_nodes.size.should == 0
   end
 
   it '#run (little bit simplified first level)', :slow => true do
@@ -70,11 +59,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.found.should                          == true
-    solver.tries.should                          == 64
-    solver.pushes.should                         == 64
-    solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 29
+    solver.found.should            == true
+    solver.tries.should            == 64
+    solver.pushes.should           == 64
+    solver.penalties.size.should   == 0
+    solver.total_nodes.size.should == 663
   end
 
   it '#run (very simplified first level)' do
@@ -94,11 +83,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.found.should                          == true
-    solver.tries.should                          == 49
-    solver.pushes.should                         == 49
-    solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 7
+    solver.found.should            == true
+    solver.tries.should            == 49
+    solver.pushes.should           == 49
+    solver.penalties.size.should   == 0
+    solver.total_nodes.size.should == 180
   end
 
   it '#run (very *very* simplified level)' do
@@ -118,11 +107,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.found.should                          == true
-    solver.tries.should                          == 35
-    solver.pushes.should                         == 34
-    solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 0
+    solver.found.should            == true
+    solver.tries.should            == 35
+    solver.pushes.should           == 34
+    solver.penalties.size.should   == 0
+    solver.total_nodes.size.should == 35
   end
 
   it '#run (simple level)' do
@@ -140,11 +129,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.found.should                          == true
-    solver.tries.should                          == 458
-    solver.pushes.should                         == 25
-    solver.penalties.size.should                 == 8
-    solver.processed_penalties_nodes.size.should == 34
+    solver.found.should            == true
+    solver.tries.should            == 458
+    solver.pushes.should           == 25
+    solver.penalties.size.should   == 8
+    solver.total_nodes.size.should == 2451
   end
 
   it '#run (level with less boxes than goals)' do
@@ -162,11 +151,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.found.should                          == true
-    solver.tries.should                          == 5
-    solver.pushes.should                         == 5
-    solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 0 # no penalties with 1 box
+    solver.found.should            == true
+    solver.tries.should            == 5
+    solver.pushes.should           == 5
+    solver.penalties.size.should   == 0
+    solver.total_nodes.size.should == 5
   end
 
   it '#run (impossible level)' do
@@ -184,11 +173,11 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    solver.found.should                          == false
-    solver.tries.should                          == 101 # 1 push + 100 loop_tries used to detect impossible solution
-    solver.pushes.should                         == Float::INFINITY
-    solver.penalties.size.should                 == 0
-    solver.processed_penalties_nodes.size.should == 0   # no penalties with 1 box
+    solver.found.should            == false
+    solver.tries.should            == 101 # 1 push + 100 loop_tries used to detect impossible solution
+    solver.pushes.should           == Float::INFINITY
+    solver.penalties.size.should   == 0
+    solver.total_nodes.size.should == 202
   end
 
 end

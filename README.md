@@ -9,8 +9,6 @@ Master Thesis implementation of Sokoban solver in Ruby
  * Téléporter une caisse vers chaque goal possible accélérerait fortement l'algo !
    (optimisation: si toutes les caisses d'un état peuvent être téléportées vers tous les goals, on peut
     supprimer les déplacements de 1 poussées car ça ne mènera à rien de plus)
- * Comprendre pourquoi total_nodes se comporte différemment de processed_penalties_nodes
-   => parce qu'on ajoute plusieurs fois le même noeud dans total_nodes dans plusieurs itéarations de A?
  * Il faudrait éviter de prendre en compte un noeud enfant qui a déjà été ouvert dans une autre itération
    de A (par contre la solution ne sera plus bonne, que faire ?)
  * améliorer SubNodesService et PenaltiesService pour ne prendre en compte que la dernière caisse

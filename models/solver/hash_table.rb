@@ -28,6 +28,8 @@ class HashTable
     @size = @size + 1
   end
 
+  alias_method :<<, :add
+
   def remove(node)
     node_index = index(node)
 
