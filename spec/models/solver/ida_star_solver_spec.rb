@@ -66,7 +66,7 @@ describe IdaStarSolver do
     solver.found.should                    == true
     solver.tries.should                    == 22
     solver.total_tries.should              == 9727
-    solver.pushes.should                   == 21
+    solver.pushes.should                   == 20
     solver.penalties.size.should           == 73
     solver.processed_penalties.size.should == 1456
 
@@ -93,10 +93,10 @@ describe IdaStarSolver do
 
     solver.found.should                    == true
     solver.tries.should                    == 97
-    solver.total_tries.should              == 2456
+    solver.total_tries.should              == 86555
     solver.pushes.should                   == 97
-    solver.penalties.size.should           == 6
-    solver.processed_penalties.size.should == 0
+    solver.penalties.size.should           == 7
+    solver.processed_penalties.size.should == 2727
   end
 
   it '#run (little bit simplified first level)' do
@@ -220,7 +220,7 @@ describe IdaStarSolver do
     solver.processed_penalties.size.should == 0
   end
 
-  it '#run (impossible level)', :focus => true do
+  it '#run (impossible level)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#  $ #  \n"\

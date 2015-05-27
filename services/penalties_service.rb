@@ -36,6 +36,11 @@ class PenaltiesService
           found_new_penalty = true
 
           @parent_solver.log.print_penalty(@penalties.last) if !@parent_solver.nil?
+
+          puts "new penalty (#{@penalties.size})"
+          puts sub_node.to_s
+          puts "value: #{penalty_value}"
+          puts "-----------------------------------"
         end
       end
     end

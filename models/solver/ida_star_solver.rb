@@ -34,7 +34,7 @@ class IdaStarSolver < Solver
       @total_tries   += solver.total_tries
 
       if !@found
-        @pushes = bound = [estimate(@node), bound].max + 1
+        @pushes = bound = [estimate(@node), bound + 1].max
         # TODO FIXME need to find a better solution to know where we really don't have any solution
         break if (i >= 100 && @loop_tries[i] == @loop_tries[i-100])
         i += 1
