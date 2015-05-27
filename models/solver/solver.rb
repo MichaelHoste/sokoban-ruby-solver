@@ -4,6 +4,8 @@ class Solver
               :deadlock_positions, :distances_for_zone, :deadlock_zone, :null_zone,
               :penalties, :processed_penalties, :log
 
+  attr_accessor :total_tries
+
   private
 
   def initialize_level(level_or_node)

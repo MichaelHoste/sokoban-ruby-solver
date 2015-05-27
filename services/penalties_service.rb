@@ -73,6 +73,11 @@ class PenaltiesService
   def real_pushes(node)
     solver = IdaStarSolver.new(node, @parent_solver)
     solver.run
+
+    if !@parent_solver.nil?
+      @parent_solver.total_tries += solver.total_tries
+    end
+
     solver.pushes
   end
 

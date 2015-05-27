@@ -9,6 +9,7 @@ class IdaStarSolver < Solver
     @pushes          = Float::INFINITY
     @loop_tries      = []
     @tries           = 0
+    @total_tries     = 0
 
     initialize_deadlocks
     initialize_distances
@@ -30,6 +31,7 @@ class IdaStarSolver < Solver
       @found         =  solver.found
       @loop_tries[i] =  solver.tries
       @tries         += solver.tries
+      @total_tries   += solver.total_tries
 
       if !@found
         @pushes = bound = [estimate(@node), bound].max + 1
@@ -39,7 +41,7 @@ class IdaStarSolver < Solver
       end
     end
 
-    puts "#{elapsed_time.to_i} ms"
+    #puts "#{elapsed_time.to_i} ms"
 
     @pushes = Float::INFINITY if !@found
   end

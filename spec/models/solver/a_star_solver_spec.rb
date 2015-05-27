@@ -9,6 +9,7 @@ describe AStarSolver do
 
     solver.found.should                    == true
     solver.tries.should                    == 4883
+    solver.total_tries.should              == 4883
     solver.pushes.should                   == 97
     solver.penalties.size.should           == 0
     solver.processed_penalties.size.should == 0
@@ -31,6 +32,7 @@ describe AStarSolver do
 
     solver.found.should                    == true
     solver.tries.should                    == 79
+    solver.total_tries.should              == 2499
     solver.pushes.should                   == 25
     solver.penalties.size.should           == 22
     solver.processed_penalties.size.should == 92
@@ -53,6 +55,7 @@ describe AStarSolver do
 
     solver.found.should                    == true
     solver.tries.should                    == 5
+    solver.total_tries.should              == 5
     solver.pushes.should                   == 5
     solver.penalties.size.should           == 0
     solver.processed_penalties.size.should == 0
@@ -75,6 +78,7 @@ describe AStarSolver do
 
     solver.found.should                    == false
     solver.tries.should                    == 1
+    solver.total_tries.should              == 1
     solver.pushes.should                   == Float::INFINITY
     solver.penalties.size.should           == 0
     solver.processed_penalties.size.should == 0

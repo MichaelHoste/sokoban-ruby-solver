@@ -11,6 +11,7 @@ class AStarSolver < Solver
     @found           = false
     @pushes          = Float::INFINITY
     @tries           = 0
+    @total_tries     = 0
 
     initialize_deadlocks
     initialize_distances
@@ -48,7 +49,8 @@ class AStarSolver < Solver
         process(current)
       end
 
-      print_log
+      @tries       += 1 if !@list.empty?
+      @total_tries += 1 if !@list.empty?
     end
 
     @found  = !@list.empty? && next_candidate.won?
@@ -132,16 +134,6 @@ class AStarSolver < Solver
 
   def add_to_tree(tree_node, child)
     tree_node.add_child(child)
-  end
-
-  def print_log
-    if !@list.empty?
-      @tries += 1
-      if @tries % 100 == 0 && (@parent_solver.nil? || @parent_solver.parent_solver.nil?)
-        puts @tries
-        #puts @list.first.node.to_s
-      end
-    end
   end
 
 end
