@@ -120,8 +120,6 @@ describe BoxDistancesService do
   end
 
   it '#run (5)' do
-    level = Pack.new('spec/support/files/level.slc').levels[0]
-
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #   #          \n"\

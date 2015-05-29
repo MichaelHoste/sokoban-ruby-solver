@@ -31,7 +31,7 @@ describe IdaStarSolver do
     solver.total_tries.should              == 1111
   end
 
-  it '#run on complete Dimitri-Yorick pack', :slow => true, :focus => true do
+  it '#run on complete Dimitri-Yorick pack', :slow => true do
     pack = Pack.new('data/Dimitri-Yorick.slc')
 
     global_found               = 0

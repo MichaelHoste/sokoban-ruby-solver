@@ -30,6 +30,8 @@ class TreeNode
     NodeChildrenService.new(@node).run.nodes.collect do |node|
       TreeNode.new(node, @g + 1)
     end
+
+    #NodeChildrenToGoalsService.new(@node).run
   end
 
 end

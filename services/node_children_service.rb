@@ -6,9 +6,7 @@ class NodeChildrenService
     @node        = node
     @level       = node.level
     @cols        = @level.cols
-    @rows        = @level.rows
     @pusher_zone = node.pusher_zone
-    @goals_zone  = node.goals_zone
     @boxes_zone  = node.boxes_zone
   end
 
@@ -66,11 +64,11 @@ class NodeChildrenService
         :behind_pos => level_pos - 1
       },
       {
-        :ahead_pos  => level_pos - @level.cols,
-        :behind_pos => level_pos + @level.cols
+        :ahead_pos  => level_pos - @cols,
+        :behind_pos => level_pos + @cols
       },
-      { :ahead_pos  => level_pos + @level.cols,
-        :behind_pos => level_pos - @level.cols
+      { :ahead_pos  => level_pos + @cols,
+        :behind_pos => level_pos - @cols
       }
     ]
   end
