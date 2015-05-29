@@ -1,7 +1,9 @@
 # Get the minimal cost to put all the boxes to the goals
 #
-# No penalities: each box is directed to a different goal but there isn't
-#                any other box in the way.
+# Computation is made by directing each box to a different goal supposing
+# there aren't any other boxes in the way.
+#
+# Penalty nodes/values are added afterward if needed.
 #
 # use the hungarian algorithm (http://en.wikipedia.org/wiki/Hungarian_algorithm)
 

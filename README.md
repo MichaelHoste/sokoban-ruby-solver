@@ -13,6 +13,10 @@ Master Thesis implementation of Sokoban solver in Ruby
     supprimer les déplacements de 1 poussées car ça ne mènera à rien de plus)
  * Il faudrait éviter de prendre en compte un noeud enfant qui a déjà été ouvert dans une autre itération
    de A (par contre la solution ne sera plus bonne, que faire ?)
+ * PISTE : Il y a des états inutiles qu'on veut supprimer. Souvent ce sont les états qui ont les
+   mêmes pusher_zones (et nombre de caisses) et qui représentent au final la même situation.
+   Une fois que la téléportation des caisses vers les goals sera faite, modifier la table de hashage
+   (fonction de hashage et include?) pour éliminer les états redondants.
  * améliorer SubNodesService et PenaltiesService pour ne prendre en compte que la dernière caisse
    (et pour éliminer directement tous les sous-noeuds qui ont déjà été analysés ?)
  * Paramétriser sub_nodes et pénalités pour définir le nombre de caisses qu’on veut.

@@ -8,11 +8,11 @@ describe AStarSolver do
     solver.run
 
     solver.found.should                    == true
-    solver.tries.should                    == 4883
-    solver.total_tries.should              == 4883
     solver.pushes.should                   == 97
     solver.penalties.size.should           == 0
     solver.processed_penalties.size.should == 0
+    solver.tries.should                    == 4883
+    solver.total_tries.should              == 4883
   end
 
   it '#run (simple level)' do
@@ -31,11 +31,11 @@ describe AStarSolver do
     solver.run
 
     solver.found.should                    == true
-    solver.tries.should                    == 79
-    solver.total_tries.should              == 2499
     solver.pushes.should                   == 25
     solver.penalties.size.should           == 22
     solver.processed_penalties.size.should == 92
+    solver.tries.should                    == 79
+    solver.total_tries.should              == 2499
   end
 
   it '#run (level with less boxes than goals)' do
@@ -54,11 +54,11 @@ describe AStarSolver do
     solver.run
 
     solver.found.should                    == true
-    solver.tries.should                    == 5
-    solver.total_tries.should              == 5
     solver.pushes.should                   == 5
     solver.penalties.size.should           == 0
     solver.processed_penalties.size.should == 0
+    solver.tries.should                    == 5
+    solver.total_tries.should              == 5
   end
 
   it '#run (impossible level)' do
@@ -77,11 +77,11 @@ describe AStarSolver do
     solver.run
 
     solver.found.should                    == false
-    solver.tries.should                    == 1
-    solver.total_tries.should              == 1
     solver.pushes.should                   == Float::INFINITY
     solver.penalties.size.should           == 0
     solver.processed_penalties.size.should == 0
+    solver.tries.should                    == 1
+    solver.total_tries.should              == 1
   end
 
 end
