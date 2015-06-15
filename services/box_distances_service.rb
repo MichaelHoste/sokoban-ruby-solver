@@ -5,6 +5,8 @@ class BoxDistancesService
 
   def initialize(level)
     @level = level.clone
+    @rows  = @level.rows
+    @cols  = @level.cols
 
     if !valid?
       raise "Error: Assumes the level contains only one box and one pusher (no goals)"
@@ -17,16 +19,22 @@ class BoxDistancesService
     box       = {}
 
     # Initialize distances and box position
-    (0..@level.rows-1).each do |m|
-      (0..@level.cols-1).each do |n|
-        distances << {
-          :from_left   => Float::INFINITY,
-          :from_right  => Float::INFINITY,
-          :from_top    => Float::INFINITY,
-          :from_bottom => Float::INFINITY
-        }
+    (0..@rows-1).each do |m|
+      (0..@cols-1).each do |n|
+        cell = @level.grid[m * @cols + n]
 
-        if @level.read_pos(m, n) == '$'
+        if cell != ' ' && cell != '#'
+          distances << {
+            :from_left   => Float::INFINITY,
+            :from_right  => Float::INFINITY,
+            :from_top    => Float::INFINITY,
+            :from_bottom => Float::INFINITY
+          }
+        else
+          distances << nil
+        end
+
+        if cell == '$'
           box = { :m => m, :n => n }
         end
       end
@@ -68,7 +76,7 @@ class BoxDistancesService
   private
 
   def dijkstra(heap, distances, item)
-    pos          = item[:box_m]*@level.cols + item[:box_n]
+    pos          = item[:box_m]*@cols + item[:box_n]
     box_cell     = @level.read_pos(item[:box_m],    item[:box_n])
     pusher_cell  = @level.read_pos(item[:pusher_m], item[:pusher_n])
     direction    = item[:direction]
@@ -130,7 +138,7 @@ class BoxDistancesService
     values = []
 
     distances.each_with_index do |distance, i|
-      if ['@', '$', 's'].include?(@level.grid[i])
+      if distance
         values << [ distance[:from_left], distance[:from_right],
                     distance[:from_top], distance[:from_bottom] ].min
       end
@@ -144,8 +152,12 @@ class BoxDistancesService
     values = []
 
     distances.each do |distance|
-      values << [ distance[:from_left], distance[:from_right],
-                  distance[:from_top], distance[:from_bottom] ].min
+      if distance
+        values << [ distance[:from_left], distance[:from_right],
+                    distance[:from_top], distance[:from_bottom] ].min
+      else
+        values << Float::INFINITY
+      end
     end
 
     values

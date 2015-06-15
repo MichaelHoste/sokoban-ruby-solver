@@ -7,10 +7,8 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * refactor node_children_to_goals_service
  * create specs of PenaltiesList and Zone.-
  * Améliorer la sortie standard (total_tries, nombre d'itérations pour chaque niveau de caisses, etc.)
- * Accélérer les pénalités infinies !
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer
  * Faut il recouper les arbres entiers parents à chaque nouvelle pénalité trouvée pour gagner du temps ?
    (lors de l'analyse du premier noeud parent, on a très vite une pénalité qui permettrait de l'invalider)
