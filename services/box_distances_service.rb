@@ -56,7 +56,7 @@ class BoxDistancesService
     @level.write_pos(@level.pusher[:pos_m], @level.pusher[:pos_n], 's')
     @level.write_pos(box[:m], box[:n], 's')
 
-    # Iterate through the heap starting with lover weights
+    # Iterate through the heap starting with lower weights
     i = 1
     while heap.size > 0
       i += 1
@@ -106,11 +106,9 @@ class BoxDistancesService
       # Pusher zone from real pusher position
       pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
 
-      # Zone where the pusher need to be for pushing in this direction (only 1 position)
-      custom_zone = Zone.new(@level, Zone::CUSTOM_ZONE, :positions => [:m => new_pusher[:m], :n => new_pusher[:n]])
-
       # Can the pusher push in the needed direction?
-      correct_pusher_position = (custom_zone & pusher_zone).to_binary.scan(/1/).count == 1
+      new_pusher_zone_pos     = @level.level_pos_to_zone_pos[new_pusher[:m] * @cols + new_pusher[:n]]
+      correct_pusher_position = new_pusher_zone_pos && pusher_zone.bit_1?(new_pusher_zone_pos)
 
       if correct_pusher_position
         distances[pos][direction] = weight
