@@ -95,16 +95,6 @@ class AStarSolver < Solver
 
   def deadlocked?(tree_node)
     one_box_deadlock = (tree_node.node.boxes_zone & @deadlock_zone) != @null_zone
-    # has_penalty      = @penalties.include?(tree_node.node)
-
-    # # TODO optimize to not loop through every penalty
-    # if has_penalty
-    #   has_infinite_penalty = !@penalties.any? do |penalty|
-    #     penalty[:node] == tree_node.node && penalty[:value] == Float::INFINITY
-    #   end.empty?
-    # end
-
-    one_box_deadlock# || (has_penalty && has_infinite_penalty)
   end
 
   def find_penalties(node)
