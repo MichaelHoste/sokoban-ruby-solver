@@ -15,7 +15,7 @@ describe IdaStarSolver do
     solver.total_tries.should              == 1074
   end
 
-  it '#run (little bit simplified first level)' do
+  it '#run (little bit simplified first level)', :focus do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\

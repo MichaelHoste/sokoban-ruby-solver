@@ -7,6 +7,8 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
+ * refactor node_children_to_goals_service
+ * create specs of PenaltiesList and Zone.-
  * Améliorer la sortie standard (total_tries, nombre d'itérations pour chaque niveau de caisses, etc.)
  * Accélérer les pénalités infinies !
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer

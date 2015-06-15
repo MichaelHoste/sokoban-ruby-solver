@@ -30,10 +30,7 @@ class NodeChildrenToGoalsService
         end
 
         # inside of levels can be smaller than before
-        restricted_level.send(:initialize_pusher_position)
         restricted_level.send(:initialize_floor)
-        #restricted_level.send(:initialize_size)
-        #restricted_level.send(:initialize_boxes_and_goals)
         restricted_level.send(:initialize_level_zone_positions)
 
         # prepare level for distances

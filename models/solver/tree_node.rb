@@ -27,15 +27,15 @@ class TreeNode
   end
 
   def find_children
-    a = NodeChildrenService.new(@node).run.nodes.collect do |node|
+    direct_children = NodeChildrenService.new(@node).run.nodes.collect do |node|
       TreeNode.new(node, @g + 1)
     end
 
-    b = NodeChildrenToGoalsService.new(@node).run.nodes.collect do |node|
+    goal_children = NodeChildrenToGoalsService.new(@node).run.nodes.collect do |node|
       TreeNode.new(node[:node], @g + node[:pushes])
     end
 
-    a + b
+    direct_children.concat(goal_children).uniq { |treenode| treenode.node }
   end
 
 end
