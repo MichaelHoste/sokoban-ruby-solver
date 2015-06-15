@@ -33,6 +33,11 @@ class Zone
     Zone.new(@level, CUSTOM_ZONE, { :number =>  @number | other_zone.number })
   end
 
+  # zone substraction
+  def -(other_zone)
+    Zone.new(@level, CUSTOM_ZONE, { :number =>  @number - other_zone.number })
+  end
+
   # zone inclusion
   def in?(other_zone)
     (self | other_zone) == other_zone

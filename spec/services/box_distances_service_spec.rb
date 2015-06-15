@@ -145,4 +145,46 @@ describe BoxDistancesService do
                                     5,          i,     i,         16, 15, 16, 17,
                                     6, i, i, i, i ]
   end
+
+  it '#run (6)' do
+    text =  "#########  \n"\
+            "#       #  \n"\
+            "#   #   ###\n"\
+            "#         #\n"\
+            "# $     ###\n"\
+            "#      @#  \n"\
+            "#########  "
+
+    level = Level.new(text)
+
+    BoxDistancesService.new(level).run(:for_zone)
+                       .should == [ 4, 3, 4, 5, 6, 7, 8,
+                                    3, 2, 3,    5, 6, 7,
+                                    2, 1, 2, 3, 4, 5, 6, 7, 8,
+                                    1, 0, 1, 2, 3, 4, 5,
+                                    2, 1, 2, 3, 4, 5, 6 ]
+  end
+
+  it '#run (7)' do
+    text =  "  ####  \n"\
+            "###@ #  \n"\
+            "#    #  \n"\
+            "#    ###\n"\
+            "### #  #\n"\
+            "  # #$ #\n"\
+            "  #    #\n"\
+            "  #  ###\n"\
+            "  ####  "
+
+    level = Level.new(text)
+
+    BoxDistancesService.new(level).run(:for_zone)
+                       .should == [   8, 9,
+                              9,  8,  7, 8,
+                              10, 9,  6, 9,
+                                  5,     1, i,
+                                  4,     0, i,
+                                  3,  2, 1, i,
+                                  12, i ]
+  end
 end

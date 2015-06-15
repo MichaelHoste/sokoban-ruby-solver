@@ -30,7 +30,10 @@ class NodeChildrenToGoalsService
         end
 
         # inside of levels can be smaller than before
+        restricted_level.send(:initialize_pusher_position)
         restricted_level.send(:initialize_floor)
+        #restricted_level.send(:initialize_size)
+        #restricted_level.send(:initialize_boxes_and_goals)
         restricted_level.send(:initialize_level_zone_positions)
 
         # prepare level for distances
@@ -41,6 +44,8 @@ class NodeChildrenToGoalsService
             level_for_distances.grid[i] = 's'
           elsif cell == '+'
             level_for_distances.grid[i] = '@'
+          elsif cell == '*'
+            level_for_distances.grid[i] = '$'
           end
         end
 
@@ -49,10 +54,10 @@ class NodeChildrenToGoalsService
 
         # For each goal position...
         restricted_level.zone_pos_to_level_pos.each_pair do |restricted_zone_pos, restricted_level_pos|
-          if ['.', '+'].include? restricted_level.grid[restricted_level_pos]
+          if ['.', '+', '*'].include? restricted_level.grid[restricted_level_pos]
             goal_distance = distances[restricted_zone_pos]
 
-            if goal_distance != Float::INFINITY
+            if goal_distance != Float::INFINITY && goal_distance != 0
               child_level = @level.clone
 
               # ...remove original box
@@ -71,7 +76,7 @@ class NodeChildrenToGoalsService
 
               if child_level.read_pos(old_pusher_m, old_pusher_n) == '+'
                 child_level.write_pos(old_pusher_m, old_pusher_n, '.')
-              else
+              elsif child_level.read_pos(old_pusher_m, old_pusher_n) == '@'
                 child_level.write_pos(old_pusher_m, old_pusher_n, 's')
               end
 
@@ -81,21 +86,32 @@ class NodeChildrenToGoalsService
               top    = restricted_level_pos - @cols
               bottom = restricted_level_pos + @cols
 
-              [left, right, top, bottom].each do |neighbour_level_pos|
-                neighbour_zone_pos = @level.level_pos_to_zone_pos[neighbour_level_pos]
+              pusher_level_indexes = [left, right, top, bottom].collect do |neighbour_level_pos|
+                neighbour_zone_pos = restricted_level.level_pos_to_zone_pos[neighbour_level_pos]
+                if !neighbour_zone_pos.nil?
+                  distances[neighbour_zone_pos]
+                else
+                  Float::INFINITY
+                end
+              end.each_with_index.sort.reverse
 
-                if !neighbour_zone_pos.nil? && distances[neighbour_zone_pos] == goal_distance - 1
-                  if child_level.grid[neighbour_level_pos] == '.'
-                    child_level.grid[neighbour_level_pos] = '+'
-                  else
-                    child_level.grid[neighbour_level_pos] = '@'
-                  end
-
-                  child_level.send(:initialize_pusher_position)
-                  ok = true
+              pusher_level_index = -1
+              pusher_level_indexes.each do |index|
+                if index[0] < goal_distance
+                  pusher_level_index = index[1]
                   break
                 end
               end
+
+              pusher_level_pos = [left, right, top, bottom][pusher_level_index]
+
+              if child_level.grid[pusher_level_pos] == '.'
+                child_level.grid[pusher_level_pos] = '+'
+              else
+                child_level.grid[pusher_level_pos] = '@'
+              end
+
+              child_level.send(:initialize_pusher_position)
 
               @child_levels << {
                 :level  => child_level,
@@ -104,8 +120,6 @@ class NodeChildrenToGoalsService
             end
           end
         end
-
-        # mettre le niveau généré dans un tableau
       end
     end
 
@@ -119,7 +133,7 @@ class NodeChildrenToGoalsService
   def nodes
     @child_nodes ||= @child_levels.collect do |level|
       {
-        :node   => Node.new(level),
+        :node   => Node.new(level[:level]),
         :pushes => level[:pushes]
       }
     end

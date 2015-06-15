@@ -11,7 +11,7 @@ describe BoxesToGoalsMinimalCostService do
     service   = LevelDistancesService.new(level).run
     distances = service.distances_for_zone
 
-    BoxesToGoalsMinimalCostService.new(node, distances).run.should == 95
+    BoxesToGoalsMinimalCostService.new(node, distances).run[:total].should == 95
   end
 
   it "#run (2) - situation where boxes should be pushed to the farther goal "\
@@ -30,7 +30,7 @@ describe BoxesToGoalsMinimalCostService do
     service   = LevelDistancesService.new(level).run
     distances = service.distances_for_zone
 
-    BoxesToGoalsMinimalCostService.new(node, distances).run.should == 9
+    BoxesToGoalsMinimalCostService.new(node, distances).run[:total].should == 9
   end
 
   it "#run (3) - level with known result" do
@@ -50,7 +50,7 @@ describe BoxesToGoalsMinimalCostService do
     service   = LevelDistancesService.new(level).run
     distances = service.distances_for_zone
 
-    BoxesToGoalsMinimalCostService.new(node, distances).run.should == 11
+    BoxesToGoalsMinimalCostService.new(node, distances).run[:total].should == 11
   end
 
   it "#run (3) - level with less boxes than goals" do
@@ -70,7 +70,7 @@ describe BoxesToGoalsMinimalCostService do
     service   = LevelDistancesService.new(level).run
     distances = service.distances_for_zone
 
-    BoxesToGoalsMinimalCostService.new(node, distances).run.should == 6
+    BoxesToGoalsMinimalCostService.new(node, distances).run[:total].should == 6
   end
 
   it "#run (4) - level with specific penalty for 3 boxes" do
@@ -89,34 +89,69 @@ describe BoxesToGoalsMinimalCostService do
 
     service   = LevelDistancesService.new(level).run
     distances = service.distances_for_zone
-    penalties = [
-      {
-        :node => Level.new("  ####  \n"\
-                           "###  #  \n"\
-                           "#    #  \n"\
-                           "#   .###\n"\
-                           "### #@.#\n"\
-                           "  # $  #\n"\
-                           "  #  $ #\n"\
-                           "  #. ###\n"\
-                           "  ####  ").to_node,
-        :value => 3
-      },
-      {
-        :node => Level.new("  ####  \n"\
-                           "###  #  \n"\
-                           "#    #  \n"\
-                           "#   .###\n"\
-                           "### #@.#\n"\
-                           "  # $$ #\n"\
-                           "  #    #\n"\
-                           "  #. ###\n"\
-                           "  ####  ").to_node,
-        :value => 3
-      }
-    ]
 
-    BoxesToGoalsMinimalCostService.new(node, distances, penalties).run.should == 17
+    penalties = PenaltiesList.new(3)
+
+    penalties << {
+      :node => Level.new("  ####  \n"\
+                         "###  #  \n"\
+                         "#    #  \n"\
+                         "#   .###\n"\
+                         "### #@.#\n"\
+                         "  # $  #\n"\
+                         "  #  $ #\n"\
+                         "  #. ###\n"\
+                         "  ####  ").to_node,
+      :value => 3
+    }
+
+    penalties << {
+      :node => Level.new("  ####  \n"\
+                         "###  #  \n"\
+                         "#    #  \n"\
+                         "#   .###\n"\
+                         "### #@.#\n"\
+                         "  # $$ #\n"\
+                         "  #    #\n"\
+                         "  #. ###\n"\
+                         "  ####  ").to_node,
+      :value => 3
+    }
+
+    BoxesToGoalsMinimalCostService.new(node, distances, penalties).run[:total].should == 14
+  end
+
+  it "#run (5) - level with a lot of penalties" do
+    text = "        #####\n"\
+           "#########   #\n"\
+           "#  ......$  #\n"\
+           "#   #$###   #\n"\
+           "### $@$ #   #\n"\
+           "  # $ $ #   #\n"\
+           "  #     #####\n"\
+           "  #######    "
+
+    level = Level.new(text)
+    node  = level.to_node
+
+    service   = LevelDistancesService.new(level).run
+    distances = service.distances_for_zone
+    penalties = PenaltiesList.new(6)
+
+    content = File.read(File.join('spec', 'support', 'files', 'penalties.txt'))
+
+    content.split("-----------------------------------\n").collect do |penalty_content|
+      lines = penalty_content.lines
+      lines.shift
+      penalty_value = lines.pop.split(': ')[1].to_i
+
+      penalties << {
+        :node  => Level.new(lines.join).to_node,
+        :value => penalty_value
+      }
+    end
+
+    BoxesToGoalsMinimalCostService.new(node, distances, penalties).run[:total].should == 32
   end
 
 end

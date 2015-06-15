@@ -27,7 +27,6 @@ class HashTable
     @table[index(node)] << node
     @size = @size + 1
   end
-
   alias_method :<<, :add
 
   def remove(node)

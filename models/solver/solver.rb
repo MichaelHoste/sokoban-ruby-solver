@@ -39,7 +39,11 @@ class Solver
   end
 
   def initialize_penalties
-    @penalties = @parent_solver.nil? ? [] : @parent_solver.penalties
+    if @parent_solver.nil?
+      @penalties = PenaltiesList.new(@node.num_of_boxes)
+    else
+      @penalties = @parent_solver.penalties
+    end
   end
 
   def initialize_processed_penalties
@@ -55,7 +59,7 @@ class Solver
       node,
       @distances_for_zone,
       @penalties
-    ).run
+    ).run[:total]
   end
 
   def elapsed_time

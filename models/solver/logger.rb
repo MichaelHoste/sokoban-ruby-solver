@@ -26,6 +26,11 @@ class Logger
       end
 
       log.close
+    else
+      puts "new penalty (#{@solver.penalties.size})"
+      puts penalty[:node].to_s
+      puts "value: #{penalty[:value]}"
+      puts "-----------------------------------"
     end
   end
 

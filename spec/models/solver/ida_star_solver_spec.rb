@@ -2,7 +2,164 @@ require 'spec_helper'
 
 describe IdaStarSolver do
 
-  xit '#run (complex level)' do
+  it '#run (first level)' do
+    level  = Pack.new('spec/support/files/level.slc').levels[0]
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.found.should                    == true
+    solver.pushes.should                   == 97
+    solver.penalties.size.should           == 5
+    solver.processed_penalties.size.should == 436
+    solver.tries.should                    == 9
+    solver.total_tries.should              == 1074
+  end
+
+  it '#run (little bit simplified first level)' do
+    text =  "    #####          \n"\
+            "    #   #          \n"\
+            "    #$  #          \n"\
+            "  ###   ##         \n"\
+            "  #  $ $ #         \n"\
+            "### # ## #   ######\n"\
+            "#   # ## #####  ..#\n"\
+            "# $             ..#\n"\
+            "##### ### #@##    #\n"\
+            "    #     #########\n"\
+            "    #######        "
+
+    level = Level.new(text)
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.found.should                    == true
+    solver.pushes.should                   == 64
+    solver.penalties.size.should           == 0
+    solver.processed_penalties.size.should == 39
+    solver.tries.should                    == 5
+    solver.total_tries.should              == 68
+  end
+
+  it '#run (very simplified first level)' do
+    text =  "    #####          \n"\
+            "    #   #          \n"\
+            "    #$  #          \n"\
+            "  ###   ##         \n"\
+            "  #    $ #         \n"\
+            "### # ## #   ######\n"\
+            "#   # ## #####   .#\n"\
+            "# $             ..#\n"\
+            "##### ### #@##    #\n"\
+            "    #     #########\n"\
+            "    #######        "
+
+    level = Level.new(text)
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.found.should                    == true
+    solver.pushes.should                   == 49
+    solver.penalties.size.should           == 0
+    solver.processed_penalties.size.should == 7
+    solver.tries.should                    == 3
+    solver.total_tries.should              == 12
+  end
+
+  it '#run (very *very* simplified level)' do
+    text =  "    #####          \n"\
+            "    #@  #          \n"\
+            "    #   #          \n"\
+            "  ###$  ##         \n"\
+            "  #    $ #         \n"\
+            "### # ## #   ######\n"\
+            "#   # ## #####   .#\n"\
+            "#                .#\n"\
+            "##### ### # ##    #\n"\
+            "    #     #########\n"\
+            "    #######        "
+
+    level = Level.new(text)
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.found.should                    == true
+    solver.pushes.should                   == 34
+    solver.penalties.size.should           == 0
+    solver.processed_penalties.size.should == 0
+    solver.tries.should                    == 2
+    solver.total_tries.should              == 2
+  end
+
+  it '#run (simple level)' do
+    text =  "  ####  \n"\
+            "###  #  \n"\
+            "#    #  \n"\
+            "#   .###\n"\
+            "### #@.#\n"\
+            "  # $$ #\n"\
+            "  #  $ #\n"\
+            "  #. ###\n"\
+            "  ####  "
+
+    level  = Level.new(text)
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.found.should                    == true
+    solver.pushes.should                   == 25
+    solver.penalties.size.should           == 18
+    solver.processed_penalties.size.should == 71
+    solver.tries.should                    == 268
+    solver.total_tries.should              == 2545
+  end
+
+  it '#run (level with less boxes than goals)' do
+    text =  "  ####  \n"\
+            "###  #  \n"\
+            "#    #  \n"\
+            "#   .###\n"\
+            "### #@.#\n"\
+            "  #  $ #\n"\
+            "  #  $ #\n"\
+            "  #. ###\n"\
+            "  ####  "
+
+    level  = Level.new(text)
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.found.should                    == true
+    solver.pushes.should                   == 5
+    solver.penalties.size.should           == 0
+    solver.processed_penalties.size.should == 0
+    solver.tries.should                    == 2
+    solver.total_tries.should              == 2
+  end
+
+  it '#run (impossible level)' do
+    text =  "  ####  \n"\
+            "###  #  \n"\
+            "#  $ #  \n"\
+            "#   .###\n"\
+            "###$#@.#\n"\
+            "  #    #\n"\
+            "  #    #\n"\
+            "  #. ###\n"\
+            "  ####  "
+
+    level  = Level.new(text)
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    solver.found.should                    == false
+    solver.pushes.should                   == Float::INFINITY
+    solver.penalties.size.should           == 0
+    solver.processed_penalties.size.should == 0
+    solver.tries.should                    == 101 # 1 push + 100 loop_tries used to detect impossible solution
+    solver.total_tries.should              == 101
+  end
+
+  xit '#run (complex level)', :slow do
     text = "################ \n"\
            "#              # \n"\
            "# # ######     # \n"\
@@ -31,7 +188,45 @@ describe IdaStarSolver do
     solver.total_tries.should              == 1111
   end
 
-  it '#run on complete Dimitri-Yorick pack', :slow => true do
+  it '#run a specific level of Dimitri-Yorick pack', :slow do
+    text = "        #####\n"\
+           "#########   #\n"\
+           "#  ......$  #\n"\
+           "#   #$###   #\n"\
+           "### $@$ #   #\n"\
+           "  # $ $ #   #\n"\
+           "  #     #####\n"\
+           "  #######    "
+
+    level = Level.new(text)
+
+    solver = IdaStarSolver.new(level)
+    solver.run
+
+    puts solver.found.to_s
+    puts solver.pushes.to_s
+    puts solver.penalties.size.to_s
+    puts solver.processed_penalties.size.to_s
+    puts solver.tries.to_s
+    puts solver.total_tries.to_s
+
+    # Avec goals
+    # true
+    # 32
+    # 1493
+    # 3239
+    # 30
+    # 2295636
+
+    solver.found.should                    == true
+    solver.pushes.should                   == 32
+    solver.penalties.size.should           == 1250
+    solver.processed_penalties.size.should == 3347
+    solver.tries.should                    == 57
+    solver.total_tries.should              == 1215309
+  end
+
+  xit '#run on complete Dimitri-Yorick pack', :slow do
     pack = Pack.new('data/Dimitri-Yorick.slc')
 
     global_found               = 0
@@ -68,7 +263,7 @@ describe IdaStarSolver do
     global_total_tries.should              == 9727
   end
 
-  it '#run on a complex level of Dimitri-Yorick pack', :slow => true do
+  it '#run on a complex level of Dimitri-Yorick pack', :slow do
    text =  "########\n"\
            "#......#\n"\
            "# $##$ #\n"\
@@ -104,163 +299,6 @@ describe IdaStarSolver do
     }
 
     solver.penalties.should include(penalty)
-  end
-
-  it '#run (first level)', :slow => true do
-    level  = Pack.new('spec/support/files/level.slc').levels[0]
-    solver = IdaStarSolver.new(level)
-    solver.run
-
-    solver.found.should                    == true
-    solver.pushes.should                   == 97
-    solver.penalties.size.should           == 7
-    solver.processed_penalties.size.should == 2727
-    solver.tries.should                    == 97
-    solver.total_tries.should              == 86555
-  end
-
-  it '#run (little bit simplified first level)' do
-    text =  "    #####          \n"\
-            "    #   #          \n"\
-            "    #$  #          \n"\
-            "  ###   ##         \n"\
-            "  #  $ $ #         \n"\
-            "### # ## #   ######\n"\
-            "#   # ## #####  ..#\n"\
-            "# $             ..#\n"\
-            "##### ### #@##    #\n"\
-            "    #     #########\n"\
-            "    #######        "
-
-    level = Level.new(text)
-    solver = IdaStarSolver.new(level)
-    solver.run
-
-    solver.found.should                    == true
-    solver.pushes.should                   == 64
-    solver.penalties.size.should           == 0
-    solver.processed_penalties.size.should == 291
-    solver.tries.should                    == 64
-    solver.total_tries.should              == 6294
-  end
-
-  it '#run (very simplified first level)' do
-    text =  "    #####          \n"\
-            "    #   #          \n"\
-            "    #$  #          \n"\
-            "  ###   ##         \n"\
-            "  #    $ #         \n"\
-            "### # ## #   ######\n"\
-            "#   # ## #####   .#\n"\
-            "# $             ..#\n"\
-            "##### ### #@##    #\n"\
-            "    #     #########\n"\
-            "    #######        "
-
-    level = Level.new(text)
-    solver = IdaStarSolver.new(level)
-    solver.run
-
-    solver.found.should                    == true
-    solver.pushes.should                   == 49
-    solver.total_tries.should              == 1280
-    solver.penalties.size.should           == 0
-    solver.tries.should                    == 49
-    solver.processed_penalties.size.should == 74
-  end
-
-  it '#run (very *very* simplified level)' do
-    text =  "    #####          \n"\
-            "    #@  #          \n"\
-            "    #   #          \n"\
-            "  ###$  ##         \n"\
-            "  #    $ #         \n"\
-            "### # ## #   ######\n"\
-            "#   # ## #####   .#\n"\
-            "#                .#\n"\
-            "##### ### # ##    #\n"\
-            "    #     #########\n"\
-            "    #######        "
-
-    level = Level.new(text)
-    solver = IdaStarSolver.new(level)
-    solver.run
-
-    solver.found.should                    == true
-    solver.pushes.should                   == 34
-    solver.penalties.size.should           == 0
-    solver.processed_penalties.size.should == 0
-    solver.tries.should                    == 35
-    solver.total_tries.should              == 35
-  end
-
-  it '#run (simple level)' do
-    text =  "  ####  \n"\
-            "###  #  \n"\
-            "#    #  \n"\
-            "#   .###\n"\
-            "### #@.#\n"\
-            "  # $$ #\n"\
-            "  #  $ #\n"\
-            "  #. ###\n"\
-            "  ####  "
-
-    level  = Level.new(text)
-    solver = IdaStarSolver.new(level)
-    solver.run
-
-    solver.found.should                    == true
-    solver.pushes.should                   == 25
-    solver.penalties.size.should           == 16
-    solver.processed_penalties.size.should == 86
-    solver.tries.should                    == 253
-    solver.total_tries.should              == 2471
-  end
-
-  it '#run (level with less boxes than goals)' do
-    text =  "  ####  \n"\
-            "###  #  \n"\
-            "#    #  \n"\
-            "#   .###\n"\
-            "### #@.#\n"\
-            "  #  $ #\n"\
-            "  #  $ #\n"\
-            "  #. ###\n"\
-            "  ####  "
-
-    level  = Level.new(text)
-    solver = IdaStarSolver.new(level)
-    solver.run
-
-    solver.found.should                    == true
-    solver.pushes.should                   == 5
-    solver.penalties.size.should           == 0
-    solver.processed_penalties.size.should == 0
-    solver.tries.should                    == 5
-    solver.total_tries.should              == 5
-  end
-
-  it '#run (impossible level)' do
-    text =  "  ####  \n"\
-            "###  #  \n"\
-            "#  $ #  \n"\
-            "#   .###\n"\
-            "###$#@.#\n"\
-            "  #    #\n"\
-            "  #    #\n"\
-            "  #. ###\n"\
-            "  ####  "
-
-    level  = Level.new(text)
-    solver = IdaStarSolver.new(level)
-    solver.run
-
-    solver.found.should                    == false
-    solver.pushes.should                   == Float::INFINITY
-    solver.penalties.size.should           == 0
-    solver.processed_penalties.size.should == 0
-    solver.tries.should                    == 101 # 1 push + 100 loop_tries used to detect impossible solution
-    solver.total_tries.should              == 101
   end
 
 end

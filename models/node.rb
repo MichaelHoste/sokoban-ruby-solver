@@ -1,6 +1,6 @@
 class Node
 
-  attr_reader :boxes_zone, :goals_zone, :pusher_zone
+  attr_accessor :boxes_zone, :goals_zone, :pusher_zone
 
   def initialize(level_or_zones)
     if level_or_zones.is_a? Level
@@ -22,6 +22,10 @@ class Node
 
   def level
     @boxes_zone.level
+  end
+
+  def num_of_boxes
+    @boxes_zone.positions_of_1.count
   end
 
   def to_s

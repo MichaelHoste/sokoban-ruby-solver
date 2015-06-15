@@ -7,7 +7,7 @@ class BoxDistancesService
     @level = level.clone
 
     if !valid?
-      raise 'Error: Assumes the level contains only one box and one pusher (no goals)'
+      raise "Error: Assumes the level contains only one box and one pusher (no goals)"
     end
   end
 

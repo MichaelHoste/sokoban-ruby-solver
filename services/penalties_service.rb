@@ -22,25 +22,21 @@ class PenaltiesService
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@processed_penalties.include?(sub_node)
+      if !@processed_penalties.include?(sub_node) # && sub_node.num_of_boxes <= 3
         @processed_penalties << sub_node
 
-        penalty_value = real_pushes(sub_node) - estimate_pushes(sub_node)
+        real     = real_pushes(sub_node)
+        estimate = estimate_pushes(sub_node)
 
-        if penalty_value > 0
-          @penalties << {
+        if real - estimate[:total] > 0
+          penalty = {
             :node  => sub_node,
-            :value => penalty_value
+            :value => estimate[:penalty_cost] + (real - estimate[:total])
           }
+          @penalties << penalty
 
+          @parent_solver.log.print_penalty(penalty) if !@parent_solver.nil?
           found_new_penalty = true
-
-          @parent_solver.log.print_penalty(@penalties.last) if !@parent_solver.nil?
-
-          puts "new penalty (#{@penalties.size})"
-          puts sub_node.to_s
-          puts "value: #{penalty_value}"
-          puts "-----------------------------------"
         end
       end
     end
@@ -52,7 +48,7 @@ class PenaltiesService
 
   def initialize_penalties
     if @parent_solver.nil?
-      @penalties = []
+      @penalties = PenaltiesList.new(@node.num_of_boxes)
     else
       @penalties = @parent_solver.penalties
     end

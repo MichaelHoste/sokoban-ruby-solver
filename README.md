@@ -7,10 +7,11 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * Créer fichier log par solver.
- * Téléporter une caisse vers chaque goal possible accélérerait fortement l'algo !
-   (optimisation: si toutes les caisses d'un état peuvent être téléportées vers tous les goals, on peut
-    supprimer les déplacements de 1 poussées car ça ne mènera à rien de plus)
+ * Améliorer la sortie standard (total_tries, nombre d'itérations pour chaque niveau de caisses, etc.)
+ * Accélérer les pénalités infinies !
+ * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer
+ * Faut il recouper les arbres entiers parents à chaque nouvelle pénalité trouvée pour gagner du temps ?
+   (lors de l'analyse du premier noeud parent, on a très vite une pénalité qui permettrait de l'invalider)
  * Il faudrait éviter de prendre en compte un noeud enfant qui a déjà été ouvert dans une autre itération
    de A (par contre la solution ne sera plus bonne, que faire ?)
  * PISTE : Il y a des états inutiles qu'on veut supprimer. Souvent ce sont les états qui ont les
@@ -20,8 +21,8 @@ Master Thesis implementation of Sokoban solver in Ruby
  * améliorer SubNodesService et PenaltiesService pour ne prendre en compte que la dernière caisse
    (et pour éliminer directement tous les sous-noeuds qui ont déjà été analysés ?)
  * Paramétriser sub_nodes et pénalités pour définir le nombre de caisses qu’on veut.
+ * Définir variables globales pour activer/désactiver certains services
  * should we search for penalties in every sub_node?
  * Should we update munkres for this one? https://github.com/maandree/hungarian-algorithm-n3
  * Tester une vraie situation en JRuby pour comparer les perfs
-
-
+ * Adopt some services to multi-threads computing (GPU?) or C++, or both
