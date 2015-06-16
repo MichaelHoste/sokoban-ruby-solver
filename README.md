@@ -7,17 +7,15 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * create specs of PenaltiesList and Zone.-
- * Améliorer la sortie standard (total_tries, nombre d'itérations pour chaque niveau de caisses, etc.)
+ * create specs of PenaltiesList
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer
  * Faut il recouper les arbres entiers parents à chaque nouvelle pénalité trouvée pour gagner du temps ?
    (lors de l'analyse du premier noeud parent, on a très vite une pénalité qui permettrait de l'invalider)
- * Il faudrait éviter de prendre en compte un noeud enfant qui a déjà été ouvert dans une autre itération
-   de A (par contre la solution ne sera plus bonne, que faire ?)
  * PISTE : Il y a des états inutiles qu'on veut supprimer. Souvent ce sont les états qui ont les
    mêmes pusher_zones (et nombre de caisses) et qui représentent au final la même situation.
    Une fois que la téléportation des caisses vers les goals sera faite, modifier la table de hashage
    (fonction de hashage et include?) pour éliminer les états redondants.
+ * Améliorer la sortie standard (total_tries, nombre d'itérations pour chaque niveau de caisses, etc.)
  * améliorer SubNodesService et PenaltiesService pour ne prendre en compte que la dernière caisse
    (et pour éliminer directement tous les sous-noeuds qui ont déjà été analysés ?)
  * Paramétriser sub_nodes et pénalités pour définir le nombre de caisses qu’on veut.

@@ -144,6 +144,44 @@ describe Zone do
     zone.should == zone_1
   end
 
+  it '#-' do
+    zone_1 = Zone.new(@level, Zone::PUSHER_ZONE)
+    zone_2 = Zone.new(@level, Zone::GOALS_ZONE)
+
+    zone = zone_1 - zone_2
+
+    zone.to_s.should == "    #####          \n"\
+                        "    #   #          \n"\
+                        "    #   #          \n"\
+                        "  ###   ##         \n"\
+                        "  #    xx#         \n"\
+                        "### # ##x#   ######\n"\
+                        "#   # ##x#####xx  #\n"\
+                        "#    xxxxxxxxxxx  #\n"\
+                        "#####x###x#x##xx  #\n"\
+                        "    #xxxxx#########\n"\
+                        "    #######        "
+  end
+
+  it '#- (2)' do
+    zone_1 = Zone.new(@level, Zone::GOALS_ZONE)
+    zone_2 = Zone.new(@level, Zone::PUSHER_ZONE)
+
+    zone = zone_1 - zone_2
+
+    zone.to_s.should == "    #####          \n"\
+                        "    #   #          \n"\
+                        "    #   #          \n"\
+                        "  ###   ##         \n"\
+                        "  #      #         \n"\
+                        "### # ## #   ######\n"\
+                        "#   # ## #####    #\n"\
+                        "#                 #\n"\
+                        "##### ### # ##    #\n"\
+                        "    #     #########\n"\
+                        "    #######        "
+  end
+
   context 'Zone inclusions' do
     text_1 =  "#######\n"\
               "#  $. #\n"\
