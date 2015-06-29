@@ -17,22 +17,7 @@ class NodeChildrenToGoalsService
 
       # Create level with one box and other boxes transformed as walls
       restricted_level = create_restricted_level(box_level_pos)
-
-      # prepare level for distances
-      level_for_distances = restricted_level.clone
-
-      level_for_distances.grid.each_with_index do |cell, i|
-        if cell == '.'
-          level_for_distances.grid[i] = 's'
-        elsif cell == '+'
-          level_for_distances.grid[i] = '@'
-        elsif cell == '*'
-          level_for_distances.grid[i] = '$'
-        end
-      end
-
-      # Get distances from this box to other positions
-      distances = BoxDistancesService.new(level_for_distances).run(:for_zone)
+      distances        = compute_distances(restricted_level)
 
       # For each goal position...
       restricted_level.zone_pos_to_level_pos.each_pair do |restricted_zone_pos, restricted_level_pos|
@@ -151,6 +136,40 @@ class NodeChildrenToGoalsService
     restricted_level.send(:initialize_level_zone_positions)
 
     restricted_level
+  end
+
+  def compute_distances(level)
+    # prepare level for distances
+    positions = []
+    level.grid.each_with_index do |cell, i|
+      if cell == '.'
+        level.grid[i] = 's'
+      elsif cell == '+'
+        level.grid[i] = '@'
+      elsif cell == '*'
+        level.grid[i] = '$'
+      end
+
+      positions << i if cell == '.' || cell == '+' || cell == '*'
+    end
+
+    # Get distances from this box to other positions
+    distances = BoxDistancesService.new(level).run(:for_zone)
+
+    # revert the grid back (optimization)
+    positions.each do |position|
+      cell = level.grid[position]
+
+      if cell == 's'
+        level.grid[position] = '.'
+      elsif cell == '@'
+        level.grid[position] = '+'
+      elsif cell == '$'
+        level.grid[position] = '*'
+      end
+    end
+
+    distances
   end
 
   # def remove_box_from_old_position(new_level, level_pos)
