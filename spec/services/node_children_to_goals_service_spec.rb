@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NodeChildrenToGoalsService do
+describe NodeChildrenToGoalsService, :focus => true do
 
   it '#run' do
     text =  "#########  \n"\
