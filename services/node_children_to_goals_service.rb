@@ -13,78 +13,36 @@ class NodeChildrenToGoalsService
     @child_levels = []
 
     # for each reachable box
-    reachable_boxes.values.each do |box_level_pos|
+    reachable_boxes_positions.each do |box_level_pos|
 
       # Create level with one box and other boxes transformed as walls
-      restricted_level = create_restricted_level(box_level_pos)
-      distances        = compute_distances(restricted_level)
+      striped_level = create_striped_level(box_level_pos)
+      distances     = compute_distances(striped_level)
 
-      # For each goal position...
-      restricted_level.zone_pos_to_level_pos.each_pair do |restricted_zone_pos, restricted_level_pos|
-        if ['.', '+', '*'].include? restricted_level.grid[restricted_level_pos]
-          goal_distance = distances[restricted_zone_pos]
+      # For each goal position of this striped level...
+      goals_positions(striped_level).each do |goal_level_pos|
+        goal_distance = distances[goal_level_pos]
 
-          if goal_distance != Float::INFINITY && goal_distance != 0
-            child_level = @level.clone
+        if goal_distance != Float::INFINITY && goal_distance != 0
+          child_level = @level.clone
 
-            # ...remove original box
-            if child_level.grid[box_level_pos] == '*'
-              child_level.grid[box_level_pos] = '.'
-            else
-              child_level.grid[box_level_pos] = 's'
-            end
+          # ...remove original box
+          remove_box_from_old_position(child_level, box_level_pos)
 
-            # ...put the box on the goal
-            child_level.grid[restricted_level_pos] = '*'
+          # ...put the box on the goal
+          child_level.grid[goal_level_pos] = '*'
 
-            # ...remove original pusher
-            old_pusher_m = child_level.pusher[:pos_m]
-            old_pusher_n = child_level.pusher[:pos_n]
+          # ...remove original pusher
+          remove_pusher_from_old_position(child_level)
 
-            if child_level.read_pos(old_pusher_m, old_pusher_n) == '+'
-              child_level.write_pos(old_pusher_m, old_pusher_n, '.')
-            elsif child_level.read_pos(old_pusher_m, old_pusher_n) == '@'
-              child_level.write_pos(old_pusher_m, old_pusher_n, 's')
-            end
+          # ...place pusher next to box
+          pusher_level_pos = get_new_pusher_position(distances, goal_level_pos)
+          place_pusher_to_new_position(child_level, pusher_level_pos)
 
-            # ...place pusher next to box
-            left   = restricted_level_pos - 1
-            right  = restricted_level_pos + 1
-            top    = restricted_level_pos - @cols
-            bottom = restricted_level_pos + @cols
-
-            pusher_level_indexes = [left, right, top, bottom].collect do |neighbour_level_pos|
-              neighbour_zone_pos = restricted_level.level_pos_to_zone_pos[neighbour_level_pos]
-              if !neighbour_zone_pos.nil?
-                distances[neighbour_zone_pos]
-              else
-                Float::INFINITY
-              end
-            end.each_with_index.sort.reverse
-
-            pusher_level_index = -1
-            pusher_level_indexes.each do |index|
-              if index[0] < goal_distance
-                pusher_level_index = index[1]
-                break
-              end
-            end
-
-            pusher_level_pos = [left, right, top, bottom][pusher_level_index]
-
-            if child_level.grid[pusher_level_pos] == '.'
-              child_level.grid[pusher_level_pos] = '+'
-            else
-              child_level.grid[pusher_level_pos] = '@'
-            end
-
-            child_level.send(:initialize_pusher_position)
-
-            @child_levels << {
-              :level  => child_level,
-              :pushes => goal_distance
-            }
-          end
+          @child_levels << {
+            :level  => child_level,
+            :pushes => goal_distance
+          }
         end
       end
     end
@@ -107,35 +65,35 @@ class NodeChildrenToGoalsService
 
   private
 
-  def reachable_boxes
+  def reachable_boxes_positions
     reachable_boxes_zone = @node.pusher_zone & @node.boxes_zone
 
-    positions = {}
+    level_positions = []
 
     @level.zone_pos_to_level_pos.each_pair do |zone_pos, level_pos|
       if reachable_boxes_zone.bit_1?(zone_pos)
-        positions[zone_pos] = level_pos
+        level_positions << level_pos
       end
     end
 
-    positions
+    level_positions
   end
 
-  def create_restricted_level(box_level_pos)
-    restricted_level = @level.clone
+  def create_striped_level(box_level_pos)
+    striped_level = @level.clone
 
     # Create level with one box and transform other boxes to walls
-    restricted_level.grid.each_with_index do |cell, i|
+    striped_level.grid.each_with_index do |cell, i|
       if ['$', '*'].include?(cell) && box_level_pos != i
-        restricted_level.grid[i] = '#'
+        striped_level.grid[i] = '#'
       end
     end
 
     # inside of levels can be smaller than before
-    restricted_level.send(:initialize_floor)
-    restricted_level.send(:initialize_level_zone_positions)
+    striped_level.send(:initialize_floor)
+    striped_level.send(:initialize_level_zone_positions)
 
-    restricted_level
+    striped_level
   end
 
   def compute_distances(level)
@@ -154,7 +112,7 @@ class NodeChildrenToGoalsService
     end
 
     # Get distances from this box to other positions
-    distances = BoxDistancesService.new(level).run(:for_zone)
+    distances = BoxDistancesService.new(level).run(:for_level)
 
     # revert the grid back (optimization)
     positions.each do |position|
@@ -172,41 +130,73 @@ class NodeChildrenToGoalsService
     distances
   end
 
-  # def remove_box_from_old_position(new_level, level_pos)
-  #   if new_level.grid[level_pos] == '*'
-  #     new_level.grid[level_pos] = '.'
-  #   else
-  #     new_level.grid[level_pos] = 's'
-  #   end
-  # end
+  def goals_positions(level)
+    positions = []
 
-  # def remove_pusher_from_old_position(new_level)
-  #   old_pusher_m = new_level.pusher[:pos_m]
-  #   old_pusher_n = new_level.pusher[:pos_n]
+    level.zone_pos_to_level_pos.values.each do |level_pos|
+      if ['.', '+', '*'].include? level.grid[level_pos]
+        positions << level_pos
+      end
+    end
 
-  #   if new_level.read_pos(old_pusher_m, old_pusher_n) == '+'
-  #     new_level.write_pos(old_pusher_m, old_pusher_n, '.')
-  #   else
-  #     new_level.write_pos(old_pusher_m, old_pusher_n, 's')
-  #   end
-  # end
+    positions
+  end
 
-  # def place_pusher_to_new_position(new_level, level_pos)
-  #   if new_level.grid[level_pos] == '.'
-  #     new_level.grid[level_pos] = '+'
-  #   else
-  #     new_level.grid[level_pos] = '@'
-  #   end
+  def remove_box_from_old_position(level, level_pos)
+    if level.grid[level_pos] == '*'
+      level.grid[level_pos] = '.'
+    else
+      level.grid[level_pos] = 's'
+    end
+  end
 
-  #   new_level.send(:initialize_pusher_position)
-  # end
+  def remove_pusher_from_old_position(level)
+    old_pusher_m = level.pusher[:pos_m]
+    old_pusher_n = level.pusher[:pos_n]
 
-  # def add_box_to_new_position(new_level, behind_pos)
-  #   if new_level.grid[behind_pos] == '.'
-  #     new_level.grid[behind_pos] = '*'
-  #   else
-  #     new_level.grid[behind_pos] = '$'
-  #   end
-  # end
+    cell = level.read_pos(old_pusher_m, old_pusher_n)
 
+    if cell == '+'
+      level.write_pos(old_pusher_m, old_pusher_n, '.')
+    elsif cell == '@'                                  # not "else" because it can be '*'
+      level.write_pos(old_pusher_m, old_pusher_n, 's') # if pusher is on a goal and the box
+    end                                                # has already been placed in it
+  end
+
+  def get_new_pusher_position(distances, goal_level_pos)
+    goal_distance = distances[goal_level_pos]
+
+    left   = goal_level_pos - 1
+    right  = goal_level_pos + 1
+    top    = goal_level_pos - @cols
+    bottom = goal_level_pos + @cols
+
+    # get array of [distance, index] sorted by biggest distance to smallest distance
+    pusher_level_indexes = [left, right, top, bottom].collect do |neighbour_level_pos|
+      distances[neighbour_level_pos]
+    end.each_with_index.sort.reverse
+
+    pusher_level_index = -1
+    pusher_level_indexes.each do |index|
+      if index[0] < goal_distance
+        pusher_level_index = index[1]
+        break
+      end
+    end
+
+    pusher_level_pos = [left, right, top, bottom][pusher_level_index]
+  end
+
+  def place_pusher_to_new_position(level, pusher_pos)
+    if level.grid[pusher_pos] == '.'
+      level.grid[pusher_pos] = '+'
+    else
+      level.grid[pusher_pos] = '@'
+    end
+
+    level.instance_variable_set(:@pusher, {
+      :pos_m => (pusher_pos / @cols).floor,
+      :pos_n => pusher_pos % @cols
+    })
+  end
 end

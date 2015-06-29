@@ -40,7 +40,7 @@ describe IdaStarSolver do
     solver.total_tries.should              == 68
   end
 
-  it '#run (very simplified first level)' do
+  it '#run (very simplified first level)', :focus do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #$  #          \n"\
