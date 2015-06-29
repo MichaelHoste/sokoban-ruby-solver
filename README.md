@@ -7,7 +7,6 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * create specs of PenaltiesList
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer
  * Faut il recouper les arbres entiers parents à chaque nouvelle pénalité trouvée pour gagner du temps ?
    (lors de l'analyse du premier noeud parent, on a très vite une pénalité qui permettrait de l'invalider)
