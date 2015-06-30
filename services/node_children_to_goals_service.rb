@@ -171,11 +171,12 @@ class NodeChildrenToGoalsService
     top    = goal_level_pos - @cols
     bottom = goal_level_pos + @cols
 
-    # get array of [distance, index] sorted by biggest distance to smallest distance
+    # get array of [distance, index] sorted by smallest distance to biggest distance
     pusher_level_indexes = [left, right, top, bottom].collect do |neighbour_level_pos|
       distances[neighbour_level_pos]
-    end.each_with_index.sort.reverse
+    end.each_with_index.sort
 
+    # find index of pusher position
     pusher_level_index = -1
     pusher_level_indexes.each do |index|
       if index[0] < goal_distance
@@ -184,7 +185,7 @@ class NodeChildrenToGoalsService
       end
     end
 
-    pusher_level_pos = [left, right, top, bottom][pusher_level_index]
+    [left, right, top, bottom][pusher_level_index]
   end
 
   def place_pusher_to_new_position(level, pusher_pos)

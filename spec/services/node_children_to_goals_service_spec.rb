@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NodeChildrenToGoalsService, :focus => true do
+describe NodeChildrenToGoalsService do
 
   it '#run' do
     text =  "#########  \n"\
@@ -22,8 +22,8 @@ describe NodeChildrenToGoalsService, :focus => true do
     child_levels.collect { |l| l[:level].class }.should == [Level, Level, Level, Level]
 
     child_levels[0][:level].to_s.should == "#########  \n"\
-                                           "# *     #  \n"\
-                                           "# @     ###\n"\
+                                           "# *@    #  \n"\
+                                           "#       ###\n"\
                                            "#        .#\n"\
                                            "# $     ###\n"\
                                            "#       #  \n"\
