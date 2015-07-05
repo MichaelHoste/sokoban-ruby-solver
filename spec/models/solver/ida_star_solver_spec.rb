@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IdaStarSolver do
 
-  it '#run (first level)' do
+  it '#run (first level)', :focus => true do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
     solver = IdaStarSolver.new(level)
     solver.run
@@ -263,7 +263,7 @@ describe IdaStarSolver do
     global_total_tries.should              == 9727
   end
 
-  it '#run on a complex level of Dimitri-Yorick pack', :slow do
+  it '#run on a complex level of Dimitri-Yorick pack' do
    text =  "########\n"\
            "#......#\n"\
            "# $##$ #\n"\
@@ -280,10 +280,10 @@ describe IdaStarSolver do
 
     solver.found.should                    == true
     solver.pushes.should                   == 20
-    solver.penalties.size.should           == 73
-    solver.processed_penalties.size.should == 1456
-    solver.tries.should                    == 22
-    solver.total_tries.should              == 9727
+    solver.penalties.size.should           == 25
+    solver.processed_penalties.size.should == 500
+    solver.tries.should                    == 8
+    solver.total_tries.should              == 1292
 
     # Be sure that this penalty is computed
     penalty = {
@@ -298,7 +298,7 @@ describe IdaStarSolver do
       :value => Float::INFINITY
     }
 
-    solver.penalties.should include(penalty)
+    solver.penalties.include?(penalty[:node]).should == true
   end
 
 end
