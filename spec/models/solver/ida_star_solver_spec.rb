@@ -110,7 +110,7 @@ describe IdaStarSolver do
       solver.penalties.size,
       solver.processed_penalties.size,
       solver.tries,
-      solver.total_tries ].should == [true, 64, 0, 39, 5, 68]
+      solver.total_tries ].should == [true, 25, 18, 71, 268, 2545]
   end
 
   it '#run (level with less boxes than goals)' do

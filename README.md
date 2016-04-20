@@ -8,6 +8,10 @@ Master Thesis implementation of Sokoban solver in Ruby
 ## Todo
 
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer
+ * Remonter les pénalités dans les nodes originels des solveurs parents
+ * Si une pénalité est trouvée, parcourir les "waiting nodes" et les retrier en fonction de
+   cette nouvelle pénalité (ou bien carrément recommencer l'analyse de l'arbre pour ainsi
+   purger aussi les branches invalides !?)
  * Faut il recouper les arbres entiers parents à chaque nouvelle pénalité trouvée pour gagner du temps ?
    (lors de l'analyse du premier noeud parent, on a très vite une pénalité qui permettrait de l'invalider)
  * PISTE : Il y a des états inutiles qu'on veut supprimer. Souvent ce sont les états qui ont les
