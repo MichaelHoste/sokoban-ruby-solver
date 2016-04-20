@@ -213,10 +213,10 @@ class Level
   def initialize_grid_from_text(text_level)
     lines      = text_level.split("\n")
     @rows      = lines.size
-    @cols      = lines.first.length
+    @cols      = lines.max_by { |line| line.rindex('#') }.rstrip.length
     @name      = ''
     @copyright = ''
-    @grid      = lines.collect { |line| line.ljust @cols }.join.split('')
+    @grid      = lines.collect { |line| line.ljust(@cols)[0..@cols-1] }.join.split('')
   end
 
   # Can't get exact position of pusher from a node

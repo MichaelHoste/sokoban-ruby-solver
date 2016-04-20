@@ -61,6 +61,42 @@ describe Level do
                          "    #######        "
   end
 
+  it '.initialize (text with weird end of lines)' do
+    text =  "    #####\n"\
+            "    #   #\n"\
+            "    #$  #\n"\
+            "  ###  $##  \n"\
+            "  #  $ $ #\n"\
+            "### # ## #   ######   \n"\
+            "#   # ## #####  ..#\n"\
+            "# $  $          ..#\n"\
+            "##### ### #@##  ..#  \n"\
+            "    #     #########\n"\
+            "    #######"
+
+    level = Level.new(text)
+
+    level.name.should      == ''
+    level.copyright.should == ''
+    level.rows.should      == 11
+    level.cols.should      == 19
+    level.boxes.should     == 6
+    level.goals.should     == 6
+    level.pusher.should    == { :pos_m => 8, :pos_n => 11 }
+
+    level.to_s.should == "    #####          \n"\
+                         "    #   #          \n"\
+                         "    #$  #          \n"\
+                         "  ###  $##         \n"\
+                         "  #  $ $ #         \n"\
+                         "### # ## #   ######\n"\
+                         "#   # ## #####  ..#\n"\
+                         "# $  $          ..#\n"\
+                         "##### ### #@##  ..#\n"\
+                         "    #     #########\n"\
+                         "    #######        "
+  end
+
   it 'initialize (node)' do
     level       = Pack.new('spec/support/files/level.slc').levels[0]
     boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
