@@ -61,8 +61,9 @@ describe Level do
                          "    #######        "
   end
 
-  it '.initialize (text with weird end of lines)' do
-    text =  "    #####\n"\
+  it '.initialize (text with weird lines and end of lines)' do
+    text =  " \n"\
+            "    #####\n"\
             "    #   #\n"\
             "    #$  #\n"\
             "  ###  $##  \n"\

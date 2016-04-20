@@ -211,7 +211,7 @@ class Level
   end
 
   def initialize_grid_from_text(text_level)
-    lines      = text_level.split("\n")
+    lines      = text_level.split("\n").select { |line| line.strip != '' }
     @rows      = lines.size
     @cols      = lines.max_by { |line| line.rindex('#') }.rstrip.length
     @name      = ''
