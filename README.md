@@ -7,6 +7,7 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
+ * Quand une pénalité est trouvée, ajouter automatiquement toutes les pénalités de type "tunnel" liées.
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer
  * Remonter les pénalités dans les nodes originels des solveurs parents
  * Si une pénalité est trouvée, parcourir les "waiting nodes" et les retrier en fonction de
