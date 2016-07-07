@@ -309,9 +309,7 @@ class Level
     initialize_floor_rec(@pusher[:pos_m], @pusher[:pos_n])
 
     # Set back symbols to regular symbols
-    @grid = @grid.join('')
-                 .tr('pda', '.$*')
-                 .split('')
+    @grid = @grid.collect { |cell| cell.tr('pda', '.$*') }
   end
 
   # Recursive function used by make_floor
@@ -319,15 +317,15 @@ class Level
     cell = read_pos(m, n)
 
     # Change of values to "floor" or "visited"
-    if cell == ' '
-      write_pos(m, n, 's') # floor
-    elsif cell == '.'
-      write_pos(m, n, 'p') # visited goal
-    elsif cell == '$'
-      write_pos(m, n, 'd') # visited box
-    elsif cell == '*'
-      write_pos(m, n, 'a') # visited box
+    new_cell = case cell
+      when ' ' then 's' # floor
+      when '.' then 'p' # visited goal
+      when '$' then 'd' # visited box
+      when '*' then 'a' # visited box on goal
+      else nil
     end
+
+    write_pos(m, n, new_cell) if new_cell
 
     # If non-visited cell, test neighbours cells
     if !['#', 's', 'p', 'd', 'a'].include? cell
