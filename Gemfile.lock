@@ -2,9 +2,11 @@ GEM
   remote: https://rubygems.org/
   specs:
     bsearch (1.5.0)
+    codeclimate-test-reporter (0.6.0)
+      simplecov (>= 0.7.1, < 1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    json (1.8.3)
+    json (2.0.1)
     mini_portile (0.6.2)
     munkres (0.1.0)
     nokogiri (1.6.6.2)
@@ -23,9 +25,9 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     ruby-prof (0.15.6)
-    simplecov (0.11.2)
+    simplecov (0.12.0)
       docile (~> 1.1.0)
-      json (~> 1.8)
+      json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
 
@@ -34,11 +36,11 @@ PLATFORMS
 
 DEPENDENCIES
   bsearch
+  codeclimate-test-reporter
   munkres
   nokogiri
   rspec
   ruby-prof
-  simplecov
 
 BUNDLED WITH
    1.11.2

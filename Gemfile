@@ -7,5 +7,5 @@ gem 'bsearch'
 group :test do
   gem 'rspec'
   gem 'ruby-prof'
-  gem 'simplecov', :require => false
+  gem "codeclimate-test-reporter", :require => false
 end

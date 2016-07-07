@@ -1,9 +1,9 @@
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
+
 require 'nokogiri'
 require 'bsearch'
 require 'ruby-prof'
-
-require 'simplecov'
-SimpleCov.start
 
 Dir.glob("./services/**/*.rb").each { |f| require f }
 
