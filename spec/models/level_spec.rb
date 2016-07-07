@@ -98,26 +98,24 @@ describe Level do
                          "    #######        "
   end
 
-  it 'initialize (node)', :profiling do
-    3000.times do |i| # TODO
-      level       = Pack.new('spec/support/files/level.slc').levels[0]
-      boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
-      goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
-      pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
-      node        = Node.new([boxes_zone, goals_zone, pusher_zone])
+  it 'initialize (node)' do
+    level       = Pack.new('spec/support/files/level.slc').levels[0]
+    boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
+    goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
+    pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
+    node        = Node.new([boxes_zone, goals_zone, pusher_zone])
 
-      Level.new(node).to_s.should == "    #####          \n"\
-                                     "    #   #          \n"\
-                                     "    #$  #          \n"\
-                                     "  ###  $##         \n"\
-                                     "  #  $ $@#         \n"\
-                                     "### # ## #   ######\n"\
-                                     "#   # ## #####  ..#\n"\
-                                     "# $  $          ..#\n"\
-                                     "##### ### # ##  ..#\n"\
-                                     "    #     #########\n"\
-                                     "    #######        "
-    end
+    Level.new(node).to_s.should == "    #####          \n"\
+                                   "    #   #          \n"\
+                                   "    #$  #          \n"\
+                                   "  ###  $##         \n"\
+                                   "  #  $ $@#         \n"\
+                                   "### # ## #   ######\n"\
+                                   "#   # ## #####  ..#\n"\
+                                   "# $  $          ..#\n"\
+                                   "##### ### # ##  ..#\n"\
+                                   "    #     #########\n"\
+                                   "    #######        "
   end
 
   it 'initialize (node with zones with less boxes/goals than linked level)' do

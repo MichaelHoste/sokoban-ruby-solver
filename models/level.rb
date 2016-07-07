@@ -34,13 +34,13 @@ class Level
 
     if level.is_a? Level
       create_level_from_level(level)
+    elsif level.is_a? Node
+      create_level_from_node(level)
     else
       if level.is_a? Nokogiri::XML::Element
         initialize_grid_from_xml(level)
       elsif level.is_a? String
         initialize_grid_from_text(level)
-      elsif level.is_a? Node
-        initialize_grid_from_node(level)
       end
 
       initialize_pusher_position
@@ -221,44 +221,65 @@ class Level
 
   # Can't get exact position of pusher from a node
   # Take first eligible position of pusher from pusher_zone
-  def initialize_grid_from_node(node)
-    boxes_zone       = node.boxes_zone
-    goals_zone       = node.goals_zone
-    pusher_zone      = node.pusher_zone
-    level            = node.level
-    boxes_positions  = boxes_zone.positions_of_1
-    goals_positions  = goals_zone.positions_of_1
-    pusher_positions = pusher_zone.positions_of_1
+  def create_level_from_node(node)
+    level = node.level
 
-    @rows      = level.rows
-    @cols      = level.cols
-    @name      = level.name
-    @copyright = level.copyright
+    @rows        = level.rows
+    @cols        = level.cols
+    @name        = level.name
+    @copyright   = level.copyright
+    @size        = @cols * @rows
+    @inside_size = level.inside_size
 
-    # clear inside to keep empty spaces
-    @grid = level.grid.dup.tr('@$*+.', 's')
+    # Don't need to copy, reference is ok because doesn't change
+    @level_pos_to_zone_pos = level.level_pos_to_zone_pos
+    @zone_pos_to_level_pos = level.zone_pos_to_level_pos
+
+    # Initialize grid
+
+    zone_pos_to_level_pos = level.zone_pos_to_level_pos
+    boxes_positions       = node.boxes_zone.positions_of_1.collect { |position| zone_pos_to_level_pos[position] }
+    goals_positions       = node.goals_zone.positions_of_1.collect { |position| zone_pos_to_level_pos[position] }
+    pusher_positions      = node.pusher_zone.positions_of_1.collect { |position| zone_pos_to_level_pos[position] }
+
+    @grid = level.grid.dup.tr('@$*+.', 's')  # clear inside to keep empty spaces
 
     boxes_positions.each do |position|
-      @grid[level.zone_pos_to_level_pos[position]] = '$'
+      @grid[position] = '$'
     end
 
     goals_positions.each do |position|
-      @grid[level.zone_pos_to_level_pos[position]] = '.'
+      @grid[position] = '.'
     end
 
     (boxes_positions & goals_positions).each do |position|
-      @grid[level.zone_pos_to_level_pos[position]] = '*'
+      @grid[position] = '*'
     end
 
     pusher_positions.each do |position|
-      if @grid[level.zone_pos_to_level_pos[position]] == '.'
-        @grid[level.zone_pos_to_level_pos[position]] = '+'
+      if @grid[position] == '.'
+        @grid[position] = '+'
+
+        @pusher = {
+          :pos_m => (position / @cols).floor,
+          :pos_n => position % @cols
+        }
         break
-      elsif @grid[level.zone_pos_to_level_pos[position]] == 's'
-        @grid[level.zone_pos_to_level_pos[position]] = '@'
+      elsif @grid[position] == 's'
+        @grid[position] = '@'
+
+        @pusher = {
+          :pos_m => (position / @cols).floor,
+          :pos_n => position % @cols
+        }
         break
       end
     end
+
+    # Initialize boxes and goals
+
+    @boxes = boxes_positions.count
+    @goals = goals_positions.count
   end
 
   def create_level_from_level(level)
