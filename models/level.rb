@@ -140,7 +140,7 @@ class Level
       end
 
       # Test on cell (m_2,n_2)
-      if ['$', '*'].include? read_pos(m_1, n_1)
+      if '$*'.include? read_pos(m_1, n_1)
         if read_pos(m_2, n_2) == '.'
           write_pos(m_2, n_2, '*')
         else
@@ -151,7 +151,7 @@ class Level
       end
 
       # Test on cell (m_1, n_1)
-      if ['.', '*'].include? read_pos(m_1, n_1)
+      if '.*'.include? read_pos(m_1, n_1)
         write_pos(m_1, n_1, '+')
       else
         write_pos(m_1, n_1, '@')
@@ -234,34 +234,38 @@ class Level
 
     pos         = 0
     pusher_flag = false
-    @grid = level.grid.split('').collect do |cell| # TODO optimize
-      # Only keep empty spaces
-      if ['@', '$', '*', '+'].include? cell
-        new_cell = 's'
+
+    # clear inside to keep empty spaces
+    #@grid = level.grid.dup#.tr('@$*+.', 's')
+    @grid = ''
+
+    level.grid.each_char.with_index do |cell, i|
+      if !@inside_cells.include?(cell)
+        @grid << cell
       else
-        new_cell = cell
-      end
-
-      if @inside_cells.include? new_cell
-        # Place goals from zone
         if goals_zone.bit_1?(pos)
-          new_cell = '.'
-        end
-
-        # Place boxes from zone
-        if boxes_zone.bit_1?(pos)
-          new_cell = new_cell == '.' ? '*' : '$'
-        # Place pusher from zone
+          if boxes_zone.bit_1?(pos)
+            new_cell = '*'
+          elsif !pusher_flag && pusher_zone.bit_1?(pos)
+            new_cell    = '+'
+            pusher_flag = true
+          else
+            new_cell = '.'
+          end
+        elsif boxes_zone.bit_1?(pos)
+          new_cell = '$'
         elsif !pusher_flag && pusher_zone.bit_1?(pos)
-          new_cell = new_cell == '.' ? '+' : '@'
+          new_cell    = '@'
           pusher_flag = true
+        else
+          new_cell = 's'
         end
 
-        pos += 1
-      end
+        @grid << new_cell
 
-      new_cell
-    end.join
+        pos = pos + 1
+      end
+    end
   end
 
   def create_level_from_level(level)
@@ -323,7 +327,7 @@ class Level
     write_pos(m, n, new_cell) if new_cell
 
     # If non-visited cell, test neighbours cells
-    if !['#', 's', 'p', 'd', 'a'].include? cell
+    if !'#spda'.include?(cell)
       initialize_floor_rec(m+1, n)
       initialize_floor_rec(m-1, n)
       initialize_floor_rec(m, n+1)

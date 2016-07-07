@@ -98,20 +98,48 @@ describe Level do
                          "    #######        "
   end
 
-  it 'initialize (node)' do
-    level       = Pack.new('spec/support/files/level.slc').levels[0]
-    boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
-    goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
+  it 'initialize (node)', :profiling do
+    #3000.times do |i|
+      level       = Pack.new('spec/support/files/level.slc').levels[0]
+      boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
+      goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
+      pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
+      node        = Node.new([boxes_zone, goals_zone, pusher_zone])
+
+      Level.new(node).to_s.should == "    #####          \n"\
+                                     "    #   #          \n"\
+                                     "    #$  #          \n"\
+                                     "  ###  $##         \n"\
+                                     "  #  $ $@#         \n"\
+                                     "### # ## #   ######\n"\
+                                     "#   # ## #####  ..#\n"\
+                                     "# $  $          ..#\n"\
+                                     "##### ### # ##  ..#\n"\
+                                     "    #     #########\n"\
+                                     "    #######        "
+   # end
+  end
+
+  it 'initialize (node with zones with less boxes/goals than linked level)' do
+    level = Pack.new('spec/support/files/level.slc').levels[0]
+
+    boxes_zone = Zone.new(level, Zone::BOXES_ZONE)
+    boxes_zone.set_bit_0(boxes_zone.positions_of_1[0])
+
+    goals_zone = Zone.new(level, Zone::GOALS_ZONE)
+    goals_zone.set_bit_0(goals_zone.positions_of_1[0])
+
     pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
-    node        = Node.new([boxes_zone, goals_zone, pusher_zone])
+
+    node = Node.new([boxes_zone, goals_zone, pusher_zone])
 
     Level.new(node).to_s.should == "    #####          \n"\
                                    "    #   #          \n"\
-                                   "    #$  #          \n"\
+                                   "    #   #          \n"\
                                    "  ###  $##         \n"\
                                    "  #  $ $@#         \n"\
                                    "### # ## #   ######\n"\
-                                   "#   # ## #####  ..#\n"\
+                                   "#   # ## #####   .#\n"\
                                    "# $  $          ..#\n"\
                                    "##### ### # ##  ..#\n"\
                                    "    #     #########\n"\
