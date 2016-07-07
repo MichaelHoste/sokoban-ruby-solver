@@ -98,7 +98,7 @@ describe Level do
                          "    #######        "
   end
 
-  it 'initialize (node)' do
+  it 'initialize (node)', :profiling do
     3000.times do |i| # TODO
       level       = Pack.new('spec/support/files/level.slc').levels[0]
       boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)

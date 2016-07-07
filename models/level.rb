@@ -222,48 +222,41 @@ class Level
   # Can't get exact position of pusher from a node
   # Take first eligible position of pusher from pusher_zone
   def initialize_grid_from_node(node)
-    boxes_zone  = node.boxes_zone
-    goals_zone  = node.goals_zone
-    pusher_zone = node.pusher_zone
-    level       = node.level
+    boxes_zone       = node.boxes_zone
+    goals_zone       = node.goals_zone
+    pusher_zone      = node.pusher_zone
+    level            = node.level
+    boxes_positions  = boxes_zone.positions_of_1
+    goals_positions  = goals_zone.positions_of_1
+    pusher_positions = pusher_zone.positions_of_1
 
     @rows      = level.rows
     @cols      = level.cols
     @name      = level.name
     @copyright = level.copyright
 
-    pos         = 0
-    pusher_flag = false
-
     # clear inside to keep empty spaces
-    #@grid = level.grid.dup#.tr('@$*+.', 's')
-    @grid = ''
+    @grid = level.grid.dup.tr('@$*+.', 's')
 
-    level.grid.each_char do |cell|
-      if !@inside_cells.include?(cell)
-        @grid << cell
-      else
-        if goals_zone.bit_1?(pos)
-          if boxes_zone.bit_1?(pos)
-            new_cell = '*'
-          elsif !pusher_flag && pusher_zone.bit_1?(pos)
-            new_cell    = '+'
-            pusher_flag = true
-          else
-            new_cell = '.'
-          end
-        elsif boxes_zone.bit_1?(pos)
-          new_cell = '$'
-        elsif !pusher_flag && pusher_zone.bit_1?(pos)
-          new_cell    = '@'
-          pusher_flag = true
-        else
-          new_cell = 's'
-        end
+    boxes_positions.each do |position|
+      @grid[level.zone_pos_to_level_pos[position]] = '$'
+    end
 
-        @grid << new_cell
+    goals_positions.each do |position|
+      @grid[level.zone_pos_to_level_pos[position]] = '.'
+    end
 
-        pos = pos + 1
+    (boxes_positions & goals_positions).each do |position|
+      @grid[level.zone_pos_to_level_pos[position]] = '*'
+    end
+
+    pusher_positions.each do |position|
+      if @grid[level.zone_pos_to_level_pos[position]] == '.'
+        @grid[level.zone_pos_to_level_pos[position]] = '+'
+        break
+      elsif @grid[level.zone_pos_to_level_pos[position]] == 's'
+        @grid[level.zone_pos_to_level_pos[position]] = '@'
+        break
       end
     end
   end
