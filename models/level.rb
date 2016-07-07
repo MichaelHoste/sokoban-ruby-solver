@@ -163,13 +163,13 @@ class Level
 
   def valid?
     criteria_1 = @boxes == @goals
-    criteria_2 = @grid.count { |cell| ['@', '+'].include? cell } == 1
+    criteria_2 = @grid.count('@+') == 1
 
     criteria_1 && criteria_2
   end
 
   def won?
-    !(@grid.any? { |cell| cell == '$' })
+    !@grid.include?('$')
   end
 
   def print
@@ -177,7 +177,7 @@ class Level
   end
 
   def to_s
-    @grid.join.tr('s', ' ').scan(/.{#{@cols}}/).join("\n")
+    @grid.tr('s', ' ').scan(/.{#{@cols}}/).join("\n")
   end
 
   def to_node
@@ -194,7 +194,7 @@ class Level
   end
 
   def self.inside_cells
-    ['$', '.', '*', '@', '+', 's']
+    '$.*@+s'
   end
 
   private
@@ -207,7 +207,7 @@ class Level
     @copyright     = copyright_node ? copyright_node.strip : ""
 
     lines = xml_level_node.css("L").collect(&:text)
-    @grid = lines.collect { |line| line.ljust @cols }.join.split('')
+    @grid = lines.collect { |line| line.ljust @cols }.join
   end
 
   def initialize_grid_from_text(text_level)
@@ -216,7 +216,7 @@ class Level
     @cols      = lines.max_by { |line| line.rindex('#') }.rstrip.length
     @name      = ''
     @copyright = ''
-    @grid      = lines.collect { |line| line.ljust(@cols)[0..@cols-1] }.join.split('')
+    @grid      = lines.collect { |line| line.ljust(@cols)[0..@cols-1] }.join
   end
 
   # Can't get exact position of pusher from a node
@@ -234,7 +234,7 @@ class Level
 
     pos         = 0
     pusher_flag = false
-    @grid = level.grid.collect do |cell|
+    @grid = level.grid.split('').collect do |cell| # TODO optimize
       # Only keep empty spaces
       if ['@', '$', '*', '+'].include? cell
         new_cell = 's'
@@ -261,7 +261,7 @@ class Level
       end
 
       new_cell
-    end
+    end.join
   end
 
   def create_level_from_level(level)
@@ -274,9 +274,7 @@ class Level
     @goals       = level.goals
     @copyright   = level.copyright
 
-    @grid        = level.grid.collect do |cell|
-      cell
-    end
+    @grid        = level.grid.dup
 
     @pusher = {
       :pos_m => level.pusher[:pos_m],
@@ -289,15 +287,12 @@ class Level
   end
 
   def initialize_size
-    @size = @cols * @rows
-
-    @inside_size = @grid.count do |cell|
-      @inside_cells.include? cell
-    end
+    @size        = @cols * @rows
+    @inside_size = @grid.count(@inside_cells)
   end
 
   def initialize_pusher_position
-    pos = @grid.index { |cell| ['@', '+'].include? cell }
+    pos = @grid.index(/[\@\+]/)
     @pusher = {
       :pos_m => (pos / @cols).floor,
       :pos_n => pos % @cols
@@ -309,7 +304,7 @@ class Level
     initialize_floor_rec(@pusher[:pos_m], @pusher[:pos_n])
 
     # Set back symbols to regular symbols
-    @grid = @grid.collect { |cell| cell.tr('pda', '.$*') }
+    @grid = @grid.tr('pda', '.$*')
   end
 
   # Recursive function used by make_floor
@@ -337,8 +332,8 @@ class Level
   end
 
   def initialize_boxes_and_goals
-    @boxes = @grid.count { |cell| ['*', '$'].include? cell }
-    @goals = @grid.count { |cell| ['+', '*', '.'].include? cell }
+    @boxes = @grid.count '*$'
+    @goals = @grid.count '+*.'
   end
 
   def initialize_level_zone_positions
@@ -346,7 +341,7 @@ class Level
     @zone_pos_to_level_pos = {}
 
     zone_pos = 0
-    @grid.each_with_index do |cell, level_pos|
+    @grid.each_char.with_index do |cell, level_pos|
       @level_pos_to_zone_pos[level_pos] = nil
 
       if @inside_cells.include? cell

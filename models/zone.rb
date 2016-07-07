@@ -87,7 +87,7 @@ class Zone
     size   = @level.inside_size
     string = ""
 
-    @level.grid.each do |char|
+    @level.grid.each_char do |char|
       if @inside_cells.include? char
         string += (@number[size-pos-1] == 1 ? 'x' : ' ')
         pos += 1

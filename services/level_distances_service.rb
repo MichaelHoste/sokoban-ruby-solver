@@ -118,7 +118,7 @@ class LevelDistancesService
   end
 
   def empty_level(level)
-    @level.grid.each_with_index do |cell, i|
+    @level.grid.each_char.with_index do |cell, i|
       if @inside_cells.include? cell
         @level.grid[i] = 's'
       end

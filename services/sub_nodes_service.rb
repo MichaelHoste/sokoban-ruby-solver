@@ -9,11 +9,7 @@ class SubNodesService
 
     @empty_level = @level.clone
 
-    @empty_level.grid.each_with_index do |cell, i|
-      if cell == '$' || cell == '*'
-        @empty_level.grid[i] = 's'
-      end
-    end
+    @empty_level.grid.tr!('$*', 's')
   end
 
   def run

@@ -162,9 +162,9 @@ class BoxDistancesService
   end
 
   def valid?
-    one_box        = @level.grid.count { |cell| ['*', '$'].include? cell      }    == 1
-    no_goals       = @level.grid.count { |cell| ['.', '*', '+'].include? cell }    == 0
-    one_pusher     = @level.grid.count { |cell| '@' == cell                   }    == 1
+    one_box        = @level.grid.count('*$')  == 1
+    no_goals       = @level.grid.count('.*+') == 0
+    one_pusher     = @level.grid.count('@')   == 1
     correct_pusher = @level.read_pos(@level.pusher[:pos_m], @level.pusher[:pos_n]) == '@'
 
     one_box && no_goals && one_pusher && correct_pusher

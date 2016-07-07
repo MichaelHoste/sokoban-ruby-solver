@@ -83,7 +83,7 @@ class NodeChildrenToGoalsService
     striped_level = @level.clone
 
     # Create level with one box and transform other boxes to walls
-    striped_level.grid.each_with_index do |cell, i|
+    striped_level.grid.each_char.with_index do |cell, i|
       if ['$', '*'].include?(cell) && box_level_pos != i
         striped_level.grid[i] = '#'
       end
@@ -99,7 +99,7 @@ class NodeChildrenToGoalsService
   def compute_distances(level)
     # prepare level for distances
     positions = []
-    level.grid.each_with_index do |cell, i|
+    level.grid.each_char.with_index do |cell, i|
       if cell == '.'
         level.grid[i] = 's'
       elsif cell == '+'
