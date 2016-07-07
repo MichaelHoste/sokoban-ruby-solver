@@ -177,7 +177,7 @@ class Level
   end
 
   def to_s
-    @grid.join.gsub('s', ' ').scan(/.{#{@cols}}/).join("\n")
+    @grid.join.tr('s', ' ').scan(/.{#{@cols}}/).join("\n")
   end
 
   def to_node
@@ -310,7 +310,7 @@ class Level
 
     # Set back symbols to regular symbols
     @grid = @grid.join('')
-                 .gsub('p', '.').gsub('d', '$').gsub('a', '*')
+                 .tr('pda', '.$*')
                  .split('')
   end
 
