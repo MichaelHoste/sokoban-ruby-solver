@@ -23,8 +23,8 @@ class NodeChildrenService
           ahead_zone_pos = @level.level_pos_to_zone_pos[ahead_pos]
 
           correct_pusher_position = @pusher_zone.bit_1?(ahead_zone_pos) if !ahead_zone_pos.nil?
-          pusher_position_not_box = !['$', '*'          ].include?(@level.grid[ahead_pos])
-          nothing_behind_box      =  ['.', '@', '+', 's'].include?(@level.grid[behind_pos])
+          pusher_position_not_box = !'$*'.include?(@level.grid[ahead_pos])
+          nothing_behind_box      = '.@+s'.include?(@level.grid[behind_pos])
 
           if correct_pusher_position && pusher_position_not_box && nothing_behind_box
             new_level = @level.clone

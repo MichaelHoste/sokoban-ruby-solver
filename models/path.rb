@@ -154,7 +154,7 @@ class Path
   end
 
   def is_valid_direction(direction)
-    %w(u d l r).include? direction.downcase
+    'udlr'.include? direction.downcase
   end
 
   def create_from_uncompressed(uncompressed_path)

@@ -239,7 +239,7 @@ class Level
     #@grid = level.grid.dup#.tr('@$*+.', 's')
     @grid = ''
 
-    level.grid.each_char.with_index do |cell, i|
+    level.grid.each_char do |cell|
       if !@inside_cells.include?(cell)
         @grid << cell
       else

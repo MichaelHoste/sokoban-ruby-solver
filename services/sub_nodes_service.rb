@@ -53,7 +53,7 @@ class SubNodesService
     if positions_of_1.count > 1
       positions_of_1.collect do |pos|
         sub_boxes_zone = boxes_zone.clone
-        sub_boxes_zone.set_bit_0(pos)
+        sub_boxes_zone[pos] = 0
         sub_boxes_zone
       end
     else

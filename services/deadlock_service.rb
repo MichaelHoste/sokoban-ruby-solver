@@ -21,7 +21,7 @@ class DeadlockService
     (0..@level.rows-1).each do |m|
       (0..@level.cols-1).each do |n|
         cell = @level.read_pos(m, n)
-        if ![' ', '#', '.', '*', '+'].include? cell
+        if not ' #.*+'.include? cell
           if in_corner?(m, n)
             positions << { :m => m, :n => n }
           end
@@ -60,7 +60,7 @@ class DeadlockService
       while cell != '#'
         escape[:up]   = true if @level.read_pos(cell_pos[:m] - 1, cell_pos[:n]) != '#'
         escape[:down] = true if @level.read_pos(cell_pos[:m] + 1, cell_pos[:n]) != '#'
-        escape[:goal] = true if ['.', '*', '+'].include? cell
+        escape[:goal] = true if '.*+'.include? cell
 
         cell_pos[:n] += 1
         cell         = @level.read_pos(cell_pos[:m], cell_pos[:n])
@@ -100,7 +100,7 @@ class DeadlockService
       while cell != '#'
         escape[:left]  = true if @level.read_pos(cell_pos[:m], cell_pos[:n] - 1) != '#'
         escape[:right] = true if @level.read_pos(cell_pos[:m], cell_pos[:n] + 1) != '#'
-        escape[:goal]  = true if ['.', '*', '+'].include? cell
+        escape[:goal]  = true if '.*+'.include? cell
 
         cell_pos[:m] += 1
         cell         = @level.read_pos(cell_pos[:m], cell_pos[:n])

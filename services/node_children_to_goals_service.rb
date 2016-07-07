@@ -84,7 +84,7 @@ class NodeChildrenToGoalsService
 
     # Create level with one box and transform other boxes to walls
     striped_level.grid.each_char.with_index do |cell, i|
-      if ['$', '*'].include?(cell) && box_level_pos != i
+      if '$*'.include?(cell) && box_level_pos != i
         striped_level.grid[i] = '#'
       end
     end
@@ -134,7 +134,7 @@ class NodeChildrenToGoalsService
     positions = []
 
     level.zone_pos_to_level_pos.values.each do |level_pos|
-      if ['.', '+', '*'].include? level.grid[level_pos]
+      if '.+*'.include? level.grid[level_pos]
         positions << level_pos
       end
     end

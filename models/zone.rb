@@ -48,12 +48,16 @@ class Zone
     (self | other_zone) == self
   end
 
-  def bit_1?(position)
-    @number[@level.inside_size - position - 1] == 1
+  def []=(position, value)
+    if value == 0
+      set_bit_0(position)
+    else
+      set_bit_1(position)
+    end
   end
 
-  def bit_0?(position)
-    @number[@level.inside_size - position - 1] == 0
+  def [](position)
+    @number[@level.inside_size - position - 1]
   end
 
   def set_bit_1(position)
@@ -66,6 +70,14 @@ class Zone
     if @number[@level.inside_size - position - 1] == 1
       @number -= 2**(@level.inside_size - position - 1)
     end
+  end
+
+  def bit_1?(position)
+    @number[@level.inside_size - position - 1] == 1
+  end
+
+  def bit_0?(position)
+    @number[@level.inside_size - position - 1] == 0
   end
 
   def positions_of_1
@@ -120,7 +132,7 @@ class Zone
 
     @level.zone_pos_to_level_pos.values.each do |level_pos|
       char = @level.grid[level_pos]
-      if ['$', '*'].include? char
+      if '$*'.include? char
         @number += bit
       end
       bit /= 2
@@ -132,7 +144,7 @@ class Zone
 
     @level.zone_pos_to_level_pos.values.each do |level_pos|
       char = @level.grid[level_pos]
-      if ['.', '*', '+'].include? char
+      if '.*+'.include? char
         @number += bit
       end
       bit /= 2

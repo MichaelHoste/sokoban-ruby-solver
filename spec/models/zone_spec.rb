@@ -218,6 +218,34 @@ describe Zone do
     end
   end
 
+  it '#[]=' do
+    zone = Zone.new(@level, Zone::BOXES_ZONE)
+    zone[0] = 1
+    zone[7] = 1
+    zone[3] = 0
+    zone[5] = 0 # no effect
+
+    zone.to_s.should == "    #####          \n"\
+                        "    #x  #          \n"\
+                        "    #   #          \n"\
+                        "  ### xx##         \n"\
+                        "  #  x x #         \n"\
+                        "### # ## #   ######\n"\
+                        "#   # ## #####    #\n"\
+                        "# x  x            #\n"\
+                        "##### ### # ##    #\n"\
+                        "    #     #########\n"\
+                        "    #######        "
+  end
+
+  it '#[]' do
+    zone = Zone.new(@level, Zone::BOXES_ZONE)
+    zone[0].should == 0
+    zone[1].should == 0
+    zone[2].should == 0
+    zone[3].should == 1
+  end
+
   it '#bit_1?' do
     zone = Zone.new(@level, Zone::BOXES_ZONE)
     zone.bit_1?(0).should == false

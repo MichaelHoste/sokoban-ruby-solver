@@ -98,8 +98,8 @@ describe Level do
                          "    #######        "
   end
 
-  it 'initialize (node)', :profiling do
-    #3000.times do |i|
+  it 'initialize (node)' do
+    3000.times do |i| # TODO
       level       = Pack.new('spec/support/files/level.slc').levels[0]
       boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
       goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
@@ -117,17 +117,17 @@ describe Level do
                                      "##### ### # ##  ..#\n"\
                                      "    #     #########\n"\
                                      "    #######        "
-   # end
+    end
   end
 
   it 'initialize (node with zones with less boxes/goals than linked level)' do
     level = Pack.new('spec/support/files/level.slc').levels[0]
 
     boxes_zone = Zone.new(level, Zone::BOXES_ZONE)
-    boxes_zone.set_bit_0(boxes_zone.positions_of_1[0])
+    boxes_zone[boxes_zone.positions_of_1[0]] = 0
 
     goals_zone = Zone.new(level, Zone::GOALS_ZONE)
-    goals_zone.set_bit_0(goals_zone.positions_of_1[0])
+    goals_zone[goals_zone.positions_of_1[0]] = 0
 
     pusher_zone = Zone.new(level, Zone::PUSHER_ZONE)
 
