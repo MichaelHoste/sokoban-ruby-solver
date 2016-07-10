@@ -261,7 +261,7 @@ class Level
         @grid[position] = '+'
 
         @pusher = {
-          :pos_m => (position / @cols).floor,
+          :pos_m => position / @cols,
           :pos_n => position % @cols
         }
         break
@@ -269,7 +269,7 @@ class Level
         @grid[position] = '@'
 
         @pusher = {
-          :pos_m => (position / @cols).floor,
+          :pos_m => position / @cols,
           :pos_n => position % @cols
         }
         break
@@ -312,7 +312,7 @@ class Level
   def initialize_pusher_position
     pos = @grid.index(/[\@\+]/)
     @pusher = {
-      :pos_m => (pos / @cols).floor,
+      :pos_m => pos / @cols,
       :pos_n => pos % @cols
     }
   end

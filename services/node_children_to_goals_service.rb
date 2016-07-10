@@ -196,7 +196,7 @@ class NodeChildrenToGoalsService
     end
 
     level.instance_variable_set(:@pusher, {
-      :pos_m => (pusher_pos / @cols).floor,
+      :pos_m => pusher_pos / @cols,
       :pos_n => pusher_pos % @cols
     })
   end

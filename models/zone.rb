@@ -195,7 +195,7 @@ class Zone
   def convert_positions_to_hash(positions)
     positions.collect do |position|
       {
-        :m => (position / @level.cols).floor,
+        :m => position / @level.cols,
         :n => position % @level.cols
       }
     end

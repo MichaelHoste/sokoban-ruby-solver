@@ -4,12 +4,12 @@
 class BoxDistancesService
 
   def initialize(level)
-    @level = level.clone
+    @level = level
     @rows  = @level.rows
     @cols  = @level.cols
 
     if !valid?
-      raise "Error: Assumes the level contains only one box and one pusher (no goals)"
+      raise "Error: BoxDistancesService assumes the level contains only one box and one pusher (no goals)"
     end
   end
 
@@ -23,7 +23,7 @@ class BoxDistancesService
       (0..@cols-1).each do |n|
         cell = @level.grid[m * @cols + n]
 
-        if cell != ' ' && cell != '#'
+        if !' #'.include?(cell)
           distances << {
             :from_left   => Float::INFINITY,
             :from_right  => Float::INFINITY,
@@ -53,6 +53,10 @@ class BoxDistancesService
     end
 
     # remove pusher and box from level
+    pos_m_before = @level.pusher[:pos_m]
+    pos_n_before = @level.pusher[:pos_n]
+    box_m_before = box[:m]
+    box_n_before = box[:n]
     @level.write_pos(@level.pusher[:pos_m], @level.pusher[:pos_n], 's')
     @level.write_pos(box[:m], box[:n], 's')
 
@@ -65,6 +69,11 @@ class BoxDistancesService
 
       dijkstra(heap, distances, next_item)
     end
+
+    # Place box and pusher back
+    @level.write_pos(pos_m_before, pos_n_before, '@')
+    @level.write_pos(box_m_before, box_n_before, '$')
+    @level.send(:initialize_pusher_position)
 
     if [:for_zone, :for_level].include? type
       send("format_distances_#{type}", distances)
@@ -162,7 +171,7 @@ class BoxDistancesService
   end
 
   def valid?
-    one_box        = @level.grid.count('*$')  == 1
+    one_box        = @level.grid.count('$')   == 1
     no_goals       = @level.grid.count('.*+') == 0
     one_pusher     = @level.grid.count('@')   == 1
     correct_pusher = @level.read_pos(@level.pusher[:pos_m], @level.pusher[:pos_n]) == '@'
