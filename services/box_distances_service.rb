@@ -118,13 +118,13 @@ class BoxDistancesService
       if correct_pusher_position
         distances[pos][direction] = weight
 
-        [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
-          index = heap.index { |item| item[:weight] <= weight + 1 } # keep it sorted DESC on weight!
+        [:from_bottom, :from_top, :from_left, :from_right].each do |new_direction|
+          index = heap.index { |heap_item| heap_item[:weight] <= weight + 1 } # keep it sorted DESC on weight!
           heap.insert(index.to_i, {
             :box       => new_box,
             :pusher_m  => item[:box][:m],
             :pusher_n  => item[:box][:n],
-            :direction => direction,
+            :direction => new_direction,
             :weight    => weight + 1
           })
         end
@@ -140,7 +140,7 @@ class BoxDistancesService
   def format_distances_for_zone(distances)
     values = []
 
-    distances.each_with_index do |distance, i|
+    distances.each do |distance|
       if distance
         values << [ distance[:from_left], distance[:from_right],
                     distance[:from_top], distance[:from_bottom] ].min
