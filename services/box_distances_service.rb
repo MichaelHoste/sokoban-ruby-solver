@@ -64,10 +64,7 @@ class BoxDistancesService
     i = 1
     while heap.size > 0
       i += 1
-      next_item = heap.min_by { |pos| pos[:weight] }
-      heap.delete(next_item)
-
-      dijkstra(heap, distances, next_item)
+      dijkstra(heap, distances, heap.pop)
     end
 
     # Place box and pusher back
@@ -123,14 +120,15 @@ class BoxDistancesService
         distances[pos][direction] = weight
 
         [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
-          heap << {
+          index = heap.index { |item| item[:weight] <= weight + 1 } # keep it sorted DESC on weight!
+          heap.insert(index.to_i, {
             :box_m     => new_box[:m],
             :box_n     => new_box[:n],
             :pusher_m  => item[:box_m],
             :pusher_n  => item[:box_n],
             :direction => direction,
             :weight    => weight + 1
-          }
+          })
         end
       end
 
