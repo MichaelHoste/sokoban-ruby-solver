@@ -119,7 +119,7 @@ describe BoxDistancesService do
                                     i, i, i, i, i, i,  i, i ]
   end
 
-  it '#run (5)', :test do
+  it '#run (5)', :profiler do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #   #          \n"\
@@ -134,13 +134,8 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    #a = nil
-
-    #300.times do
-      a = BoxDistancesService.new(level).run
-    #end
-
-                       a.should == [ 4, i, i,
+    BoxDistancesService.new(level).run
+                       .should == [ 4, i, i,
                                     3, i, i,
                                     2, i, i,
                               3, 2, 1, 0, 1, 2,
