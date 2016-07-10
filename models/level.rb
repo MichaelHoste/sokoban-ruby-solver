@@ -327,25 +327,31 @@ class Level
 
   # Recursive function used by make_floor
   def initialize_floor_rec(m, n)
-    cell = read_pos(m, n)
+    array = [[m, n]]
 
-    # Change of values to "floor" or "visited"
-    new_cell = case cell
-      when ' ' then 's' # floor
-      when '.' then 'p' # visited goal
-      when '$' then 'd' # visited box
-      when '*' then 'a' # visited box on goal
-      else nil
-    end
+    while array.length > 0
+      cell_pos = array.shift
+      m, n     = cell_pos
+      cell     = read_pos(m, n)
 
-    write_pos(m, n, new_cell) if new_cell
+      # Change of values to "floor" or "visited"
+      new_cell = case cell
+        when ' ' then 's' # floor
+        when '.' then 'p' # visited goal
+        when '$' then 'd' # visited box
+        when '*' then 'a' # visited box on goal
+        else nil
+      end
 
-    # If non-visited cell, test neighbours cells
-    if !'#spda'.include?(cell)
-      initialize_floor_rec(m+1, n)
-      initialize_floor_rec(m-1, n)
-      initialize_floor_rec(m, n+1)
-      initialize_floor_rec(m, n-1)
+      write_pos(m, n, new_cell) if new_cell
+
+      # If non-visited cell, test neighbours cells
+      if !'#spda'.include?(cell)
+        array << [m+1, n]
+        array << [m-1, n]
+        array << [m, n+1]
+        array << [m, n-1]
+      end
     end
   end
 
