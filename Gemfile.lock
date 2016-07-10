@@ -7,6 +7,7 @@ GEM
     diff-lcs (1.2.5)
     docile (1.1.5)
     json (2.0.1)
+    memoist (0.14.0)
     mini_portile (0.6.2)
     munkres (0.1.0)
     nokogiri (1.6.6.2)
@@ -37,6 +38,7 @@ PLATFORMS
 DEPENDENCIES
   bsearch
   codeclimate-test-reporter
+  memoist
   munkres
   nokogiri
   rspec

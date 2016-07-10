@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'nokogiri'
 gem 'munkres'
 gem 'bsearch'
+gem 'memoist'
 
 group :test do
   gem 'rspec'

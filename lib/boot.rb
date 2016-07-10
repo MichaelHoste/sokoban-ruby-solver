@@ -4,6 +4,7 @@ CodeClimate::TestReporter.start
 require 'nokogiri'
 require 'bsearch'
 require 'ruby-prof'
+require 'memoist'
 
 Dir.glob("./services/**/*.rb").each { |f| require f }
 
