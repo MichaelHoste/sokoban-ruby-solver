@@ -51,7 +51,7 @@ describe AStarSolver do
       solver.total_tries ].should == [true, 25, 23, 76, 69, 2548]
   end
 
-  it '#run (simple level without penalties)', :profiling do
+  it '#run (simple level without penalties)' do
     text =  "  ####  \n"\
             "###  #  \n"\
             "#    #  \n"\
