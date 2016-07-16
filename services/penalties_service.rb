@@ -17,10 +17,6 @@ class PenaltiesService
   end
 
   def run
-    # if LevelComplexityService.new(@node.level).run / @node.num_of_boxes < 26
-    #   return false
-    # end
-
     found_new_penalty = false
 
     sub_nodes = SubNodesService.new(@node).run

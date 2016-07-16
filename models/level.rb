@@ -19,6 +19,8 @@
 #      #     #########
 #      #######
 
+require 'io/console'
+
 class Level
 
   NO_MOVE     = 0
@@ -77,16 +79,16 @@ class Level
     # Following of the direction, test 2 cells
     if direction == 'u'
       move1 = read_pos(m-1, n)
-      move2 = read_pos(m-2, n)
+      move2 = read_pos(m-2, n) if move1 != '#'
     elsif direction == 'd'
       move1 = read_pos(m+1, n)
-      move2 = read_pos(m+2, n)
+      move2 = read_pos(m+2, n) if move1 != '#'
     elsif direction == 'l'
       move1 = read_pos(m, n-1)
-      move2 = read_pos(m, n-2)
+      move2 = read_pos(m, n-2) if move1 != '#'
     elsif direction == 'r'
       move1 = read_pos(m, n+1)
-      move2 = read_pos(m, n+2)
+      move2 = read_pos(m, n+2) if move1 != '#'
     end
 
     # Check that's not a wall, or two boxes, or one boxes and a wall
@@ -195,6 +197,43 @@ class Level
 
   def self.inside_cells
     '$.*@+s'
+  end
+
+  def play
+    pushes = 0
+    moves  = 0
+
+    while !won?
+      system('clear')
+      puts "Pushes: #{pushes}"
+      puts "Moves:  #{moves}"
+      puts
+
+      print
+
+      case read_char
+        when "\e[A"
+          m = move('u')
+        when "\e[B"
+          m = move('d')
+        when "\e[C"
+          m = move('r')
+        when "\e[D"
+          m = move('l')
+        when "\e"
+          exit
+        else
+          m = NO_MOVE
+      end
+
+      case m
+        when NORMAL_MOVE
+          moves = moves + 1
+        when BOX_MOVE
+          moves  = moves  + 1
+          pushes = pushes + 1
+      end
+    end
   end
 
   private

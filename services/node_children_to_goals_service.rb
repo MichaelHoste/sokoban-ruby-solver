@@ -1,4 +1,5 @@
 # Find children of a node by pushing each box to reachable goals
+# Doesn't modify level
 
 class NodeChildrenToGoalsService
 
@@ -15,12 +16,11 @@ class NodeChildrenToGoalsService
     # for each reachable box
     reachable_boxes_positions.each do |box_level_pos|
 
-      # Create level with one box and other boxes transformed as walls
-      striped_level = create_striped_level(box_level_pos)
-      distances     = compute_distances(striped_level)
+      # Compute distances for this box (assuming other boxes are not-movable)
+      distances = compute_distances(@level, box_level_pos)
 
-      # For each goal position of this striped level...
-      goals_positions(striped_level).each do |goal_level_pos|
+      # For each goal position...
+      goals_positions(@level).each do |goal_level_pos|
         goal_distance = distances[goal_level_pos]
 
         if goal_distance != Float::INFINITY && goal_distance != 0
@@ -79,53 +79,11 @@ class NodeChildrenToGoalsService
     level_positions
   end
 
-  def create_striped_level(box_level_pos)
-    striped_level = @level.clone
-
-    # Create level with one box and transform other boxes to walls
-    box_cell = striped_level.grid[box_level_pos]
-    striped_level.grid.tr!('$*', '#')
-    striped_level.grid[box_level_pos] = box_cell
-
-    # inside of levels can be smaller than before
-    striped_level.send(:initialize_floor)
-    striped_level.send(:initialize_level_zone_positions)
-
-    striped_level
-  end
-
-  def compute_distances(level)
-    # prepare level for distances
-    positions = []
-    level.grid.each_char.with_index do |cell, i|
-      if cell == '.'
-        level.grid[i] = 's'
-      elsif cell == '+'
-        level.grid[i] = '@'
-      elsif cell == '*'
-        level.grid[i] = '$'
-      end
-
-      positions << i if cell == '.' || cell == '+' || cell == '*'
-    end
-
-    # Get distances from this box to other positions
-    distances = BoxDistancesService.new(level).run(:for_level)
-
-    # revert the grid back (optimization)
-    positions.each do |position|
-      cell = level.grid[position]
-
-      if cell == 's'
-        level.grid[position] = '.'
-      elsif cell == '@'
-        level.grid[position] = '+'
-      elsif cell == '$'
-        level.grid[position] = '*'
-      end
-    end
-
-    distances
+  def compute_distances(level, box_level_pos)
+    BoxDistancesService.new(level, {
+      :m => box_level_pos / @cols,
+      :n => box_level_pos % @cols
+    }).run(:for_level)
   end
 
   def goals_positions(level)

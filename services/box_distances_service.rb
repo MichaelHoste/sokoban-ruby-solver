@@ -3,21 +3,23 @@
 
 class BoxDistancesService
 
-  def initialize(level)
-    @level  = level
-    @rows   = level.rows
-    @cols   = level.cols
-    @pusher = level.pusher
+  def initialize(level, box_position = nil)
+    @level        = level
+    @rows         = level.rows
+    @cols         = level.cols
+    @pusher       = level.pusher
 
-    if !valid?
-     raise "Error: BoxDistancesService assumes the level contains only one box and one pusher (no goals)"
+    if box_position
+      @box = box_position # use this param only if many boxes in level to
+                          # decide which one to use with the service
+    else
+      @box = initialize_box_position_from_level
     end
   end
 
   def run(type = :for_zone)
     heap      = []
     distances = []
-    box       = {}
 
     # Initialize all distances with infinity
     distances = Array.new(@rows * @cols) do {
@@ -28,17 +30,10 @@ class BoxDistancesService
       }
     end
 
-    # Initialize box position
-    box_index = @level.grid.index('$')
-    box       = {
-      :m => box_index / @cols,
-      :n => box_index % @cols
-    }
-
     # Populate heap with first moves of box
     [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
       heap << {
-        :box       => box,
+        :box       => @box,
         :pusher    => @pusher,
         :direction => direction,
         :weight    => 0
@@ -46,14 +41,16 @@ class BoxDistancesService
     end
 
     # remove pusher from level
-    pusher_m_before = @pusher[:m]
-    pusher_n_before = @pusher[:n]
+    pusher_m_before    = @pusher[:m]
+    pusher_n_before    = @pusher[:n]
+    pusher_cell_before = @level.read_pos(@pusher[:m], @pusher[:n])
     @level.write_pos(@pusher[:m], @pusher[:n], 's')
 
     # remove box from level
-    box_m_before = box[:m]
-    box_n_before = box[:n]
-    @level.write_pos(box[:m], box[:n], 's')
+    box_m_before    = @box[:m]
+    box_n_before    = @box[:n]
+    box_cell_before = @level.read_pos(@box[:m], @box[:n])
+    @level.write_pos(@box[:m], @box[:n], 's')
 
     # Iterate through the heap starting with lower weights
     while heap.size > 0
@@ -61,8 +58,8 @@ class BoxDistancesService
     end
 
     # Place box and pusher back
-    @level.write_pos(pusher_m_before, pusher_n_before, '@')
-    @level.write_pos(box_m_before, box_n_before, '$')
+    @level.write_pos(pusher_m_before, pusher_n_before, pusher_cell_before)
+    @level.write_pos(box_m_before, box_n_before, box_cell_before)
     @level.send(:initialize_pusher_position)
 
     if [:for_zone, :for_level].include? type
@@ -74,6 +71,18 @@ class BoxDistancesService
 
   private
 
+  def initialize_box_position_from_level
+    if !valid?
+      raise "Error: BoxDistancesService without 'box_position' assumes the level contains only one box"
+    end
+
+    box_index = @level.grid.index('$')
+    @box       = {
+      :m => box_index / @cols,
+      :n => box_index % @cols
+    }
+  end
+
   def dijkstra(heap, item, distances)
     pos          = item[:box][:m]*@cols + item[:box][:n]
     box_cell     = @level.read_pos(item[:box][:m],    item[:box][:n])
@@ -81,8 +90,10 @@ class BoxDistancesService
     direction    = item[:direction]
     weight       = item[:weight]
 
-    if box_cell == 's' && pusher_cell == 's' && distances[pos][direction] > weight
+    if !'$*#'.include?(box_cell) && !'$*#'.include?(pusher_cell) && distances[pos][direction] > weight
       # Place box and pusher
+      old_box_cell    = @level.read_pos(item[:box][:m],    item[:box][:n])
+      old_pusher_cell = @level.read_pos(item[:pusher][:m], item[:pusher][:n])
       @level.write_pos(item[:box][:m],    item[:box][:n],    '$')
       @level.write_pos(item[:pusher][:m], item[:pusher][:n], '@')
       @level.send(:initialize_pusher_position)
@@ -124,8 +135,8 @@ class BoxDistancesService
       end
 
       # remove box and pusher
-      @level.write_pos(item[:box][:m],    item[:box][:n],    's')
-      @level.write_pos(item[:pusher][:m], item[:pusher][:n], 's')
+      @level.write_pos(item[:box][:m],    item[:box][:n],    old_box_cell)
+      @level.write_pos(item[:pusher][:m], item[:pusher][:n], old_pusher_cell)
     end
   end
 
@@ -150,12 +161,10 @@ class BoxDistancesService
   end
 
   def valid?
-    one_box        = @level.grid.count('$')   == 1
-    no_goals       = @level.grid.count('.*+') == 0
-    one_pusher     = @level.grid.count('@')   == 1
-    correct_pusher = @level.read_pos(@pusher[:m], @pusher[:n]) == '@'
+    one_box        = @level.grid.count('$') == 1
+    correct_pusher = '@+'.include?(@level.read_pos(@pusher[:m], @pusher[:n]))
 
-    one_box && no_goals && one_pusher && correct_pusher
+    one_box && correct_pusher
   end
 
 end

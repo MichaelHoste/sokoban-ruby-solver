@@ -194,6 +194,15 @@ describe Level do
     level.can_move?('u').should == true
   end
 
+  it '#can_move? (2)' do
+    level = Level.new("####\n"\
+                      "# @#\n"\
+                      "#  #\n"\
+                      "####")
+
+    level.can_move?('r')
+  end
+
   it '#move' do
     original_level = Pack.new('spec/support/files/level.slc').levels[0]
     level_1        = Pack.new('spec/support/files/level.slc').levels[0]
