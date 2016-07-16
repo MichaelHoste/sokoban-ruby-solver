@@ -113,14 +113,13 @@ class BoxDistancesService
         new_box    = { :m => item[:box][:m], :n => item[:box][:n] - 1 }
       end
 
-      # Pusher zone from real pusher position
-      pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
-
       # Can the pusher push in the needed direction?
-      new_pusher_zone_pos     = @level.level_pos_to_zone_pos[new_pusher[:m] * @cols + new_pusher[:n]]
-      correct_pusher_position = new_pusher_zone_pos && pusher_zone.bit_1?(new_pusher_zone_pos)
+      new_pusher_level_pos = new_pusher[:m] * @cols + new_pusher[:n]
+      not_box_position     = !'*$'.include?(@level.grid[new_pusher_level_pos])
+      new_pusher_zone_pos  = @level.level_pos_to_zone_pos[new_pusher_level_pos]
 
-      if correct_pusher_position
+      # test if correct pusher position
+      if not_box_position && new_pusher_zone_pos && Zone.new(@level, Zone::PUSHER_ZONE).bit_1?(new_pusher_zone_pos)
         distances[pos][direction] = weight
 
         [:from_bottom, :from_top, :from_left, :from_right].each do |new_direction|

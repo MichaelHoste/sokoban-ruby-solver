@@ -79,6 +79,7 @@ class NodeChildrenToGoalsService
     level_positions
   end
 
+  # Get distances from this box to other positions
   def compute_distances(level, box_level_pos)
     BoxDistancesService.new(level, {
       :m => box_level_pos / @cols,

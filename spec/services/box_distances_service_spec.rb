@@ -205,10 +205,44 @@ describe BoxDistancesService do
                        .should == [   i, i,
                                 i, i, i, i,
                                 1, 0, 1, 2,
-                                   2,    i, i,
-                                   3,    i, i,
-                                   4, i, i, i,
-                                   5, i ]
+                                     2,    i, i,
+                                     3,    i, i,
+                                     4, i, i, i,
+                                     5, i ]
+
+    # check the level was not modified by the service!
+    level.to_s.should == text
+  end
+
+  it '#run with multiple neighbours boxes' do
+    text =  "  ####  \n"\
+            "###@ #  \n"\
+            "#    #  \n"\
+            "#   .###\n"\
+            "### # .#\n"\
+            "  # $$ #\n"\
+            "  #    #\n"\
+            "  #. ###\n"\
+            "  ####  "
+
+    level = Level.new(text)
+
+    BoxDistancesService.new(level, { :m => 5, :n => 4 }).run(:for_zone)
+                       .should == [   i, i,
+                                i, i, i, i,
+                                i, i, i, i,
+                                   i,    i, i,
+                                   i, 0, i, i,
+                                   i, i, i, i,
+                                   i, i ]
+
+                                #   [   5, 6,
+                                # 6, 5, 4, 5,
+                                # 7, 6, 3, 6,
+                                #    2,    i, i,
+                                #    1, 0, i, i,
+                                #    8, i, i, i,
+                                #    9, i]
 
     # check the level was not modified by the service!
     level.to_s.should == text
