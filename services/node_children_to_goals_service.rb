@@ -83,11 +83,9 @@ class NodeChildrenToGoalsService
     striped_level = @level.clone
 
     # Create level with one box and transform other boxes to walls
-    striped_level.grid.each_char.with_index do |cell, i|
-      if '$*'.include?(cell) && box_level_pos != i
-        striped_level.grid[i] = '#'
-      end
-    end
+    box_cell = striped_level.grid[box_level_pos]
+    striped_level.grid.tr!('$*', '#')
+    striped_level.grid[box_level_pos] = box_cell
 
     # inside of levels can be smaller than before
     striped_level.send(:initialize_floor)

@@ -57,7 +57,7 @@ class BoxDistancesService
 
     # Iterate through the heap starting with lower weights
     while heap.size > 0
-      dijkstra(heap, distances, heap.pop)
+      dijkstra(heap, heap.pop, distances)
     end
 
     # Place box and pusher back
@@ -74,7 +74,7 @@ class BoxDistancesService
 
   private
 
-  def dijkstra(heap, distances, item)
+  def dijkstra(heap, item, distances)
     pos          = item[:box][:m]*@cols + item[:box][:n]
     box_cell     = @level.read_pos(item[:box][:m],    item[:box][:n])
     pusher_cell  = @level.read_pos(item[:pusher][:m], item[:pusher][:n])
@@ -114,7 +114,7 @@ class BoxDistancesService
 
         [:from_bottom, :from_top, :from_left, :from_right].each do |new_direction|
           index = heap.index { |heap_item| heap_item[:weight] <= weight + 1 } # keep it sorted DESC on weight!
-          heap.insert(index.to_i, {
+          heap.insert(index.to_i, { # to_i because nil should be pos 0
             :box       => new_box,
             :pusher    => item[:box],
             :direction => new_direction,
