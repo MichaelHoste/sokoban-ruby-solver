@@ -10,7 +10,7 @@ describe Level do
     level.cols.should      == 19
     level.boxes.should     == 6
     level.goals.should     == 6
-    level.pusher.should    == { :pos_m => 8, :pos_n => 11 }
+    level.pusher.should    == { :m => 8, :n => 11 }
 
     level.to_s.should == "    #####          \n"\
                          "    #   #          \n"\
@@ -46,7 +46,7 @@ describe Level do
     level.cols.should      == 19
     level.boxes.should     == 6
     level.goals.should     == 6
-    level.pusher.should    == { :pos_m => 8, :pos_n => 11 }
+    level.pusher.should    == { :m => 8, :n => 11 }
 
     level.to_s.should == "    #####          \n"\
                          "    #   #          \n"\
@@ -83,7 +83,7 @@ describe Level do
     level.cols.should      == 19
     level.boxes.should     == 6
     level.goals.should     == 6
-    level.pusher.should    == { :pos_m => 8, :pos_n => 11 }
+    level.pusher.should    == { :m => 8, :n => 11 }
 
     level.to_s.should == "    #####          \n"\
                          "    #   #          \n"\

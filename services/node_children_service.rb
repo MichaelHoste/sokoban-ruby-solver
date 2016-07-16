@@ -82,8 +82,8 @@ class NodeChildrenService
   end
 
   def remove_pusher_from_old_position(new_level)
-    old_pusher_m = new_level.pusher[:pos_m]
-    old_pusher_n = new_level.pusher[:pos_n]
+    old_pusher_m = new_level.pusher[:m]
+    old_pusher_n = new_level.pusher[:n]
 
     if new_level.read_pos(old_pusher_m, old_pusher_n) == '+'
       new_level.write_pos(old_pusher_m, old_pusher_n, '.')

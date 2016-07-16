@@ -69,8 +69,8 @@ class Level
 
   # Direction should be 'u', 'd', 'l', 'r' in lowercase or uppercase
   def can_move?(direction)
-    m = @pusher[:pos_m]
-    n = @pusher[:pos_n]
+    m = @pusher[:m]
+    n = @pusher[:n]
 
     direction = direction.downcase
 
@@ -97,8 +97,8 @@ class Level
   # Return NO_MOVE, NORMAL_MOVE or BOX_MOVE
   def move(direction)
     action = true
-    m      = @pusher[:pos_m]
-    n      = @pusher[:pos_n]
+    m      = @pusher[:m]
+    n      = @pusher[:n]
 
     direction = direction.downcase
 
@@ -107,22 +107,22 @@ class Level
       m_1 = m-1
       m_2 = m-2
       n_1 = n_2 = n
-      @pusher[:pos_m] -= 1
+      @pusher[:m] -= 1
     elsif direction == 'd' && can_move?('d')
       m_1 = m+1
       m_2 = m+2
       n_1 = n_2 = n
-      @pusher[:pos_m] += 1
+      @pusher[:m] += 1
     elsif direction == 'l' && can_move?('l')
       n_1 = n-1
       n_2 = n-2
       m_1 = m_2 = m
-      @pusher[:pos_n] -= 1
+      @pusher[:n] -= 1
     elsif direction == 'r' && can_move?('r')
       n_1 = n+1
       n_2 = n+2
       m_1 = m_2 = m
-      @pusher[:pos_n] += 1
+      @pusher[:n] += 1
     else
       action = false
       state = NO_MOVE
@@ -261,16 +261,16 @@ class Level
         @grid[position] = '+'
 
         @pusher = {
-          :pos_m => position / @cols,
-          :pos_n => position % @cols
+          :m => position / @cols,
+          :n => position % @cols
         }
         break
       elsif @grid[position] == 's'
         @grid[position] = '@'
 
         @pusher = {
-          :pos_m => position / @cols,
-          :pos_n => position % @cols
+          :m => position / @cols,
+          :n => position % @cols
         }
         break
       end
@@ -295,8 +295,8 @@ class Level
     @grid        = level.grid.dup
 
     @pusher = {
-      :pos_m => level.pusher[:pos_m],
-      :pos_n => level.pusher[:pos_n]
+      :m => level.pusher[:m],
+      :n => level.pusher[:n]
     }
 
     # Don't need to copy, reference is ok because doesn't change
@@ -312,14 +312,14 @@ class Level
   def initialize_pusher_position
     pos = @grid.index(/[\@\+]/)
     @pusher = {
-      :pos_m => pos / @cols,
-      :pos_n => pos % @cols
+      :m => pos / @cols,
+      :n => pos % @cols
     }
   end
 
   # Transform empty spaces inside level in floor represented by 's'.
   def initialize_floor
-    initialize_floor_rec(@pusher[:pos_m], @pusher[:pos_n])
+    initialize_floor_rec(@pusher[:m], @pusher[:n])
 
     # Set back symbols to regular symbols
     @grid = @grid.tr('pda', '.$*')

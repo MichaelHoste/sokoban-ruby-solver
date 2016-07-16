@@ -11,20 +11,29 @@ RSpec.configure do |config|
 
   config.after :example, :profiling => true do
     result  = RubyProf.stop
-    result.eliminate_methods!([
-      /Unknown#column_indices/,
-      /Unknown#row_indices/,
-      /Class#new/,
-      /Array#index/,
-      /Array#each/,
-      /Array#include?/,
-      /Array#collect/,
-      /Array#count/,
-      /Hash#==/,
-      /Hash#each_pair/
-    ])
+    # result.eliminate_methods!([
+    #   /Unknown#column_indices/,
+    #   /Unknown#row_indices/,
+    #   /Class#new/,
+    #   /Array#index/,
+    #   /Array#each/,
+    #   /Array#include?/,
+    #   /Array#collect/,
+    #   /Array#count/,
+    #   /Hash#==/,
+    #   /Hash#each_pair/
+    # ])
     printer = RubyProf::FlatPrinter.new(result)
     printer.print(STDOUT)
+
+    printer = RubyProf::GraphHtmlPrinter.new(result)
+    printer.print(File.new('reports/graph.html', 'w'))
+
+    printer = RubyProf::CallStackPrinter.new(result)
+    printer.print(File.new('reports/stack.html', 'w'))
+
+    system('open reports/graph.html')
+    system('open reports/stack.html')
   end
 
   # config.profile_examples = 3

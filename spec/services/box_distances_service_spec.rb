@@ -119,7 +119,7 @@ describe BoxDistancesService do
                                     i, i, i, i, i, i,  i, i ]
   end
 
-  it '#run (5)', :test do
+  it '#run (5)' do
     text =  "    #####          \n"\
             "    #   #          \n"\
             "    #   #          \n"\

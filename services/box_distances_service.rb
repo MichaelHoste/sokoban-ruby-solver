@@ -1,15 +1,16 @@
-# From a level with one pusher and one box, compute number of pushes to any
-# position from the level
+# From a level with one pusher and one box, compute number of pushes to put
+# the box on any position of the level
 
 class BoxDistancesService
 
   def initialize(level)
-    @level = level
-    @rows  = @level.rows
-    @cols  = @level.cols
+    @level  = level
+    @rows   = level.rows
+    @cols   = level.cols
+    @pusher = level.pusher
 
     if !valid?
-      raise "Error: BoxDistancesService assumes the level contains only one box and one pusher (no goals)"
+     raise "Error: BoxDistancesService assumes the level contains only one box and one pusher (no goals)"
     end
   end
 
@@ -18,56 +19,49 @@ class BoxDistancesService
     distances = []
     box       = {}
 
-    # Initialize distances and box position
-    (0..@rows-1).each do |m|
-      (0..@cols-1).each do |n|
-        cell = @level.grid[m * @cols + n]
-
-        if !' #'.include?(cell)
-          distances << {
-            :from_left   => Float::INFINITY,
-            :from_right  => Float::INFINITY,
-            :from_top    => Float::INFINITY,
-            :from_bottom => Float::INFINITY
-          }
-        else
-          distances << nil
-        end
-
-        if cell == '$'
-          box = { :m => m, :n => n }
-        end
-      end
+    # Initialize all distances with infinity
+    distances = Array.new(@rows * @cols) do {
+        :from_left   => Float::INFINITY,
+        :from_right  => Float::INFINITY,
+        :from_top    => Float::INFINITY,
+        :from_bottom => Float::INFINITY
+      }
     end
+
+    # Initialize box position
+    box_index = @level.grid.index('$')
+    box       = {
+      :m => box_index / @cols,
+      :n => box_index % @cols
+    }
 
     # Populate heap with first moves of box
     [:from_bottom, :from_top, :from_left, :from_right].each do |direction|
       heap << {
         :box       => box,
-        :pusher_m  => @level.pusher[:pos_m],
-        :pusher_n  => @level.pusher[:pos_n],
+        :pusher    => @pusher,
         :direction => direction,
         :weight    => 0
       }
     end
 
-    # remove pusher and box from level
-    pos_m_before = @level.pusher[:pos_m]
-    pos_n_before = @level.pusher[:pos_n]
+    # remove pusher from level
+    pusher_m_before = @pusher[:m]
+    pusher_n_before = @pusher[:n]
+    @level.write_pos(@pusher[:m], @pusher[:n], 's')
+
+    # remove box from level
     box_m_before = box[:m]
     box_n_before = box[:n]
-    @level.write_pos(@level.pusher[:pos_m], @level.pusher[:pos_n], 's')
     @level.write_pos(box[:m], box[:n], 's')
 
     # Iterate through the heap starting with lower weights
-    i = 1
     while heap.size > 0
-      i += 1
       dijkstra(heap, distances, heap.pop)
     end
 
     # Place box and pusher back
-    @level.write_pos(pos_m_before, pos_n_before, '@')
+    @level.write_pos(pusher_m_before, pusher_n_before, '@')
     @level.write_pos(box_m_before, box_n_before, '$')
     @level.send(:initialize_pusher_position)
 
@@ -83,14 +77,14 @@ class BoxDistancesService
   def dijkstra(heap, distances, item)
     pos          = item[:box][:m]*@cols + item[:box][:n]
     box_cell     = @level.read_pos(item[:box][:m],    item[:box][:n])
-    pusher_cell  = @level.read_pos(item[:pusher_m], item[:pusher_n])
+    pusher_cell  = @level.read_pos(item[:pusher][:m], item[:pusher][:n])
     direction    = item[:direction]
     weight       = item[:weight]
 
     if box_cell == 's' && pusher_cell == 's' && distances[pos][direction] > weight
       # Place box and pusher
       @level.write_pos(item[:box][:m],    item[:box][:n],    '$')
-      @level.write_pos(item[:pusher_m], item[:pusher_n], '@')
+      @level.write_pos(item[:pusher][:m], item[:pusher][:n], '@')
       @level.send(:initialize_pusher_position)
 
       # Place new pusher (place where it will be before pushing the box in the direction)
@@ -122,8 +116,7 @@ class BoxDistancesService
           index = heap.index { |heap_item| heap_item[:weight] <= weight + 1 } # keep it sorted DESC on weight!
           heap.insert(index.to_i, {
             :box       => new_box,
-            :pusher_m  => item[:box][:m],
-            :pusher_n  => item[:box][:n],
+            :pusher    => item[:box],
             :direction => new_direction,
             :weight    => weight + 1
           })
@@ -132,45 +125,35 @@ class BoxDistancesService
 
       # remove box and pusher
       @level.write_pos(item[:box][:m],    item[:box][:n],    's')
-      @level.write_pos(item[:pusher_m], item[:pusher_n], 's')
+      @level.write_pos(item[:pusher][:m], item[:pusher][:n], 's')
     end
   end
 
   # keep only useful distances for zones (only inside, no walls or outside)
   def format_distances_for_zone(distances)
-    values = []
-
-    distances.each do |distance|
-      if distance
-        values << [ distance[:from_left], distance[:from_right],
-                    distance[:from_top], distance[:from_bottom] ].min
+    distances.collect.with_index do |distance, pos|
+      if !' #'.include?(@level.grid[pos])
+        [ distance[:from_left], distance[:from_right],
+          distance[:from_top], distance[:from_bottom] ].min
+      else
+        nil
       end
-    end
-
-    values
+    end.compact
   end
 
   # keep only useful distances for levels (every position)
   def format_distances_for_level(distances)
-    values = []
-
-    distances.each do |distance|
-      if distance
-        values << [ distance[:from_left], distance[:from_right],
-                    distance[:from_top], distance[:from_bottom] ].min
-      else
-        values << Float::INFINITY
-      end
+    distances.collect do |distance|
+      [ distance[:from_left], distance[:from_right],
+        distance[:from_top], distance[:from_bottom] ].min
     end
-
-    values
   end
 
   def valid?
     one_box        = @level.grid.count('$')   == 1
     no_goals       = @level.grid.count('.*+') == 0
     one_pusher     = @level.grid.count('@')   == 1
-    correct_pusher = @level.read_pos(@level.pusher[:pos_m], @level.pusher[:pos_n]) == '@'
+    correct_pusher = @level.read_pos(@pusher[:m], @pusher[:n]) == '@'
 
     one_box && no_goals && one_pusher && correct_pusher
   end

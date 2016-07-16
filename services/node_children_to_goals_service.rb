@@ -151,8 +151,8 @@ class NodeChildrenToGoalsService
   end
 
   def remove_pusher_from_old_position(level)
-    old_pusher_m = level.pusher[:pos_m]
-    old_pusher_n = level.pusher[:pos_n]
+    old_pusher_m = level.pusher[:m]
+    old_pusher_n = level.pusher[:n]
 
     cell = level.read_pos(old_pusher_m, old_pusher_n)
 
@@ -196,8 +196,8 @@ class NodeChildrenToGoalsService
     end
 
     level.instance_variable_set(:@pusher, {
-      :pos_m => pusher_pos / @cols,
-      :pos_n => pusher_pos % @cols
+      :m => pusher_pos / @cols,
+      :n => pusher_pos % @cols
     })
   end
 end

@@ -59,53 +59,55 @@ describe PenaltiesList do
     penalties.size.should == 3
   end
 
-  context 'iterator' do
-    penalties = PenaltiesList.new(4)
+  describe 'iterator' do
+    before :all do
+      @penalties = PenaltiesList.new(4)
 
-    node_1 = Level.new("#######  \n"\
-                       "# .   #  \n"\
-                       "#   $ ###\n"\
-                       "#      .#\n"\
-                       "# $   ###\n"\
-                       "#    @#  \n"\
-                       "#######  ").to_node
+      node_1 = Level.new("#######  \n"\
+                         "# .   #  \n"\
+                         "#   $ ###\n"\
+                         "#      .#\n"\
+                         "# $   ###\n"\
+                         "#    @#  \n"\
+                         "#######  ").to_node
 
-    node_2 = Level.new("#######  \n"\
-                       "# .   #  \n"\
-                       "#   $ ###\n"\
-                       "#   $  .#\n"\
-                       "#     ###\n"\
-                       "#    @#  \n"\
-                       "#######  ").to_node
+      node_2 = Level.new("#######  \n"\
+                         "# .   #  \n"\
+                         "#   $ ###\n"\
+                         "#   $  .#\n"\
+                         "#     ###\n"\
+                         "#    @#  \n"\
+                         "#######  ").to_node
 
-    node_3 = Level.new("#######  \n"\
-                       "# .   #  \n"\
-                       "#  $$ ###\n"\
-                       "#   $  .#\n"\
-                       "#     ###\n"\
-                       "#    @#  \n"\
-                       "#######  ").to_node
+      node_3 = Level.new("#######  \n"\
+                         "# .   #  \n"\
+                         "#  $$ ###\n"\
+                         "#   $  .#\n"\
+                         "#     ###\n"\
+                         "#    @#  \n"\
+                         "#######  ").to_node
 
-    # 2 boxes
-    penalties.add(
-      :node  => node_1,
-      :value => 4
-    )
+      # 2 boxes
+      @penalties.add(
+        :node  => node_1,
+        :value => 4
+      )
 
-    penalties.add(
-      :node  => node_2,
-      :value => 5
-    )
+      @penalties.add(
+        :node  => node_2,
+        :value => 5
+      )
 
-    # 3 boxes
-    penalties.add(
-      :node  => node_3,
-      :value => 3
-    )
+      # 3 boxes
+      @penalties.add(
+        :node  => node_3,
+        :value => 3
+      )
+    end
 
     it '#each' do
       i = 0
-      penalties.each do |penalty_list|
+      @penalties.each do |penalty_list|
         penalty_list.size.should == 0 if i == 0
         penalty_list.size.should == 2 if i == 1
         penalty_list.size.should == 1 if i == 2
@@ -116,7 +118,7 @@ describe PenaltiesList do
 
     it '#reverse_each' do
       i = 0
-      penalties.reverse_each do |penalty_list|
+      @penalties.reverse_each do |penalty_list|
         penalty_list.size.should == 0 if i == 0
         penalty_list.size.should == 1 if i == 1
         penalty_list.size.should == 2 if i == 2

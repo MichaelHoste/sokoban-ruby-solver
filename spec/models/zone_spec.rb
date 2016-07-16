@@ -54,6 +54,22 @@ describe Zone do
                           "    #######        "
     end
 
+    it "creates small pusher zone" do
+      level = Level.new(" ####\n"\
+                        "##  #\n"\
+                        "# $##\n"\
+                        "#@ # \n"\
+                        "#### ")
+
+      zone = Zone.new(level, Zone::PUSHER_ZONE)
+
+      zone.to_s.should == " ####\n"\
+                          "##  #\n"\
+                          "#xx##\n"\
+                          "#xx# \n"\
+                          "#### "
+    end
+
     it "creates custom zone with positions" do
       zone = Zone.new(@level, Zone::CUSTOM_ZONE, {
         :positions => [{ :m => 5, :n => 3 }]
@@ -182,39 +198,41 @@ describe Zone do
                         "    #######        "
   end
 
-  context 'Zone inclusions' do
-    text_1 =  "#######\n"\
-              "#  $. #\n"\
-              "# @$. #\n"\
-              "#  $. #\n"\
-              "#######"
+  describe 'Zone inclusions' do
+    before :all do
+      @text_1 =  "#######\n"\
+                "#  $. #\n"\
+                "# @$. #\n"\
+                "#  $. #\n"\
+                "#######"
 
-    text_2 =  "#######\n"\
-              "# $ . #\n"\
-              "#@$ . #\n"\
-              "# $ . #\n"\
-              "#######"
+      @text_2 =  "#######\n"\
+                "# $ . #\n"\
+                "#@$ . #\n"\
+                "# $ . #\n"\
+                "#######"
 
-    level_1 = Level.new(text_1)
-    node_1  = level_1.to_node
+      @level_1 = Level.new(@text_1)
+      @node_1  = @level_1.to_node
 
-    level_2 = Level.new(text_2)
-    node_2  = level_2.to_node
+      @level_2 = Level.new(@text_2)
+      @node_2  = @level_2.to_node
+    end
 
     it '#in?' do
-      node_2.pusher_zone.in?(node_1.pusher_zone).should == true
-      node_1.pusher_zone.in?(node_2.pusher_zone).should == false
+      @node_2.pusher_zone.in?(@node_1.pusher_zone).should == true
+      @node_1.pusher_zone.in?(@node_2.pusher_zone).should == false
 
-      node_2.goals_zone.in?(node_1.goals_zone).should == true
-      node_1.goals_zone.in?(node_2.goals_zone).should == true
+      @node_2.goals_zone.in?(@node_1.goals_zone).should == true
+      @node_1.goals_zone.in?(@node_2.goals_zone).should == true
     end
 
     it '#include?' do
-      node_1.pusher_zone.include?(node_2.pusher_zone).should == true
-      node_2.pusher_zone.include?(node_1.pusher_zone).should == false
+      @node_1.pusher_zone.include?(@node_2.pusher_zone).should == true
+      @node_2.pusher_zone.include?(@node_1.pusher_zone).should == false
 
-      node_1.goals_zone.include?(node_2.goals_zone).should == true
-      node_2.goals_zone.include?(node_1.goals_zone).should == true
+      @node_1.goals_zone.include?(@node_2.goals_zone).should == true
+      @node_2.goals_zone.include?(@node_1.goals_zone).should == true
     end
   end
 
