@@ -54,7 +54,8 @@ class LevelDistancesService
 
     @level.grid[pusher_index] = '@'
     @level.grid[box_index]    = '$'
-    @level.send(:initialize_pusher_position)
+    @level.pusher[:m] = pusher_index / @level.cols
+    @level.pusher[:n] = pusher_index % @level.cols
 
     distances = BoxDistancesService.new(@level).run(:for_level)
 
@@ -102,7 +103,8 @@ class LevelDistancesService
     if pusher_inside && box_inside && pusher_index != box_index
       @level.grid[pusher_index] = '@'
       @level.grid[box_index]    = '$'
-      @level.send(:initialize_pusher_position)
+      @level.pusher[:m] = pusher_index / @level.cols
+      @level.pusher[:n] = pusher_index % @level.cols
 
       pusher_zone = Zone.new(@level, Zone::PUSHER_ZONE)
 

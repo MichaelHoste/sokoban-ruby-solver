@@ -99,7 +99,8 @@ class NodeChildrenService
       new_level.grid[level_pos] = '@'
     end
 
-    new_level.send(:initialize_pusher_position)
+    new_level.pusher[:m] = level_pos / @cols
+    new_level.pusher[:n] = level_pos % @cols
   end
 
   def add_box_to_new_position(new_level, behind_pos)

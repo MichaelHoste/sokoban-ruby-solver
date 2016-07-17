@@ -60,7 +60,8 @@ class BoxDistancesService
     # Place box and pusher back
     @level.write_pos(pusher_m_before, pusher_n_before, pusher_cell_before)
     @level.write_pos(box_m_before, box_n_before, box_cell_before)
-    @level.send(:initialize_pusher_position)
+    @level.pusher[:m] = pusher_m_before
+    @level.pusher[:n] = pusher_n_before
 
     if [:for_zone, :for_level].include? type
       send("format_distances_#{type}", distances)
@@ -96,7 +97,8 @@ class BoxDistancesService
       old_pusher_cell = @level.read_pos(item[:pusher][:m], item[:pusher][:n])
       @level.write_pos(item[:box][:m],    item[:box][:n],    '$')
       @level.write_pos(item[:pusher][:m], item[:pusher][:n], '@')
-      @level.send(:initialize_pusher_position)
+      @level.pusher[:m] = item[:pusher][:m]
+      @level.pusher[:n] = item[:pusher][:n]
 
       # Place new pusher (place where it will be before pushing the box in the direction)
       if direction == :from_bottom
