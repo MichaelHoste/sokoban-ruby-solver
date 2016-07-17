@@ -199,6 +199,29 @@ describe IdaStarSolver do
     solver.penalties.include?(penalty[:node]).should == true
   end
 
+  it "#run on a complex level of Dimitri-Yorick pack without penalties" do
+    text =  "########\n"\
+            "#......#\n"\
+            "# $##$ #\n"\
+            "#  ##  #\n"\
+            "# $$@$$#\n"\
+            "#      #\n"\
+            "#   #  #\n"\
+            "########"
+
+     level = Level.new(text)
+
+     solver = IdaStarSolver.new(level, nil, false)
+     solver.run
+
+     [ solver.found,
+       solver.pushes,
+       solver.penalties.size,
+       solver.processed_penalties.size,
+       solver.tries,
+       solver.total_tries ].should == [true, 20, 0, 0, 1895, 1895]
+  end
+
   xit '#run (complex level)', :slow do
     text = "################ \n"\
            "#              # \n"\

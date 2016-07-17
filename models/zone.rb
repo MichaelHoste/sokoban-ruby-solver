@@ -183,7 +183,7 @@ class Zone
     if cell != '#' && !positions.include?(grid_pos)
       positions << grid_pos
 
-      if cell != '$' && cell != '*'
+      if !'$*'.include?(cell)
         pusher_positions_rec(m+1, n,   positions)
         pusher_positions_rec(m-1, n,   positions)
         pusher_positions_rec(m,   n+1, positions)
