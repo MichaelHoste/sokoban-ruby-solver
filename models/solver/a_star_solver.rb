@@ -6,6 +6,7 @@ class AStarSolver < Solver
 
     @bound           = bound
     @check_penalties = check_penalties
+    @dead            = false
     @found           = false
     @tries           = 0
     @total_tries     = 0
@@ -22,15 +23,15 @@ class AStarSolver < Solver
   def run
     @list = [@root]
 
-    while !@list.empty? && !next_candidate.won?
+    while !@dead && !@list.empty? && !next_candidate.won?
       current   = extract_next_candidate
 
       find_penalties(current.node)
       current.h = estimate(current.node)
 
-      if current.f <= @bound && !processed?(current)
+      if !@dead && current.f <= @bound && !processed?(current)
         current.find_children.each do |child|
-          if !deadlocked?(child) && !processed?(child) && !waiting?(child)
+          if !@dead && !deadlocked?(child) && !processed?(child) && !waiting?(child)
             child.h = estimate(child.node)
 
             if child.f <= @bound
@@ -98,10 +99,9 @@ class AStarSolver < Solver
   def find_penalties(node)
     if @check_penalties
       if !@processed_penalties.include?(node)
-        return PenaltiesService.new(node, @stack, @bound).run
+        PenaltiesService.new(node, @stack, @bound).run
       end
     end
-    return false
   end
 
   def add_to_waiting_list(tree_node)

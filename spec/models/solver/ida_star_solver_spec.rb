@@ -12,7 +12,7 @@ describe IdaStarSolver do
       solver.penalties.size,
       solver.processed_penalties.size,
       solver.tries,
-      solver.total_tries ].should == [true, 97, 5, 436, 9, 1074]
+      solver.total_tries ].should == [true, 97, 5, 435, 9, 1076]
   end
 
   it '#run (little bit simplified first level)' do
@@ -161,6 +161,36 @@ describe IdaStarSolver do
       solver.total_tries ].should == [false, Float::INFINITY, 0, 0, 101, 101]
   end
 
+  it '#run on 50 first levels of Dimitri-Yorick pack' do
+    pack = Pack.new('data/Dimitri-Yorick.slc')
+
+    global_found               = true
+    global_pushes              = 0
+    global_penalties           = 0
+    global_processed_penalties = 0
+    global_tries               = 0
+    global_total_tries         = 0
+
+    pack.levels.first(50).each do |level|
+      solver = IdaStarSolver.new(level)
+      solver.run
+
+      global_found               &&= global_found
+      global_pushes              +=  solver.pushes
+      global_penalties           +=  solver.penalties.size
+      global_processed_penalties +=  solver.processed_penalties.size
+      global_tries               +=  solver.tries
+      global_total_tries         +=  solver.total_tries
+    end
+
+    [ global_found,
+      global_pushes,
+      global_penalties,
+      global_processed_penalties,
+      global_tries,
+      global_total_tries ].should == [true, 424, 37, 587, 645, 1801]
+  end
+
   it '#run on a complex level of Dimitri-Yorick pack' do
    text =  "########\n"\
            "#......#\n"\
@@ -251,7 +281,7 @@ describe IdaStarSolver do
       solver.total_tries ].should == [true, 64, 3, 0, 64, 1111]
   end
 
-  it '#run a specific level of Dimitri-Yorick pack', :slow do
+  xit '#run a specific level of Dimitri-Yorick pack', :slow do
     text = "        #####\n"\
            "#########   #\n"\
            "#  ......$  #\n"\
@@ -287,43 +317,5 @@ describe IdaStarSolver do
       solver.processed_penalties.size,
       solver.tries,
       solver.total_tries ].should == [true, 32, 1250, 3347, 57, 1215309]
-  end
-
-  xit '#run on complete Dimitri-Yorick pack', :slow do
-    pack = Pack.new('data/Dimitri-Yorick.slc')
-
-    global_found               = 0
-    global_pushes              = 0
-    global_penalties           = 0
-    global_processed_penalties = 0
-    global_tries               = 0
-    global_total_tries         = 0
-
-    pack.levels.each do |level|
-      solver = IdaStarSolver.new(level)
-      solver.run
-
-      global_found               &&= global_found
-      global_pushes              +=  solver.pushes
-      global_penalties           +=  solver.penalties.size
-      global_processed_penalties +=  solver.processed_penalties.size
-      global_tries               +=  solver.tries
-      global_total_tries         +=  solver.total_tries
-    end
-
-    puts global_found
-    puts global_pushes
-    puts global_penalties
-    puts global_processed_penalties
-    puts global_tries
-    puts global_total_tries
-
-
-    [ global_found,
-      global_pushes,
-      global_penalties.size,
-      global_processed_penalties.size,
-      global_tries,
-      global_total_tries ].should == [true, 32, 1250, 3347, 57, 1215309]
   end
 end

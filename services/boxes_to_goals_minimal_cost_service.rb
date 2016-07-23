@@ -46,9 +46,9 @@ class BoxesToGoalsMinimalCostService
 
     # Fix because Munkres doesn't support Infinity
     {
-      :cost         => cost                >= BIG_NUMBER ? Float::INFINITY : cost,
-      :penalty_cost => penalty_cost        >= BIG_NUMBER ? Float::INFINITY : penalty_cost,
-      :total        => cost + penalty_cost >= BIG_NUMBER ? Float::INFINITY : cost + penalty_cost
+      :cost         => cost                >= BIG_NUMBER ? Float::INFINITY : cost,               # cost for boxes assignations (using distances)
+      :penalty_cost => penalty_cost        >= BIG_NUMBER ? Float::INFINITY : penalty_cost,       # penalty cost using penalties (penaltiesList)
+      :total        => cost + penalty_cost >= BIG_NUMBER ? Float::INFINITY : cost + penalty_cost # total minimal cost estimation (using both)
     }
   end
 

@@ -2,41 +2,44 @@
 
 class PenaltiesService
 
-  attr_reader :penalties, :bound, :stack, :distances_for_zone,
+  attr_reader :level, :node, :penalties, :bound, :stack, :distances_for_zone,
               :deadlock_zone, :null_zone, :processed_penalties
+
+  attr_accessor :dead
 
   def initialize(node, stack = [], bound = Float::INFINITY)
     @node  = node
     @level = node.to_level
     @bound = bound
+    @dead  = false
 
     initialize_stack(stack)
     initialize_deadlocks
     initialize_distances
     initialize_penalties
     initialize_processed_penalties
+
+    @bound = estimate(@node) if @bound == Float::INFINITY
   end
 
   def run
-    found_new_penalty = false
-
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@processed_penalties.include?(sub_node) # && sub_node.num_of_boxes <= 3
+      if !@dead && !@processed_penalties.include?(sub_node) # && sub_node.num_of_boxes <= 3
         @processed_penalties << sub_node
 
-        real     = real_pushes(sub_node)
-        estimate = estimate_pushes(sub_node)
+        real       = real_pushes(sub_node)
+        estimation = BoxesToGoalsMinimalCostService.new(sub_node, @distances_for_zone, @penalties).run
 
-        if real - estimate[:total] > 0
+        if real - estimation[:total] > 0
           penalty = {
             :node  => sub_node,
-            :value => estimate[:penalty_cost] + (real - estimate[:total])
+            :value => estimation[:penalty_cost] + (real - estimation[:total]) # old penalties cost + new difference found
           }
           @penalties << penalty
 
-          found_new_penalty = true
+          flag_dead_branches
 
           puts "new penalty (#{@penalties.size})"
           puts penalty[:node].to_s
@@ -45,8 +48,14 @@ class PenaltiesService
         end
       end
     end
+  end
 
-    found_new_penalty
+  def estimate(node)
+    BoxesToGoalsMinimalCostService.new(
+      node,
+      @distances_for_zone,
+      @penalties
+    ).run[:total]
   end
 
   private
@@ -103,11 +112,20 @@ class PenaltiesService
     solver.pushes
   end
 
-  def estimate_pushes(node)
-    BoxesToGoalsMinimalCostService.new(
-      node,
-      @distances_for_zone,
-      @penalties
-    ).run
+  def flag_dead_branches
+    found_dead_branch = false
+
+    @stack.each do |step|
+      if found_dead_branch
+        step.dead = true
+      else
+        new_estimation = step.estimate(step.node)
+
+        if new_estimation > step.bound
+          step.dead         = true
+          found_dead_branch = true
+        end
+      end
+    end
   end
 end

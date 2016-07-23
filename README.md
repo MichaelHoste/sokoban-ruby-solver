@@ -6,51 +6,10 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 
 ## Todo
-
-J'obtiens
-
-    new penalty (588)
-            #####
-    #########   #
-    #@ ...*..$  #
-    #   # ###   #
-    ###   $ #   #
-      # $   #   #
-      #     #####
-      #######
-    value: Infinity
-
-alors que
-
-            #####
-    #########   #
-    #@ ...*..$  #
-    #   # ###   #
-    ###     #   #
-      #     #   #
-      #     #####
-      #######
-
-qui est un sous-niveau devrait déjà être infinity et annuler la recheche de plus de pénalité
-(voir run (3) dans penalties_service_spec.rb)
-
-Regarder
-
-new penalty (901)
-        #####
-#########   #
-#  ......$  #
-#  $# ###   #
-###@ $$ #   #
-  #     #   #
-  #     #####
-  #######
-value: Infinity
-
----------
-
+ * Ajouter les résultats optimaux de Dimitri-Yorick (dans slow) pour vérifier qu'on n'a pas de régression
  * Précalculer tous les sous-niveaux avec 1..4 caisses pour avoir un set de pénalités et de deadlocks
-   qui sera utilisé dans le solver du niveau réel.
+   qui sera utilisé dans le solver du niveau réel. > si ça fait une différence, quelque chose ne va pas
+   dans l'algo actuel !
  * Quand une pénalité est trouvée, ajouter automatiquement toutes les pénalités de type "tunnel" liées
    (difficile vu que le fait de bouger une caisse implique d'autres pénalités sous-jacentes).
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer

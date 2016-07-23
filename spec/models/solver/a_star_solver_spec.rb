@@ -12,7 +12,7 @@ describe AStarSolver do
       solver.penalties.size,
       solver.processed_penalties.size,
       solver.tries,
-      solver.total_tries ].should == [true, 97, 5, 436, 9, 1074]
+      solver.total_tries ].should == [true, 97, 3, 341, 9, 737]
   end
 
   it '#run (first level without penalties)' do
@@ -48,7 +48,7 @@ describe AStarSolver do
       solver.penalties.size,
       solver.processed_penalties.size,
       solver.tries,
-      solver.total_tries ].should == [true, 25, 23, 76, 69, 2548]
+      solver.total_tries ].should == [true, 25, 23, 74, 69, 2536]
   end
 
   it '#run (simple level without penalties)' do

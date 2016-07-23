@@ -4,8 +4,9 @@ class IdaStarSolver < Solver
     initialize_level(level_or_node)
     initialize_stack(stack)
 
-    @bound           = Float::INFINITY
+    @bound           = 0
     @check_penalties = check_penalties
+    @dead            = false
     @found           = false
     @loop_tries      = []
     @tries           = 0
@@ -19,7 +20,7 @@ class IdaStarSolver < Solver
 
   def run
     @bound = estimate(@node)
-    i      = 0
+    i = 0
 
     while !@found && @bound != Float::INFINITY
       solver = AStarSolver.new(@level, @stack, @bound, @check_penalties)

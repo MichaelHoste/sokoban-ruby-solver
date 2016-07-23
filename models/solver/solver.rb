@@ -4,7 +4,16 @@ class Solver
               :distances_for_zone, :deadlock_zone, :null_zone,
               :penalties, :processed_penalties
 
-  attr_accessor :total_tries
+  attr_accessor :total_tries, :dead
+
+
+  def estimate(node)
+    BoxesToGoalsMinimalCostService.new(
+      node,
+      @distances_for_zone,
+      @penalties
+    ).run[:total]
+  end
 
   private
 
@@ -57,13 +66,5 @@ class Solver
     else
      @processed_penalties = @stack.first.processed_penalties
     end
-  end
-
-  def estimate(node)
-    BoxesToGoalsMinimalCostService.new(
-      node,
-      @distances_for_zone,
-      @penalties
-    ).run[:total]
   end
 end
