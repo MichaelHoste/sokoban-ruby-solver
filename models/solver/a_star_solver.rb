@@ -1,7 +1,5 @@
 class AStarSolver < Solver
 
-  attr_reader :bound
-
   def initialize(level_or_node, stack = [], bound = Float::INFINITY, check_penalties = true)
     initialize_level(level_or_node)
     initialize_stack(stack)
@@ -9,7 +7,6 @@ class AStarSolver < Solver
     @bound           = bound
     @check_penalties = check_penalties
     @found           = false
-    @pushes          = Float::INFINITY
     @tries           = 0
     @total_tries     = 0
 
@@ -50,8 +47,12 @@ class AStarSolver < Solver
       @total_tries += 1 if !@list.empty?
     end
 
-    @found  = !@list.empty? && next_candidate.won?
-    @pushes = @found ? next_candidate.g : Float::INFINITY
+    @found = !@list.empty? && next_candidate.won?
+    @bound = @found ? next_candidate.g : Float::INFINITY
+  end
+
+  def pushes
+    @bound
   end
 
   private

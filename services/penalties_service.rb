@@ -2,8 +2,8 @@
 
 class PenaltiesService
 
-  attr_reader :penalties, :stack, :distances_for_zone, :deadlock_zone, :null_zone,
-              :processed_penalties
+  attr_reader :penalties, :bound, :stack, :distances_for_zone,
+              :deadlock_zone, :null_zone, :processed_penalties
 
   def initialize(node, stack = [], bound = Float::INFINITY)
     @node  = node

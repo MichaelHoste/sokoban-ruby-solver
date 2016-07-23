@@ -1,6 +1,6 @@
 class Solver
 
-  attr_reader :level, :node, :found, :pushes, :tries, :stack,
+  attr_reader :level, :node, :found, :bound, :tries, :stack,
               :distances_for_zone, :deadlock_zone, :null_zone,
               :penalties, :processed_penalties
 
