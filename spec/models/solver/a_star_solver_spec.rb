@@ -12,12 +12,12 @@ describe AStarSolver do
       solver.penalties.size,
       solver.processed_penalties.size,
       solver.tries,
-      solver.total_tries ].should == [true, 97, 5, 437, 9, 1080]
+      solver.total_tries ].should == [true, 97, 5, 436, 9, 1074]
   end
 
   it '#run (first level without penalties)' do
     level  = Pack.new('spec/support/files/level.slc').levels[0]
-    solver = AStarSolver.new(level, nil, Float::INFINITY, false)
+    solver = AStarSolver.new(level, [], Float::INFINITY, false)
     solver.run
 
     [ solver.found,
@@ -63,7 +63,7 @@ describe AStarSolver do
             "  ####  "
 
     level  = Level.new(text)
-    solver = AStarSolver.new(level, nil, Float::INFINITY, false)
+    solver = AStarSolver.new(level, [], Float::INFINITY, false)
     solver.run
 
     [ solver.found,

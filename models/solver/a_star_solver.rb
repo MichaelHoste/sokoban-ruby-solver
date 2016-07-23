@@ -2,11 +2,11 @@ class AStarSolver < Solver
 
   attr_reader :bound
 
-  def initialize(level_or_node, parent_solver = nil, bound = Float::INFINITY, check_penalties = true)
+  def initialize(level_or_node, stack = [], bound = Float::INFINITY, check_penalties = true)
     initialize_level(level_or_node)
+    initialize_stack(stack)
 
     @bound           = bound
-    @parent_solver   = parent_solver
     @check_penalties = check_penalties
     @found           = false
     @pushes          = Float::INFINITY
@@ -17,12 +17,9 @@ class AStarSolver < Solver
     initialize_distances
     initialize_penalties
     initialize_processed_penalties
-    initialize_processed
-    initialize_waiting
+    initialize_processed_nodes
+    initialize_waiting_nodes
     initialize_tree
-    initialize_log
-
-    @start_time      = Time.now
   end
 
   def run
@@ -31,8 +28,8 @@ class AStarSolver < Solver
     while !@list.empty? && !next_candidate.won?
       current   = extract_next_candidate
 
-      found     = find_penalties(current.node)
-      current.h = estimate(current.node) if found
+      find_penalties(current.node)
+      current.h = estimate(current.node)
 
       if current.f <= @bound && !processed?(current)
         current.find_children.each do |child|
@@ -59,11 +56,11 @@ class AStarSolver < Solver
 
   private
 
-  def initialize_processed
+  def initialize_processed_nodes
     @processed_nodes = HashTable.new
   end
 
-  def initialize_waiting
+  def initialize_waiting_nodes
     @waiting_nodes = HashTable.new
   end
 
@@ -100,7 +97,7 @@ class AStarSolver < Solver
   def find_penalties(node)
     if @check_penalties
       if !@processed_penalties.include?(node)
-        return PenaltiesService.new(node, self).run
+        return PenaltiesService.new(node, @stack, @bound).run
       end
     end
     return false

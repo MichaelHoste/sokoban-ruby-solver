@@ -1,12 +1,12 @@
 class IdaStarSolver < Solver
 
-  def initialize(level_or_node, parent_solver = nil, check_penalties = true)
+  def initialize(level_or_node, stack = [], check_penalties = true)
     initialize_level(level_or_node)
+    initialize_stack(stack)
 
-    @parent_solver   = parent_solver
+    @bound           = Float::INFINITY
     @check_penalties = check_penalties
     @found           = false
-    @pushes          = Float::INFINITY
     @loop_tries      = []
     @tries           = 0
     @total_tries     = 0
@@ -15,17 +15,14 @@ class IdaStarSolver < Solver
     initialize_distances
     initialize_penalties
     initialize_processed_penalties
-    initialize_log
-
-    @start_time      = Time.now
   end
 
   def run
-    @pushes = bound = estimate(@node)
-    i       = 0
+    @bound = estimate(@node)
+    i      = 0
 
-    while !@found && bound != Float::INFINITY
-      solver = AStarSolver.new(@level, self, bound, @check_penalties)
+    while !@found && @bound != Float::INFINITY
+      solver = AStarSolver.new(@level, @stack, @bound, @check_penalties)
       solver.run
 
       @found         =  solver.found
@@ -34,16 +31,19 @@ class IdaStarSolver < Solver
       @total_tries   += solver.total_tries
 
       if !@found
-        @pushes = bound = [estimate(@node), bound + 1].max
+        @bound = [estimate(@node), @bound + 1].max
         # TODO FIXME need to find a better solution to know where we really don't have any solution
         break if (i >= 100 && @loop_tries[i] == @loop_tries[i-100])
         i += 1
       end
     end
 
-    #puts "#{elapsed_time.to_i} ms"
+    # TODO Remove when better solution to find infinite
+    @bound = Float::INFINITY if !@found
+  end
 
-    @pushes = Float::INFINITY if !@found
+  def pushes
+    @bound
   end
 
   private

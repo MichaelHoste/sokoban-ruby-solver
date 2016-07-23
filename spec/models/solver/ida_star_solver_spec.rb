@@ -12,7 +12,7 @@ describe IdaStarSolver do
       solver.penalties.size,
       solver.processed_penalties.size,
       solver.tries,
-      solver.total_tries ].should == [true, 97, 5, 437, 9, 1080]
+      solver.total_tries ].should == [true, 97, 5, 436, 9, 1074]
   end
 
   it '#run (little bit simplified first level)' do
@@ -110,7 +110,7 @@ describe IdaStarSolver do
       solver.penalties.size,
       solver.processed_penalties.size,
       solver.tries,
-      solver.total_tries ].should == [true, 25, 18, 71, 268, 2545]
+      solver.total_tries ].should == [true, 25, 14, 67, 264, 2036]
   end
 
   it '#run (level with less boxes than goals)' do
@@ -211,7 +211,7 @@ describe IdaStarSolver do
 
      level = Level.new(text)
 
-     solver = IdaStarSolver.new(level, nil, false)
+     solver = IdaStarSolver.new(level, [], false)
      solver.run
 
      [ solver.found,
@@ -266,12 +266,12 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
-    puts solver.found.to_s
-    puts solver.pushes.to_s
-    puts solver.penalties.size.to_s
-    puts solver.processed_penalties.size.to_s
-    puts solver.tries.to_s
-    puts solver.total_tries.to_s
+    puts [ solver.found,
+      solver.pushes,
+      solver.penalties.size,
+      solver.processed_penalties.size,
+      solver.tries,
+      solver.total_tries ].inspect
 
     # Avec goals
     # true
