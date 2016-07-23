@@ -37,6 +37,9 @@ class PenaltiesService
 
           @parent_solver.log.print_penalty(penalty) if !@parent_solver.nil?
           found_new_penalty = true
+
+          # if infinity penalty is found, it's enough to stop the search!
+          break if penalty[:value] == Float::INFINITY
         end
       end
     end

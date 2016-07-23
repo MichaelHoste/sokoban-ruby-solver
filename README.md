@@ -7,7 +7,52 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ## Todo
 
- * Quand une pénalité est trouvée, ajouter automatiquement toutes les pénalités de type "tunnel" liées.
+J'obtiens
+
+    new penalty (588)
+            #####
+    #########   #
+    #@ ...*..$  #
+    #   # ###   #
+    ###   $ #   #
+      # $   #   #
+      #     #####
+      #######
+    value: Infinity
+
+alors que
+
+            #####
+    #########   #
+    #@ ...*..$  #
+    #   # ###   #
+    ###     #   #
+      #     #   #
+      #     #####
+      #######
+
+qui est un sous-niveau devrait déjà être infinity et annuler la recheche de plus de pénalité
+(voir run (3) dans penalties_service_spec.rb)
+
+Regarder
+
+new penalty (901)
+        #####
+#########   #
+#  ......$  #
+#  $# ###   #
+###@ $$ #   #
+  #     #   #
+  #     #####
+  #######
+value: Infinity
+
+---------
+
+ * Précalculer tous les sous-niveaux avec 1..4 caisses pour avoir un set de pénalités et de deadlocks
+   qui sera utilisé dans le solver du niveau réel.
+ * Quand une pénalité est trouvée, ajouter automatiquement toutes les pénalités de type "tunnel" liées
+   (difficile vu que le fait de bouger une caisse implique d'autres pénalités sous-jacentes).
  * Ajouter plus de tests pour NodeChildrenToGoalsService + refactorer
  * Remonter les pénalités dans les nodes originels des solveurs parents
  * Si une pénalité est trouvée, parcourir les "waiting nodes" et les retrier en fonction de
