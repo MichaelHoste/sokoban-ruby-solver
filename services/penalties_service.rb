@@ -26,7 +26,7 @@ class PenaltiesService
     sub_nodes = SubNodesService.new(@node).run
 
     sub_nodes.each do |sub_node|
-      if !@dead && !@processed_penalties.include?(sub_node) # && sub_node.num_of_boxes <= 3
+      if !@dead && !@processed_penalties.include?(sub_node) && sub_node.num_of_boxes <= 5
         @processed_penalties << sub_node
 
         real       = real_pushes(sub_node)

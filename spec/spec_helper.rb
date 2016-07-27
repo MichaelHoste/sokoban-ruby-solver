@@ -26,13 +26,13 @@ RSpec.configure do |config|
     printer = RubyProf::FlatPrinter.new(result)
     printer.print(STDOUT)
 
-    printer = RubyProf::GraphHtmlPrinter.new(result)
-    printer.print(File.new('reports/graph.html', 'w'))
+    # printer = RubyProf::GraphHtmlPrinter.new(result)
+    # printer.print(File.new('reports/graph.html', 'w'))
 
     printer = RubyProf::CallStackPrinter.new(result)
     printer.print(File.new('reports/stack.html', 'w'))
 
-    system('open reports/graph.html')
+    #system('open reports/graph.html')
     system('open reports/stack.html')
   end
 

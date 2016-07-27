@@ -6,7 +6,8 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 
 ## Todo
- * Ajouter les résultats optimaux de Dimitri-Yorick (dans slow) pour vérifier qu'on n'a pas de régression
+ * Penalties > améliorer SubNodesService pour se concentrer sur les pénalités de situations problématiques
+   et ignorer les autres
  * Précalculer tous les sous-niveaux avec 1..4 caisses pour avoir un set de pénalités et de deadlocks
    qui sera utilisé dans le solver du niveau réel. > si ça fait une différence, quelque chose ne va pas
    dans l'algo actuel !

@@ -252,7 +252,7 @@ describe IdaStarSolver do
        solver.total_tries ].should == [true, 20, 0, 0, 1895, 1895]
   end
 
-  xit '#run (complex level)', :slow do
+  xit '#run (complex level)' do
     text = "################ \n"\
            "#              # \n"\
            "# # ######     # \n"\
@@ -272,6 +272,13 @@ describe IdaStarSolver do
 
     solver = IdaStarSolver.new(level)
     solver.run
+
+    puts [ solver.found,
+      solver.pushes,
+      solver.penalties.size,
+      solver.processed_penalties.size,
+      solver.tries,
+      solver.total_tries ].to_s
 
     [ solver.found,
       solver.pushes,
