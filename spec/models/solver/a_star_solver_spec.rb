@@ -7,6 +7,9 @@ describe AStarSolver do
     solver = AStarSolver.new(level)
     solver.run
 
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
+
     [ solver.found,
       solver.pushes,
       solver.penalties.size,

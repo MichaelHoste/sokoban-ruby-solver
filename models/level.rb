@@ -281,7 +281,8 @@ class Level
     goals_positions       = node.goals_zone.positions_of_1.collect { |position| zone_pos_to_level_pos[position] }
     pusher_positions      = node.pusher_zone.positions_of_1.collect { |position| zone_pos_to_level_pos[position] }
 
-    @grid = level.grid.dup.tr('@$*+.', 's')  # clear inside to keep empty spaces
+    @grid = level.grid.dup
+    @grid.tr!('@$*+.', 's') # clear inside to keep empty spaces
 
     boxes_positions.each do |position|
       @grid[position] = '$'
@@ -361,7 +362,7 @@ class Level
     initialize_floor_rec(@pusher[:m], @pusher[:n])
 
     # Set back symbols to regular symbols
-    @grid = @grid.tr('pda', '.$*')
+    @grid.tr!('pda', '.$*')
   end
 
   # Recursive function used by make_floor

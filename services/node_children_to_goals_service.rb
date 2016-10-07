@@ -84,7 +84,7 @@ class NodeChildrenToGoalsService
     BoxDistancesService.new(level, {
       :m => box_level_pos / @cols,
       :n => box_level_pos % @cols
-    }).run(:for_level)
+    }).run(:minimum_for_level)
   end
 
   def goals_positions(level)

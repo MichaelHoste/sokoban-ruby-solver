@@ -24,7 +24,7 @@ class AStarSolver < Solver
     @list = [@root]
 
     while !@dead && !@list.empty? && !next_candidate.won?
-      current   = extract_next_candidate
+      current = extract_next_candidate
 
       find_penalties(current.node)
       current.h = estimate(current.node)
@@ -49,7 +49,16 @@ class AStarSolver < Solver
     end
 
     @found = !@list.empty? && next_candidate.won?
-    @bound = @found ? next_candidate.g : Float::INFINITY
+
+    if @found
+      @bound              = next_candidate.g
+      @solution_tree_node = next_candidate
+    else
+      @bound              = Float::INFINITY
+      @solution_tree_node = nil
+    end
+
+    @solution_tree_node
   end
 
   def pushes

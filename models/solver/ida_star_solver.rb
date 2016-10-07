@@ -41,6 +41,16 @@ class IdaStarSolver < Solver
 
     # TODO Remove when better solution to find infinite
     @bound = Float::INFINITY if !@found
+
+    if @found
+      @bound              = solver.bound
+      @solution_tree_node = solver.solution_tree_node
+    else
+      @bound              = Float::INFINITY
+      @solution_tree_node = nil
+    end
+
+    @solution_tree_node
   end
 
   def pushes

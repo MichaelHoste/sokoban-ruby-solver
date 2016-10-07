@@ -1,7 +1,7 @@
 class Solver
 
-  attr_reader :level, :node, :found, :bound, :tries, :stack,
-              :distances_for_zone, :deadlock_zone, :null_zone,
+  attr_reader :level, :node, :found, :bound, :solution_tree_node,
+              :tries, :stack, :distances_for_zone, :deadlock_zone, :null_zone,
               :penalties, :processed_penalties
 
   attr_accessor :total_tries, :dead
@@ -13,6 +13,10 @@ class Solver
       @distances_for_zone,
       @penalties
     ).run[:total]
+  end
+
+  def solution_path
+    @found ? @solution_tree_node.path : nil
   end
 
   private

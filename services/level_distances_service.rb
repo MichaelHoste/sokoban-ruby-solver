@@ -57,7 +57,7 @@ class LevelDistancesService
     @level.pusher[:m] = pusher_index / @level.cols
     @level.pusher[:n] = pusher_index % @level.cols
 
-    distances = BoxDistancesService.new(@level).run(:for_level)
+    distances = BoxDistancesService.new(@level).run(:minimum_for_level)
 
     @level.grid[pusher_index] = 's'
     @level.grid[box_index]    = 's'

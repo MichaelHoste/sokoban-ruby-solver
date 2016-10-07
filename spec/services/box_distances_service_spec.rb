@@ -42,20 +42,20 @@ describe BoxDistancesService do
     level = Level.new(text)
 
     BoxDistancesService.new(level)
-                       .run(:for_zone).should == [       2, i, i,
-                                                         1, i, i,
-                                                   4, 3, 0, 1, 2,
-                                                   i, i, 3,
-                                                   i, i, 4        ]
+                       .run(:minimum_for_zone).should == [       2, i, i,
+                                                                 1, i, i,
+                                                           4, 3, 0, 1, 2,
+                                                           i, i, 3,
+                                                           i, i, 4        ]
 
     BoxDistancesService.new(level)
-                       .run(:for_level).should == [ i, i, i, i, i, i, i,
-                                                    i, i, i, 2, i, i, i,
-                                                    i, i, i, 1, i, i, i,
-                                                    i, 4, 3, 0, 1, 2, i,
-                                                    i, i, i, 3, i, i, i,
-                                                    i, i, i, 4, i, i, i,
-                                                    i, i, i, i, i, i, i ]
+                       .run(:minimum_for_level).should == [ i, i, i, i, i, i, i,
+                                                            i, i, i, 2, i, i, i,
+                                                            i, i, i, 1, i, i, i,
+                                                            i, 4, 3, 0, 1, 2, i,
+                                                            i, i, i, 3, i, i, i,
+                                                            i, i, i, 4, i, i, i,
+                                                            i, i, i, i, i, i, i ]
   end
 
   it '#run (2)' do
@@ -103,13 +103,13 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level).run(:for_zone).should == [ i, i, i,    8, 9,
-                                                              5, 4, 3, 2, 7, 8,
-                                                                       1, 8, 9,
-                                                                       0, 9,
-                                                                       1, 10 ]
+    BoxDistancesService.new(level).run(:minimum_for_zone).should == [ i, i, i,    8, 9,
+                                                                      5, 4, 3, 2, 7, 8,
+                                                                               1, 8, 9,
+                                                                               0, 9,
+                                                                               1, 10 ]
 
-    BoxDistancesService.new(level).run(:for_level)
+    BoxDistancesService.new(level).run(:minimum_for_level)
                        .should == [ i, i, i, i, i, i,  i, i,
                                     i, i, i, i, i, 8,  9, i,
                                     i, 5, 4, 3, 2, 7,  8, i,
@@ -157,7 +157,7 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level).run(:for_zone)
+    BoxDistancesService.new(level).run(:minimum_for_zone)
                        .should == [ 4, 3, 4, 5, 6, 7, 8,
                                     3, 2, 3,    5, 6, 7,
                                     2, 1, 2, 3, 4, 5, 6, 7, 8,
@@ -178,7 +178,7 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level).run(:for_zone)
+    BoxDistancesService.new(level).run(:minimum_for_zone)
                        .should == [   8, 9,
                               9,  8,  7, 8,
                               10, 9,  6, 9,
@@ -201,7 +201,7 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level, { :m => 3, :n => 2 }).run(:for_zone)
+    BoxDistancesService.new(level, { :m => 3, :n => 2 }).run(:minimum_for_zone)
                        .should == [   i, i,
                                 i, i, i, i,
                                 1, 0, 1, 2,
@@ -227,7 +227,7 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level, { :m => 5, :n => 4 }).run(:for_zone)
+    BoxDistancesService.new(level, { :m => 5, :n => 4 }).run(:minimum_for_zone)
                        .should == [   i, i,
                                 i, i, i, i,
                                 i, i, i, i,
@@ -235,14 +235,6 @@ describe BoxDistancesService do
                                    i, 0, i, i,
                                    i, i, i, i,
                                    i, i ]
-
-                                #   [   5, 6,
-                                # 6, 5, 4, 5,
-                                # 7, 6, 3, 6,
-                                #    2,    i, i,
-                                #    1, 0, i, i,
-                                #    8, i, i, i,
-                                #    9, i]
 
     # check the level was not modified by the service!
     level.to_s.should == text
@@ -261,7 +253,7 @@ describe BoxDistancesService do
 
     level = Level.new(text)
 
-    BoxDistancesService.new(level, { :m => 3, :n => 2 }).run(:for_zone)
+    BoxDistancesService.new(level, { :m => 3, :n => 2 }).run(:minimum_for_zone)
                        .should == [   i, i,
                                 i, i, i, i,
                                 1, 0, 1, 2,
@@ -273,7 +265,7 @@ describe BoxDistancesService do
     # check the level was not modified by the service!
     level.to_s.should == text
 
-    BoxDistancesService.new(level, { :m => 6, :n => 3 }).run(:for_zone)
+    BoxDistancesService.new(level, { :m => 6, :n => 3 }).run(:minimum_for_zone)
                        .should == [   i, i,
                                 i, i, i, i,
                                 i, i, i, i,
@@ -285,7 +277,7 @@ describe BoxDistancesService do
     # check the level was not modified by the service!
     level.to_s.should == text
 
-    BoxDistancesService.new(level, { :m => 5, :n => 5 }).run(:for_zone)
+    BoxDistancesService.new(level, { :m => 5, :n => 5 }).run(:minimum_for_zone)
                        .should == [   i, i,
                                 i, i, i, i,
                                 i, i, i, i,

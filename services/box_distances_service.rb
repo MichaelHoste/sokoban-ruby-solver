@@ -17,12 +17,11 @@ class BoxDistancesService
     end
   end
 
-  def run(type = :for_zone)
-    heap      = []
-    distances = []
+  def run(type = :minimum_for_zone)
+    heap       = []
 
     # Initialize all distances with infinity
-    distances = Array.new(@rows * @cols) do {
+    @distances = Array.new(@rows * @cols) do {
         :from_left   => Float::INFINITY,
         :from_right  => Float::INFINITY,
         :from_top    => Float::INFINITY,
@@ -54,7 +53,7 @@ class BoxDistancesService
 
     # Iterate through the heap starting with lower weights
     while heap.size > 0
-      dijkstra(heap, heap.pop, distances)
+      dijkstra(heap, heap.pop)
     end
 
     # Place box and pusher back
@@ -63,14 +62,36 @@ class BoxDistancesService
     @level.pusher[:m] = pusher_m_before
     @level.pusher[:n] = pusher_n_before
 
-    if [:for_zone, :for_level].include? type
-      send("format_distances_#{type}", distances)
-    else
-      nil
+    case type
+      when :all_for_level     then all_distances_for_level
+      when :minimum_for_zone  then minimum_distances_for_zone
+      when :minimum_for_level then minimum_distances_for_level
+      else                         nil
     end
   end
 
   private
+
+  # distances from 4 directions (every position)
+  def all_distances_for_level
+    @distances
+  end
+
+  # keep only useful distances for zones (only inside, no walls or outside)
+  def minimum_distances_for_zone
+    @distances.collect.with_index do |distance, pos|
+      if !' #'.include?(@level.grid[pos])
+        distance.values.min
+      end
+    end.compact
+  end
+
+  # keep only useful distances for levels (every position)
+  def minimum_distances_for_level
+    @distances.collect do |distance|
+      distance.values.min
+    end
+  end
 
   def initialize_box_position_from_level
     if !valid?
@@ -84,14 +105,14 @@ class BoxDistancesService
     }
   end
 
-  def dijkstra(heap, item, distances)
+  def dijkstra(heap, item)
     pos          = item[:box][:m]*@cols + item[:box][:n]
     box_cell     = @level.read_pos(item[:box][:m],    item[:box][:n])
     pusher_cell  = @level.read_pos(item[:pusher][:m], item[:pusher][:n])
     direction    = item[:direction]
     weight       = item[:weight]
 
-    if !'$*#'.include?(box_cell) && !'$*#'.include?(pusher_cell) && distances[pos][direction] > weight
+    if !'$*#'.include?(box_cell) && !'$*#'.include?(pusher_cell) && @distances[pos][direction] > weight
       # Place box and pusher
       old_box_cell    = @level.read_pos(item[:box][:m],    item[:box][:n])
       old_pusher_cell = @level.read_pos(item[:pusher][:m], item[:pusher][:n])
@@ -122,7 +143,7 @@ class BoxDistancesService
 
       # test if correct pusher position
       if not_box_position && new_pusher_zone_pos && Zone.new(@level, Zone::PUSHER_ZONE).bit_1?(new_pusher_zone_pos)
-        distances[pos][direction] = weight
+        @distances[pos][direction] = weight
 
         [:from_bottom, :from_top, :from_left, :from_right].each do |new_direction|
           index = heap.index { |heap_item| heap_item[:weight] <= weight + 1 } # keep it sorted DESC on weight!
@@ -141,31 +162,10 @@ class BoxDistancesService
     end
   end
 
-  # keep only useful distances for zones (only inside, no walls or outside)
-  def format_distances_for_zone(distances)
-    distances.collect.with_index do |distance, pos|
-      if !' #'.include?(@level.grid[pos])
-        [ distance[:from_left], distance[:from_right],
-          distance[:from_top], distance[:from_bottom] ].min
-      else
-        nil
-      end
-    end.compact
-  end
-
-  # keep only useful distances for levels (every position)
-  def format_distances_for_level(distances)
-    distances.collect do |distance|
-      [ distance[:from_left], distance[:from_right],
-        distance[:from_top], distance[:from_bottom] ].min
-    end
-  end
-
   def valid?
     one_box        = @level.grid.count('$') == 1
     correct_pusher = '@+'.include?(@level.read_pos(@pusher[:m], @pusher[:n]))
 
     one_box && correct_pusher
   end
-
 end

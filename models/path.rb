@@ -1,8 +1,6 @@
 # Class usefull to represent a way to move in a level.
 #
-# Pushes are represented by upper case and moves by lower case
-# It could be written in COMPRESSED mode, but in this class, it's
-# UNCOMPRESSED for rapidity and flexibility.
+# Pushes are represented by upper case and moves by lower case.
 #
 # In compressed mode, when many moves in one direction, letters are prefixed
 # by numbers.

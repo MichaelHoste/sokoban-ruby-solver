@@ -7,6 +7,9 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
+
     [ solver.found,
       solver.pushes,
       solver.penalties.size,
@@ -28,9 +31,12 @@ describe IdaStarSolver do
             "    #     #########\n"\
             "    #######        "
 
-    level = Level.new(text)
+    level  = Level.new(text)
     solver = IdaStarSolver.new(level)
     solver.run
+
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
 
     [ solver.found,
       solver.pushes,
@@ -56,6 +62,9 @@ describe IdaStarSolver do
     level = Level.new(text)
     solver = IdaStarSolver.new(level)
     solver.run
+
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
 
     [ solver.found,
       solver.pushes,
@@ -252,7 +261,7 @@ describe IdaStarSolver do
        solver.total_tries ].should == [true, 20, 0, 0, 1895, 1895]
   end
 
-  xit '#run (complex level)' do
+  xit '#run (complex level)', :slow do
     text = "################ \n"\
            "#              # \n"\
            "# # ######     # \n"\
