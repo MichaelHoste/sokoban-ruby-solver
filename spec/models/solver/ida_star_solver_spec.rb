@@ -195,8 +195,6 @@ describe IdaStarSolver do
       solver = IdaStarSolver.new(level)
       solver.run
 
-      puts "issue with solution path of #{level.name}"
-
       solver.solution_path.each_char { |move| level.move(move) }
       level.won?.should == true
 
