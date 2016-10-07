@@ -181,7 +181,7 @@ describe IdaStarSolver do
       solver.total_tries ].should == [false, Float::INFINITY, 0, 0, 101, 101]
   end
 
-  it '#run on 50 first levels of Dimitri-Yorick pack', :focus do
+  it '#run on 50 first levels of Dimitri-Yorick pack' do
     pack = Pack.new('data/Dimitri-Yorick.slc')
 
     global_found               = true
@@ -197,8 +197,8 @@ describe IdaStarSolver do
 
       puts "issue with solution path of #{level.name}"
 
-      #solver.solution_path.each_char { |move| level.move(move) }
-      #level.won?.should == true
+      solver.solution_path.each_char { |move| level.move(move) }
+      level.won?.should == true
 
       global_found               &&= global_found
       global_pushes              +=  solver.pushes

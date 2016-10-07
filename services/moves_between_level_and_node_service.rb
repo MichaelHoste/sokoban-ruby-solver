@@ -58,7 +58,7 @@ class MovesBetweenLevelAndNodeService
     pushes    = distance_of(distances, m, n)
 
     # pushes
-    while distance_of(distances, m, n) != 0
+    while pushes != 0
       if distance_of(distances, m+1, n, :from_bottom) == pushes - 1
         m    = m + 1
         path = "U#{path}"
