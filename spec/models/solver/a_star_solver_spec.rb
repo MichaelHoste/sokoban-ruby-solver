@@ -23,6 +23,9 @@ describe AStarSolver do
     solver = AStarSolver.new(level, [], Float::INFINITY, false)
     solver.run
 
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
+
     [ solver.found,
       solver.pushes,
       solver.penalties.size,
@@ -45,6 +48,9 @@ describe AStarSolver do
     level  = Level.new(text)
     solver = AStarSolver.new(level)
     solver.run
+
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
 
     [ solver.found,
       solver.pushes,
@@ -69,6 +75,9 @@ describe AStarSolver do
     solver = AStarSolver.new(level, [], Float::INFINITY, false)
     solver.run
 
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
+
     [ solver.found,
       solver.pushes,
       solver.penalties.size,
@@ -92,6 +101,9 @@ describe AStarSolver do
     solver = AStarSolver.new(level)
     solver.run
 
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
+
     [ solver.found,
       solver.pushes,
       solver.penalties.size,
@@ -114,6 +126,8 @@ describe AStarSolver do
     level  = Level.new(text)
     solver = AStarSolver.new(level)
     solver.run
+
+    solver.solution_path.should == nil
 
     [ solver.found,
       solver.pushes,

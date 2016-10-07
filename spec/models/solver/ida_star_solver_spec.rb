@@ -91,6 +91,9 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
+
     [ solver.found,
       solver.pushes,
       solver.penalties.size,
@@ -113,6 +116,9 @@ describe IdaStarSolver do
     level  = Level.new(text)
     solver = IdaStarSolver.new(level)
     solver.run
+
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
 
     [ solver.found,
       solver.pushes,
@@ -137,6 +143,9 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
+
     [ solver.found,
       solver.pushes,
       solver.penalties.size,
@@ -160,6 +169,8 @@ describe IdaStarSolver do
     solver = IdaStarSolver.new(level)
     solver.run
 
+    solver.solution_path.should == nil
+
     # 1 push + 100 loop_tries used to detect impossible solution
 
     [ solver.found,
@@ -170,7 +181,7 @@ describe IdaStarSolver do
       solver.total_tries ].should == [false, Float::INFINITY, 0, 0, 101, 101]
   end
 
-  it '#run on 50 first levels of Dimitri-Yorick pack' do
+  it '#run on 50 first levels of Dimitri-Yorick pack', :focus do
     pack = Pack.new('data/Dimitri-Yorick.slc')
 
     global_found               = true
@@ -183,6 +194,11 @@ describe IdaStarSolver do
     pack.levels.first(50).each do |level|
       solver = IdaStarSolver.new(level)
       solver.run
+
+      puts "issue with solution path of #{level.name}"
+
+      #solver.solution_path.each_char { |move| level.move(move) }
+      #level.won?.should == true
 
       global_found               &&= global_found
       global_pushes              +=  solver.pushes
@@ -214,6 +230,9 @@ describe IdaStarSolver do
 
     solver = IdaStarSolver.new(level)
     solver.run
+
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
 
     [ solver.found,
       solver.pushes,
@@ -253,6 +272,9 @@ describe IdaStarSolver do
      solver = IdaStarSolver.new(level, [], false)
      solver.run
 
+     solver.solution_path.each_char { |move| level.move(move) }
+     level.won?.should == true
+
      [ solver.found,
        solver.pushes,
        solver.penalties.size,
@@ -281,6 +303,9 @@ describe IdaStarSolver do
 
     solver = IdaStarSolver.new(level)
     solver.run
+
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
 
     puts [ solver.found,
       solver.pushes,
@@ -311,6 +336,9 @@ describe IdaStarSolver do
 
     solver = IdaStarSolver.new(level)
     solver.run
+
+    solver.solution_path.each_char { |move| level.move(move) }
+    level.won?.should == true
 
     puts [ solver.found,
       solver.pushes,
