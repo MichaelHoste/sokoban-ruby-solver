@@ -74,53 +74,57 @@ class SokobanGame < Gosu::Window
   end
 
   def update_move_left
-    if @left_pressed == 1
-      if @level.move('l') != Level::NO_MOVE
-        @path.add_displacement('l')
+    if @left_pressed == 1 || (@left_pressed > 15 && @left_pressed % 4 == 0)
+      case @level.move('l')
+        when Level::NORMAL_MOVE then @path.add_move('l')
+        when Level::BOX_MOVE    then @path.add_push('l')
       end
-
-      @left_pressed = 0
     end
+
+    @left_pressed += 1 if @left_pressed >= 1
   end
 
   def update_move_right
-    if @right_pressed == 1
-      if @level.move('r') != Level::NO_MOVE
-        @path.add_displacement('r')
+    if @right_pressed == 1 || (@right_pressed > 15 && @right_pressed % 4 == 0)
+      case @level.move('r')
+        when Level::NORMAL_MOVE then @path.add_move('r')
+        when Level::BOX_MOVE    then @path.add_push('r')
       end
-
-      @right_pressed = 0
     end
+
+    @right_pressed += 1 if @right_pressed >= 1
   end
 
   def update_move_up
-    if @up_pressed == 1
-      if @level.move('u') != Level::NO_MOVE
-        @path.add_displacement('u')
+    if @up_pressed == 1 || (@up_pressed > 15 && @up_pressed % 4 == 0)
+      case @level.move('u')
+        when Level::NORMAL_MOVE then @path.add_move('u')
+        when Level::BOX_MOVE    then @path.add_push('u')
       end
-
-      @up_pressed = 0
     end
+
+    @up_pressed += 1 if @up_pressed >= 1
   end
 
   def update_move_down
-    if @down_pressed == 1
-      if @level.move('d') != Level::NO_MOVE
-        @path.add_displacement('d')
+    if @down_pressed == 1 || (@down_pressed > 15 && @down_pressed % 4 == 0)
+      case @level.move('d')
+        when Level::NORMAL_MOVE then @path.add_move('d')
+        when Level::BOX_MOVE    then @path.add_push('d')
       end
-
-      @down_pressed = 0
     end
+
+    @down_pressed += 1 if @down_pressed >= 1
   end
 
   def update_move_backspace
-    if @backspace_pressed == 1
+    if @backspace_pressed == 1 || (@backspace_pressed > 15 && @backspace_pressed % 4 == 0)
       @path.delete_last_move
       @level = @original_level.clone
       @path.to_s.each_char { |c| @level.move(c) }
-
-      @backspace_pressed = 0
     end
+
+    @backspace_pressed += 1 if @backspace_pressed >= 1
   end
 
   def button_down(id)
