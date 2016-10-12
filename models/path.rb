@@ -13,7 +13,7 @@ class Path
   attr_reader :pushes_count, :moves_count, :moves
 
   # Constructor for a empty path
-  def initialize(path)
+  def initialize(path = "")
     @pushes_count = 0
     @moves_count  = 0
     @moves        = ''

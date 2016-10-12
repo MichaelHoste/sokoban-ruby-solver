@@ -199,7 +199,12 @@ class Level
     '$.*@+s'
   end
 
-  def play
+  def play(width=800, height=600)
+    window = SokobanGame.new(self, width, height)
+    window.show
+  end
+
+  def console_play
     pushes = 0
     moves  = 0
 

@@ -1,6 +1,6 @@
 require './lib/boot'
 
-pack  = Pack.new('data/Original.slc')
+pack  = Pack.new('data/packs/Original.slc')
 level = pack.levels[1]
 
 
