@@ -1,6 +1,6 @@
 require 'gosu'
 
-class SokobanGame < Gosu::Window
+class GameService < Gosu::Window
   def initialize(level, width, height)
     super(width, height)
     self.caption = "Sokoban"

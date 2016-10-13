@@ -200,7 +200,7 @@ class Level
   end
 
   def play(width=800, height=600)
-    window = SokobanGame.new(self, width, height)
+    window = GameService.new(self, width, height)
     window.show
   end
 
@@ -239,6 +239,10 @@ class Level
           pushes = pushes + 1
       end
     end
+  end
+
+  def generate_picture(filename)
+    PictureService.new(self, filename).generate
   end
 
   private

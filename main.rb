@@ -3,7 +3,7 @@ require './lib/boot'
 pack  = Pack.new('data/packs/Original.slc')
 level = pack.levels[1]
 
-puts level.play
+#puts level.play
 
 text =  "  ####  \n"\
         "###  #  \n"\
@@ -16,6 +16,8 @@ text =  "  ####  \n"\
         "  ####  "
 
 level = Level.new(text)
+
+level.generate_picture
 
 # level.play
 
