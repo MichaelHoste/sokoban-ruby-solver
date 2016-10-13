@@ -20,11 +20,13 @@ class SokobanGame < Gosu::Window
     @x_offset = (@width.to_f  - @cols * @box_size) / 2
     @y_offset = (@height.to_f - @rows * @box_size) / 2
 
-    @left_pressed      = 0
-    @right_pressed     = 0
-    @up_pressed        = 0
-    @down_pressed      = 0
-    @backspace_pressed = 0
+    @pressed = {
+      :left      => 0,
+      :right     => 0,
+      :up        => 0,
+      :down      => 0,
+      :backspace => 0
+    }
 
     @images = {}
 
@@ -35,16 +37,33 @@ class SokobanGame < Gosu::Window
 
   def update
     if !@level.won?
-      update_move_left
-      update_move_right
-      update_move_up
-      update_move_down
+      update_move(:left)
+      update_move(:right)
+      update_move(:up)
+      update_move(:down)
     end
 
     update_move_backspace
   end
 
   def draw
+    draw_background
+    draw_level
+    draw_path
+    draw_moves
+    draw_pushes
+  end
+
+  def draw_background
+    draw_quad(
+      0,      0,       0xff_f4f4f4,
+      @width, 0,       0xff_f4f4f4,
+      0,      @height, 0xff_f4f4f4,
+      @width, @height, 0xff_f4f4f4
+    )
+  end
+
+  def draw_level
     (0..@rows-1).each do |m|
       (0..@cols-1).each do |n|
         cell = @level.read_pos(m, n)
@@ -69,84 +88,65 @@ class SokobanGame < Gosu::Window
         )
       end
     end
-
-    @font.draw(@path.compressed_string_path, 20, @height - 40, 0, 1, 1, 0xff_ffffff)
   end
 
-  def update_move_left
-    if @left_pressed == 1 || (@left_pressed > 15 && @left_pressed % 4 == 0)
-      case @level.move('l')
-        when Level::NORMAL_MOVE then @path.add_move('l')
-        when Level::BOX_MOVE    then @path.add_push('l')
+  def draw_path
+    @font.draw(@path.compressed_string_path, 20, @height - 32, 0, 1, 1, 0xff_000000)
+  end
+
+  def draw_moves
+    @font.draw("Moves:",          20, 12, 0, 1, 1, 0xff_000000)
+    @font.draw(@path.moves_count, 80, 12, 0, 1, 1, 0xff_000000)
+  end
+
+  def draw_pushes
+    @font.draw("Pushes:",          20, 28, 0, 1, 1, 0xff_000000)
+    @font.draw(@path.pushes_count, 80, 28, 0, 1, 1, 0xff_000000)
+  end
+
+  def update_move(direction)
+    d = direction.to_s[0]
+
+    if @pressed[direction] == 1 || (@pressed[direction] > 15 && @pressed[direction] % 4 == 0)
+      case @level.move(d)
+        when Level::NORMAL_MOVE then @path.add_move(d)
+        when Level::BOX_MOVE    then @path.add_push(d)
       end
     end
 
-    @left_pressed += 1 if @left_pressed >= 1
-  end
-
-  def update_move_right
-    if @right_pressed == 1 || (@right_pressed > 15 && @right_pressed % 4 == 0)
-      case @level.move('r')
-        when Level::NORMAL_MOVE then @path.add_move('r')
-        when Level::BOX_MOVE    then @path.add_push('r')
-      end
-    end
-
-    @right_pressed += 1 if @right_pressed >= 1
-  end
-
-  def update_move_up
-    if @up_pressed == 1 || (@up_pressed > 15 && @up_pressed % 4 == 0)
-      case @level.move('u')
-        when Level::NORMAL_MOVE then @path.add_move('u')
-        when Level::BOX_MOVE    then @path.add_push('u')
-      end
-    end
-
-    @up_pressed += 1 if @up_pressed >= 1
-  end
-
-  def update_move_down
-    if @down_pressed == 1 || (@down_pressed > 15 && @down_pressed % 4 == 0)
-      case @level.move('d')
-        when Level::NORMAL_MOVE then @path.add_move('d')
-        when Level::BOX_MOVE    then @path.add_push('d')
-      end
-    end
-
-    @down_pressed += 1 if @down_pressed >= 1
+    @pressed[direction] += 1 if @pressed[direction] >= 1
   end
 
   def update_move_backspace
-    if @backspace_pressed == 1 || (@backspace_pressed > 15 && @backspace_pressed % 4 == 0)
+    if @pressed[:backspace] == 1 || (@pressed[:backspace] > 15 && @pressed[:backspace] % 4 == 0)
       @path.delete_last_move
       @level = @original_level.clone
       @path.to_s.each_char { |c| @level.move(c) }
     end
 
-    @backspace_pressed += 1 if @backspace_pressed >= 1
+    @pressed[:backspace] += 1 if @pressed[:backspace] >= 1
   end
 
   def button_down(id)
     case id
-      when Gosu::KbLeft      then @left_pressed      = 1
-      when Gosu::KbRight     then @right_pressed     = 1
-      when Gosu::KbUp        then @up_pressed        = 1
-      when Gosu::KbDown      then @down_pressed      = 1
-      when Gosu::KbBackspace then @backspace_pressed = 1
-      when Gosu::KbD         then @backspace_pressed = 1
-      when Gosu::KbEscape    then close
+      when Gosu::KbLeft      then @pressed[:left]      = 1
+      when Gosu::KbRight     then @pressed[:right]     = 1
+      when Gosu::KbUp        then @pressed[:up]        = 1
+      when Gosu::KbDown      then @pressed[:down]      = 1
+      when Gosu::KbBackspace then @pressed[:backspace] = 1
+      when Gosu::KbD         then @pressed[:backspace] = 1
+      when Gosu::KbEscape    then puts(@path.compressed_string_path); close
     end
   end
 
   def button_up(id)
     case id
-      when Gosu::KbLeft      then @left_pressed      = 0
-      when Gosu::KbRight     then @right_pressed     = 0
-      when Gosu::KbUp        then @up_pressed        = 0
-      when Gosu::KbDown      then @down_pressed      = 0
-      when Gosu::KbBackspace then @backspace_pressed = 0
-      when Gosu::KbD         then @backspace_pressed = 0
+      when Gosu::KbLeft      then @pressed[:left]      = 0
+      when Gosu::KbRight     then @pressed[:right]     = 0
+      when Gosu::KbUp        then @pressed[:up]        = 0
+      when Gosu::KbDown      then @pressed[:down]      = 0
+      when Gosu::KbBackspace then @pressed[:backspace] = 0
+      when Gosu::KbD         then @pressed[:backspace] = 0
     end
   end
 end
