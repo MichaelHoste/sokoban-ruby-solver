@@ -199,7 +199,12 @@ class Level
     '$.*@+s'
   end
 
-  def play
+  def play(width=800, height=600)
+    window = GameService.new(self, width, height)
+    window.show
+  end
+
+  def console_play
     pushes = 0
     moves  = 0
 
@@ -234,6 +239,10 @@ class Level
           pushes = pushes + 1
       end
     end
+  end
+
+  def generate_picture(filename)
+    PictureService.new(self, filename).generate
   end
 
   private

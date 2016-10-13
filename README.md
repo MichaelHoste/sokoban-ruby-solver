@@ -4,6 +4,10 @@ Master Thesis implementation of Sokoban solver in Ruby
 
 ![Build Status](https://www.codeship.io/projects/6e6488b0-b2b1-0132-f32a-2e477b22f50d/status)
 
+# Install
+
+ * brew install sdl2 (for gosu: https://github.com/gosu/gosu/wiki/Getting-Started-on-OS-X)
+
 
 ## Todo
  * Penalties > améliorer SubNodesService pour se concentrer sur les pénalités de situations problématiques

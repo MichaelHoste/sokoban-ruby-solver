@@ -182,7 +182,7 @@ describe IdaStarSolver do
   end
 
   it '#run on 50 first levels of Dimitri-Yorick pack' do
-    pack = Pack.new('data/Dimitri-Yorick.slc')
+    pack = Pack.new('data/packs/Dimitri-Yorick.slc')
 
     global_found               = true
     global_pushes              = 0

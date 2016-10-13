@@ -4,6 +4,7 @@ gem 'nokogiri'
 gem 'munkres'
 gem 'bsearch'
 gem 'memoist'
+gem 'gosu'
 
 group :test do
   gem 'rspec'

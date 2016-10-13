@@ -1,8 +1,9 @@
 require './lib/boot'
 
-pack  = Pack.new('data/Original.slc')
+pack  = Pack.new('data/packs/Original.slc')
 level = pack.levels[1]
 
+#puts level.play
 
 text =  "  ####  \n"\
         "###  #  \n"\
@@ -14,9 +15,11 @@ text =  "  ####  \n"\
         "  #. ###\n"\
         "  ####  "
 
-level  = Level.new(text)
+level = Level.new(text)
 
-level.play
+level.generate_picture
+
+# level.play
 
 # positions = CornerDeadlock.new(level).deadlock_positions
 
