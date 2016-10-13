@@ -1,13 +1,15 @@
 # sokoban-ruby-solver
 
-Master Thesis implementation of Sokoban solver in Ruby
+Implementation of Sokoban solver in Ruby
 
-![Build Status](https://www.codeship.io/projects/6e6488b0-b2b1-0132-f32a-2e477b22f50d/status)
+[![Build Status](https://app.codeship.com/projects/6e6488b0-b2b1-0132-f32a-2e477b22f50d/status?branch=master)](https://app.codeship.com/projects/70056)
+[![Test Coverage](https://codeclimate.com/github/MichaelHoste/sokoban-ruby-solver/badges/coverage.svg)](https://codeclimate.com/github/MichaelHoste/sokoban-ruby-solver/coverage)
+[![Code Climate](https://codeclimate.com/github/MichaelHoste/sokoban-ruby-solver/badges/gpa.svg)](https://codeclimate.com/github/MichaelHoste/sokoban-ruby-solver)
 
-# Install
+## Install
 
  * brew install sdl2 (for gosu: https://github.com/gosu/gosu/wiki/Getting-Started-on-OS-X)
-
+ * brew install imagemagick (for sokoban image generator)
 
 ## Todo
  * Penalties > améliorer SubNodesService pour se concentrer sur les pénalités de situations problématiques
