@@ -98,7 +98,7 @@ describe Level do
                          "    #######        "
   end
 
-  it 'initialize (node)' do
+  it '.initialize (node)' do
     level       = Pack.new('spec/support/files/level.slc').levels[0]
     boxes_zone  = Zone.new(level, Zone::BOXES_ZONE)
     goals_zone  = Zone.new(level, Zone::GOALS_ZONE)
@@ -118,7 +118,7 @@ describe Level do
                                    "    #######        "
   end
 
-  it 'initialize (node with zones with less boxes/goals than linked level)' do
+  it '.initialize (node with zones with less boxes/goals than linked level)' do
     level = Pack.new('spec/support/files/level.slc').levels[0]
 
     boxes_zone = Zone.new(level, Zone::BOXES_ZONE)
@@ -288,6 +288,20 @@ describe Level do
     level.write_pos(1, 5, '$')
 
     level.should_not == new_level
+  end
+
+  it '#generate_picture' do
+    level = Pack.new('spec/support/files/level.slc').levels[0]
+
+    # with extension
+    level.generate_picture('test.png')
+    File.exist?('./test.png').should == true
+    FileUtils.rm './test.png'
+
+    # without extension
+    level.generate_picture('test2')
+    File.exist?('./test2.png').should == true
+    FileUtils.rm './test2.png'
   end
 
   it 'Check that solution string goes to solution level' do

@@ -195,10 +195,6 @@ class Level
     Level.new(self)
   end
 
-  def self.inside_cells
-    '$.*@+s'
-  end
-
   def play(width=800, height=600)
     window = GameService.new(self, width, height)
     window.show
@@ -243,6 +239,10 @@ class Level
 
   def generate_picture(filename)
     PictureService.new(self, filename).generate
+  end
+
+  def self.inside_cells
+    '$.*@+s'
   end
 
   private
