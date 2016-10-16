@@ -2,7 +2,7 @@
 #
 # Positions in grid start in the upper-left corner with (m=0,n=0).
 #
-# Example : (2,4) means third rows and fifth cols starting in the upper-left
+# Example: (2,4) means third rows and fifth cols starting in the upper-left
 # corner.
 #
 # Grid is made like this in loaded files :
