@@ -41,10 +41,10 @@ class PenaltiesService
 
           flag_dead_branches
 
-          puts "new penalty (#{@penalties.size})"
-          puts penalty[:node].to_s
-          puts "value: #{penalty[:value]}"
-          puts "-----------------------------------"
+          # puts "new penalty (#{@penalties.size})"
+          # puts penalty[:node].to_s
+          # puts "value: #{penalty[:value]}"
+          # puts "-----------------------------------"
         end
       end
     end
