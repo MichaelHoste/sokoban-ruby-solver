@@ -7,8 +7,6 @@
 #
 # use the hungarian algorithm (http://en.wikipedia.org/wiki/Hungarian_algorithm)
 
-require 'munkres'
-
 class BoxesToGoalsMinimalCostService
 
   BIG_NUMBER = 10_000_000
@@ -24,10 +22,19 @@ class BoxesToGoalsMinimalCostService
   end
 
   def run
-    matrix       = create_costs_matrix
-    munkres      = Munkres.new(matrix)
-    pairings     = munkres.find_pairings
-    cost         = munkres.total_cost_of_pairing
+    matrix = create_costs_matrix
+
+    # With Munkres_ru
+
+    pairings = MunkresRu.solve(matrix)
+    cost     = pairings.inject(0) {|total, star| total + matrix[star[0]][star[1]]}
+
+    # With Munkres (slower)
+
+    # munkres  = Munkres.new(matrix)
+    # pairings = munkres.find_pairings
+    # cost     = munkres.total_cost_of_pairing
+
     penalty_cost = 0
 
     # add penalty to cost

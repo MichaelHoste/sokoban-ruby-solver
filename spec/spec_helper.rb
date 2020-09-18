@@ -1,6 +1,10 @@
 require './lib/boot'
 
+Dir["./spec/support/**/*.rb"].each { |f| require f }
+
 RSpec.configure do |config|
+  config.include PutsHelpers
+
   config.expect_with :rspec do |expectations|
     expectations.syntax = [:should, :expect]
   end
@@ -34,6 +38,13 @@ RSpec.configure do |config|
 
     #system('open reports/graph.html')
     system('open reports/stack.html')
+  end
+
+  config.after :each do |x|
+    puts
+    print cyan("== %6.2f" % (Time.now - x.execution_result.started_at))
+    print cyan(" - #{x.metadata[:full_description].to_s.gsub("\n", "").gsub("        ", "")}.")
+    print cyan(" => ") # final dot
   end
 
   # config.profile_examples = 3

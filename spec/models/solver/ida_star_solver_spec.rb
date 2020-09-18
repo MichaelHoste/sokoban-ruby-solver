@@ -281,7 +281,7 @@ describe IdaStarSolver do
        solver.total_tries ].should == [true, 20, 0, 0, 1895, 1895]
   end
 
-  xit '#run (complex level)', :slow do
+  xit '#run (complex level)', :slow => true do
     text = "################ \n"\
            "#              # \n"\
            "# # ######     # \n"\
@@ -320,7 +320,7 @@ describe IdaStarSolver do
       solver.total_tries ].should == [true, 64, 3, 0, 64, 1111]
   end
 
-  xit '#run a specific level of Dimitri-Yorick pack', :slow do
+  xit '#run a specific level of Dimitri-Yorick pack', :slow => true do
     text = "        #####\n"\
            "#########   #\n"\
            "#  ......$  #\n"\

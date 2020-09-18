@@ -17,7 +17,7 @@ text =  "  ####  \n"\
 
 level = Level.new(text)
 
-level.generate_picture
+# level.generate_picture
 
 # level.play
 

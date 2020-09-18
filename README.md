@@ -4,6 +4,7 @@ Clean and fully tested implementation of [Sokoban](https://en.wikipedia.org/wiki
 
 ## Installation
 
+ * `brew install sdl2 libogg libvorbis rust` (on MacOS) -> rust for munkres_ru
  * **Ruby**. See `.ruby-version` for current version.
    [rbenv](https://github.com/rbenv/rbenv) is recommended to install it.
  * **SDL2**. `brew install sdl2` on MacOS (for gosu: https://github.com/gosu/gosu/wiki/Getting-Started-on-OS-X)

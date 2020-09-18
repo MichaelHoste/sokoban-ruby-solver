@@ -1,7 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'nokogiri'
+
 gem 'munkres'
+gem 'munkres_ru'
+gem 'ffi' # needed for munkres_ru
+
 gem 'bsearch'
 gem 'memoist'
 gem 'gosu'
